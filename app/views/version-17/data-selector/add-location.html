@@ -1,0 +1,721 @@
+{% extends "layouts/v17.html" %}
+
+{% set pageName="Add location(s)" %}
+
+{% block beforeContent %}
+
+<a href="create-pollutant.html" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-l">Add location(s)</h1>
+
+    <div class="govuk-form-group">
+      <fieldset class="govuk-fieldset" aria-describedby="location-hint">
+        <div id="location-hint" class="govuk-hint">Select one option</div>
+
+        <div class="govuk-radios" data-module="govuk-radios">
+          <!-- Countries -->
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input"
+                   id="location-2"
+                   name="location"
+                   type="radio"
+                   value="countries"
+                   data-aria-controls="conditional-location-2">
+            <label class="govuk-label govuk-radios__label" for="location-2">Countries</label>
+            <div class="govuk-hint govuk-radios__hint">
+              Choose one or more: England, Scotland, Wales or Northern Ireland
+            </div>
+          </div>
+
+          <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-location-2">
+            <div class="govuk-form-group">
+              <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="country-england" name="country" type="checkbox" value="England">
+                  <label class="govuk-label govuk-checkboxes__label" for="country-england">England</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="country-scotland" name="country" type="checkbox" value="Scotland">
+                  <label class="govuk-label govuk-checkboxes__label" for="country-scotland">Scotland</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="country-wales" name="country" type="checkbox" value="Wales">
+                  <label class="govuk-label govuk-checkboxes__label" for="country-wales">Wales</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="country-ni" name="country" type="checkbox" value="Northern Ireland">
+                  <label class="govuk-label govuk-checkboxes__label" for="country-ni">Northern Ireland</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Zones and agglomerations -->
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input"
+                   id="location-3"
+                   name="location"
+                   type="radio"
+                   value="zones-agglomerations"
+                   data-aria-controls="conditional-location-3">
+            <label class="govuk-label govuk-radios__label" for="location-3">Zones and agglomerations</label>
+            <div class="govuk-hint govuk-radios__hint">
+              Choose one or more UK air quality zones and agglomerations
+            </div>
+          </div>
+
+          <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-location-3">
+            <div class="govuk-form-group">
+              <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Zones</h2>
+              <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-central-scotland" name="zoneAgg" type="checkbox" value="Central Scotland zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-central-scotland">Central Scotland</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-east-midlands" name="zoneAgg" type="checkbox" value="East Midlands zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-east-midlands">East Midlands</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-eastern" name="zoneAgg" type="checkbox" value="Eastern zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-eastern">Eastern</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-greater-london-zone" name="zoneAgg" type="checkbox" value="Greater London zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-greater-london-zone">Greater London</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-highland" name="zoneAgg" type="checkbox" value="Highland zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-highland">Highland</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-north-east" name="zoneAgg" type="checkbox" value="North East zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-north-east">North East</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-north-east-scotland" name="zoneAgg" type="checkbox" value="North East Scotland zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-north-east-scotland">North East Scotland</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-north-wales" name="zoneAgg" type="checkbox" value="North Wales zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-north-wales">North Wales</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-north-west" name="zoneAgg" type="checkbox" value="North West &amp; Merseyside zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-north-west">North West &amp; Merseyside</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-northern-ireland" name="zoneAgg" type="checkbox" value="Northern Ireland zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-northern-ireland">Northern Ireland</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-scottish-borders" name="zoneAgg" type="checkbox" value="Scottish Borders zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-scottish-borders">Scottish Borders</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-south-east" name="zoneAgg" type="checkbox" value="South East zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-south-east">South East</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-south-west" name="zoneAgg" type="checkbox" value="South West zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-south-west">South West</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-west-midlands" name="zoneAgg" type="checkbox" value="West Midlands zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-west-midlands">West Midlands</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-yorkshire" name="zoneAgg" type="checkbox" value="Yorkshire &amp; Humberside zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-yorkshire">Yorkshire &amp; Humberside</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-south-wales" name="zoneAgg" type="checkbox" value="South Wales zone">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-south-wales">South Wales</label>
+                </div>
+              </div>
+
+              <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-2">Agglomerations</h2>
+              <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-greater-london" name="zoneAgg" type="checkbox" value="Greater London Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-greater-london">Greater London Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-west-midlands-agg" name="zoneAgg" type="checkbox" value="West Midlands Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-west-midlands-agg">West Midlands Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-greater-manchester" name="zoneAgg" type="checkbox" value="Greater Manchester Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-greater-manchester">Greater Manchester Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-west-yorkshire" name="zoneAgg" type="checkbox" value="West Yorkshire Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-west-yorkshire">West Yorkshire Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-tyneside" name="zoneAgg" type="checkbox" value="Tyneside Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-tyneside">Tyneside Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-liverpool" name="zoneAgg" type="checkbox" value="Liverpool Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-liverpool">Liverpool Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-sheffield" name="zoneAgg" type="checkbox" value="Sheffield Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-sheffield">Sheffield Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-bristol" name="zoneAgg" type="checkbox" value="Bristol Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-bristol">Bristol Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-south-wales-agg" name="zoneAgg" type="checkbox" value="Cardiff Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-south-wales-agg">Cardiff Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-edinburgh" name="zoneAgg" type="checkbox" value="Edinburgh Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-edinburgh">Edinburgh Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-glasgow" name="zoneAgg" type="checkbox" value="Glasgow Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-glasgow">Glasgow Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-belfast" name="zoneAgg" type="checkbox" value="Belfast Metropolitan Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-belfast">Belfast Metropolitan Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-brighton-worthing-littlehampton" name="zoneAgg" type="checkbox" value="Brighton/Worthing/Littlehampton agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-brighton-worthing-littlehampton">Brighton/Worthing/Littlehampton</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-leicester" name="zoneAgg" type="checkbox" value="Leicester Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-leicester">Leicester Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-nottingham" name="zoneAgg" type="checkbox" value="Nottingham Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-nottingham">Nottingham Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-portsmouth" name="zoneAgg" type="checkbox" value="Portsmouth Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-portsmouth">Portsmouth Urban Area</label>
+                </div>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="za-swansea" name="zoneAgg" type="checkbox" value="Swansea Urban Area agglomeration">
+                  <label class="govuk-label govuk-checkboxes__label" for="za-swansea">Swansea Urban Area</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Local authority -->
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input"
+                   id="location-4"
+                   name="location"
+                   type="radio"
+                   value="la"
+                   data-aria-controls="conditional-location-4">
+            <label class="govuk-label govuk-radios__label" for="location-4">Local authority</label>
+          </div>
+
+          <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-location-4">
+            <div class="govuk-form-group">
+              <!-- Inline error will be inserted just before this container -->
+              <div id="autocomplete-container" class="govuk-body"></div>
+
+              <div class="govuk-button-group govuk-!-margin-top-3">
+                {{ govukButton({
+                  text: "Add local authority",
+                  classes: "govuk-button--secondary",
+                  attributes: { id: "add-more-locations-button" }
+                }) }}
+              </div>
+            </div>
+
+            <table class="govuk-table govuk-!-margin-top-4" id="location-table" hidden>
+              <caption class="govuk-table__caption govuk-table__caption--m">Added local authorities</caption>
+              <tbody class="govuk-table__body"></tbody>
+            </table>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: "Continue",
+        attributes: { id: "add-location-button" }
+      }) }}
+    </div>
+
+  </div>
+</div>
+
+<!-- Page script (enforces "select from list" + no duplicates with inline errors) -->
+ <script>
+document.addEventListener('DOMContentLoaded', function () {
+  // ------- SETTINGS -------
+  const INPUT_SELECTOR = '#my-autocomplete'; // must match the id used by accessible-autocomplete
+  const KEY_COUNTRIES = 'selectedCountries';
+  const KEY_ZONES_AGG = 'selectedZonesAgglomerations';
+  const KEY_LA_LIST   = 'selectedLocations';
+  const MAX_LAS = 10;
+
+  // ------- ERROR SUMMARY (new) -------
+  function ensureErrorSummaryRoot() {
+    let root = document.getElementById('page-error-summary');
+    if (!root) {
+      root = document.createElement('div');
+      root.id = 'page-error-summary';
+      const h1 = document.querySelector('.govuk-heading-l');
+      if (h1 && h1.parentNode) {
+        h1.parentNode.insertBefore(root, h1); // place ABOVE the H1
+      } else {
+        document.body.insertBefore(root, document.body.firstChild);
+      }
+    }
+    return root;
+  }
+
+  function showErrorSummary(items) {
+    // items: [{ text: 'message', href: '#fieldId' }]
+    const root = ensureErrorSummaryRoot();
+    root.innerHTML = `
+      <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary" tabindex="-1">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            ${items.map(i => `<li><a href="${i.href}">${i.text}</a></li>`).join('')}
+          </ul>
+        </div>
+      </div>`;
+    root.querySelector('.govuk-error-summary')?.focus?.();
+  }
+
+  function clearErrorSummary() {
+    const root = document.getElementById('page-error-summary');
+    if (root) root.innerHTML = '';
+  }
+
+  // ------- ALLOWED LIST HELPERS -------
+  function getAllowedLAsRaw() {
+    try {
+      const raw = sessionStorage.getItem('allLocalAuthorities');
+      if (raw) {
+        const arr = JSON.parse(raw);
+        if (Array.isArray(arr) && arr.length) return arr;
+      }
+    } catch {}
+    if (Array.isArray(window.ALL_LOCAL_AUTHORITIES) && window.ALL_LOCAL_AUTHORITIES.length) {
+      return window.ALL_LOCAL_AUTHORITIES.slice();
+    }
+    return [];
+  }
+  function isAllowedLA(value) {
+    const arr = getAllowedLAsRaw();
+    if (!arr.length) return false;
+    const set = new Set(arr.map(s => String(s).toLowerCase().trim()));
+    return set.has(String(value || '').toLowerCase().trim());
+  }
+
+  // ------- ELEMENTS -------
+  const submitButton = document.getElementById('add-location-button');
+  const addMoreButton = document.getElementById('add-more-locations-button');
+
+  const table = document.getElementById('location-table');
+  const tableBody = table.querySelector('tbody');
+
+  const countriesRadio = document.getElementById('location-2');
+  const zonesAggRadio = document.getElementById('location-3');
+  const laRadio = document.getElementById('location-4');
+  const countriesConditional = document.getElementById('conditional-location-2');
+  const zonesAggConditional = document.getElementById('conditional-location-3');
+  const laConditional = document.getElementById('conditional-location-4');
+
+  const modeFieldset = document.getElementById('location-mode-fieldset') || document.querySelector('fieldset[aria-describedby="location-hint"]');
+
+  // Inline-error target within LA conditional
+  const laFormGroup =
+    document.querySelector('#conditional-location-4 .govuk-form-group') ||
+    document.getElementById('conditional-location-4');
+
+  // Inline-error target for Countries (fallbacks supported)
+  const countriesFormGroup =
+    document.getElementById('countries-form-group') ||
+    document.querySelector('#conditional-location-2 .govuk-form-group') ||
+    document.getElementById('conditional-location-2');
+
+  const zonesAggFormGroup =
+    document.getElementById('zones-agg-form-group') ||
+    document.querySelector('#conditional-location-3 .govuk-form-group') ||
+    document.getElementById('conditional-location-3');
+
+  // ------- INLINE ERROR HELPERS (reuseable) -------
+  function ensureInlineError(container, id) {
+    container.classList.add('govuk-form-group--error');
+    let err = container.querySelector('#' + id);
+    if (!err) {
+      err = document.createElement('p');
+      err.id = id;
+      err.className = 'govuk-error-message';
+      const before =
+        container.querySelector('#autocomplete-container') ||
+        container.querySelector('.govuk-checkboxes, .govuk-radios') ||
+        container.firstChild;
+      container.insertBefore(err, before);
+    }
+    return err;
+  }
+
+  function showLAInlineError(message) {
+    if (!laFormGroup) return;
+    const err = ensureInlineError(laFormGroup, 'la-error');
+    err.innerHTML = '<span class="govuk-visually-hidden">Error:</span> ' + message;
+
+    const input = document.querySelector(INPUT_SELECTOR);
+    if (input) {
+      input.setAttribute('aria-invalid', 'true');
+      const described = (input.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+      if (!described.includes('la-error')) {
+        input.setAttribute('aria-describedby', [...described, 'la-error'].join(' '));
+      }
+    }
+  }
+
+  function clearLAInlineError() {
+    if (!laFormGroup) return;
+    laFormGroup.classList.remove('govuk-form-group--error');
+    const err = laFormGroup.querySelector('#la-error');
+    if (err) err.remove();
+
+    const input = document.querySelector(INPUT_SELECTOR);
+    if (input) {
+      input.removeAttribute('aria-invalid');
+      const described = (input.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+      const pruned = described.filter(x => x !== 'la-error');
+      if (pruned.length) input.setAttribute('aria-describedby', pruned.join(' '));
+      else input.removeAttribute('aria-describedby');
+    }
+  }
+
+  function showCountriesInlineError(message) {
+    if (!countriesFormGroup) return;
+    const err = ensureInlineError(countriesFormGroup, 'countries-error');
+    err.innerHTML = '<span class="govuk-visually-hidden">Error:</span> ' + message;
+  }
+
+  function clearCountriesInlineError() {
+    if (!countriesFormGroup) return;
+    countriesFormGroup.classList.remove('govuk-form-group--error');
+    const err = countriesFormGroup.querySelector('#countries-error');
+    if (err) err.remove();
+  }
+
+  function showZonesAggInlineError(message) {
+    if (!zonesAggFormGroup) return;
+    const err = ensureInlineError(zonesAggFormGroup, 'zones-agg-error');
+    err.innerHTML = '<span class="govuk-visually-hidden">Error:</span> ' + message;
+  }
+
+  function clearZonesAggInlineError() {
+    if (!zonesAggFormGroup) return;
+    zonesAggFormGroup.classList.remove('govuk-form-group--error');
+    const err = zonesAggFormGroup.querySelector('#zones-agg-error');
+    if (err) err.remove();
+  }
+
+  // ------- INPUT LISTENERS (clear errors as user interacts) -------
+  ;(function attachInputListeners() {
+    const input = document.querySelector(INPUT_SELECTOR);
+    if (input) {
+      input.addEventListener('input', () => { clearLAInlineError(); clearErrorSummary(); });
+      input.addEventListener('change', () => { clearLAInlineError(); clearErrorSummary(); });
+      input.addEventListener('blur', (e) => { if (!(e.target.value || '').trim()) { clearLAInlineError(); clearErrorSummary(); }});
+    }
+
+    // Clear summary/inline when switching top-level radios
+    document.querySelectorAll('input[name="location"]').forEach(r => {
+      r.addEventListener('change', () => {
+        clearErrorSummary();
+        clearCountriesInlineError();
+        clearZonesAggInlineError();
+        clearLAInlineError();
+      });
+    });
+
+    // Clear summary/inline when toggling country checkboxes
+    document.querySelectorAll('#conditional-location-2 input[name="country"]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        clearCountriesInlineError();
+        clearErrorSummary();
+      });
+    });
+
+    document.querySelectorAll('#conditional-location-3 input[name="zoneAgg"]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        clearZonesAggInlineError();
+        clearErrorSummary();
+      });
+    });
+  })();
+
+  // ------- STATE -------
+  let count = 0;
+  const addedLocations = new Set(); // lowercased
+
+  function updateAddButtonLabel() {
+    if (!addMoreButton) return;
+    addMoreButton.textContent = tableBody.children.length === 0
+      ? 'Add local authority'
+      : 'Add another local authority';
+  }
+
+  function addLocationRow(value) {
+    count++;
+    addedLocations.add(value.toLowerCase());
+
+    const row = document.createElement('tr');
+    row.className = 'govuk-table__row';
+
+    const headerCell = document.createElement('th');
+    headerCell.scope = 'row';
+    headerCell.className = 'govuk-table__header';
+    headerCell.textContent = 'Local authority ' + count;
+
+    const valueCell = document.createElement('td');
+    valueCell.className = 'govuk-table__cell';
+    valueCell.textContent = value;
+
+    const actionCell = document.createElement('td');
+    actionCell.className = 'govuk-table__cell';
+
+    const removeLink = document.createElement('a');
+    removeLink.href = '#';
+    removeLink.className = 'govuk-link';
+    removeLink.textContent = 'Remove';
+
+    removeLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      row.remove();
+      addedLocations.delete(value.toLowerCase());
+      if (tableBody.children.length === 0) {
+        table.hidden = true;
+        count = 0;
+      }
+      clearLAInlineError();
+      clearErrorSummary();
+      updateAddButtonLabel();
+    });
+
+    actionCell.appendChild(removeLink);
+    row.appendChild(headerCell);
+    row.appendChild(valueCell);
+    row.appendChild(actionCell);
+    tableBody.appendChild(row);
+
+    table.hidden = false;
+    updateAddButtonLabel();
+  }
+
+  // ------- RESTORE FROM SESSION -------
+  const savedCountries = sessionStorage.getItem(KEY_COUNTRIES);
+  const savedZonesAgg = sessionStorage.getItem(KEY_ZONES_AGG);
+  const savedLAList = sessionStorage.getItem(KEY_LA_LIST);
+  const savedUK = sessionStorage.getItem('selectedLocation'); // legacy single value
+
+  if (savedCountries) {
+    countriesRadio.checked = true;
+    countriesConditional.classList.remove('govuk-radios__conditional--hidden');
+  } else if (savedZonesAgg) {
+    zonesAggRadio.checked = true;
+    zonesAggConditional.classList.remove('govuk-radios__conditional--hidden');
+    try {
+      const items = JSON.parse(savedZonesAgg);
+      if (Array.isArray(items)) {
+        const selected = new Set(items.map(v => String(v).toLowerCase().trim()));
+        document.querySelectorAll('#conditional-location-3 input[name="zoneAgg"]').forEach(cb => {
+          cb.checked = selected.has(String(cb.value).toLowerCase().trim());
+        });
+      }
+    } catch {}
+  } else if (savedLAList) {
+    laRadio.checked = true;
+    laConditional.classList.remove('govuk-radios__conditional--hidden');
+    try {
+      const locations = JSON.parse(savedLAList);
+      locations.slice(0, MAX_LAS).forEach(value => addLocationRow(value)); // restore up to 10
+    } catch {}
+  } else if (savedUK === 'United Kingdom') {
+    countriesRadio.checked = true;
+    countriesConditional.classList.remove('govuk-radios__conditional--hidden');
+    ['country-england','country-scotland','country-wales','country-ni'].forEach(id => {
+      const cb = document.getElementById(id);
+      if (cb) cb.checked = true;
+    });
+  }
+
+  laRadio.addEventListener('change', updateAddButtonLabel);
+  updateAddButtonLabel();
+
+  // ------- ADD MORE (inline validation + summary + limit check) -------
+  if (addMoreButton) {
+    addMoreButton.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      const current = tableBody.children.length;
+      if (current >= MAX_LAS) {
+        showLAInlineError('You can only add up to 10 local authorities');
+        showErrorSummary([{ text: 'You can only add up to 10 local authorities', href: INPUT_SELECTOR }]);
+        return;
+      }
+
+      const input = document.querySelector(INPUT_SELECTOR);
+      if (!input) return;
+
+      const value = (input.value || '').trim();
+      const lower = value.toLowerCase();
+
+      if (!value) {
+        showLAInlineError('Enter a local authority');
+        showErrorSummary([{ text: 'Enter a local authority', href: INPUT_SELECTOR }]);
+        return;
+      }
+      if (!isAllowedLA(value)) {
+        if (getAllowedLAsRaw().length === 0) {
+          showLAInlineError('The local authority list is still loading. Try again in a moment, or select from the suggestions.');
+          showErrorSummary([{ text: 'The local authority list is still loading. Try again in a moment, or select from the suggestions.', href: INPUT_SELECTOR }]);
+        } else {
+          showLAInlineError('Select a local authority from the list');
+          showErrorSummary([{ text: 'Select a local authority from the list', href: INPUT_SELECTOR }]);
+        }
+        return;
+      }
+      if (addedLocations.has(lower)) {
+        showLAInlineError('This local authority has already been added');
+        showErrorSummary([{ text: 'This local authority has already been added', href: INPUT_SELECTOR }]);
+        return;
+      }
+
+      clearLAInlineError();
+      clearErrorSummary();
+      addLocationRow(value);
+      input.value = '';
+    });
+  }
+
+  // ------- SUBMIT -------
+  submitButton.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const selectedRadio = document.querySelector('input[name="location"]:checked');
+
+    // No top-level radio: show ONLY summary (no inline for fieldset)
+    if (!selectedRadio) {
+      clearCountriesInlineError();
+      clearLAInlineError();
+      showErrorSummary([{ text: 'Select an option before continuing', href: '#location-2' }]);
+      const first = document.getElementById('location-2') || document.getElementById('location-4');
+      if (first) first.focus();
+      return;
+    } else {
+      clearErrorSummary();
+    }
+
+    // Clear mutually exclusive keys
+    sessionStorage.removeItem('selectedLocation');
+    sessionStorage.removeItem(KEY_ZONES_AGG);
+    sessionStorage.removeItem(KEY_LA_LIST);
+    sessionStorage.removeItem(KEY_COUNTRIES);
+
+    if (selectedRadio.id === 'location-2') {
+      const checked = Array.from(document.querySelectorAll('input[name="country"]:checked'))
+        .map(cb => cb.value.trim());
+      if (checked.length === 0) {
+        showCountriesInlineError('Select at least one country');
+        showErrorSummary([{ text: 'Select at least one country', href: '#country-england' }]);
+        return;
+      }
+      clearCountriesInlineError();
+      clearErrorSummary();
+      sessionStorage.setItem(KEY_COUNTRIES, JSON.stringify(checked));
+
+    } else if (selectedRadio.id === 'location-3') {
+      const selectedZonesAgg = Array.from(document.querySelectorAll('input[name="zoneAgg"]:checked'))
+        .map(cb => cb.value.trim());
+      if (selectedZonesAgg.length === 0) {
+        showZonesAggInlineError('Select at least one zone or agglomeration');
+        showErrorSummary([{ text: 'Select at least one zone or agglomeration', href: '#za-greater-london' }]);
+        return;
+      }
+      clearZonesAggInlineError();
+      clearErrorSummary();
+      sessionStorage.setItem(KEY_ZONES_AGG, JSON.stringify(selectedZonesAgg));
+
+    } else if (selectedRadio.id === 'location-4') {
+      let locations = [];
+
+      if (!table.hidden && tableBody.children.length > 0) {
+        const rows = tableBody.querySelectorAll('tr');
+        rows.forEach(row => {
+          const name = row.querySelector('td')?.textContent?.trim();
+          if (name) locations.push(name);
+        });
+      } else {
+        const input = document.querySelector(INPUT_SELECTOR);
+        const value = (input && input.value.trim()) || '';
+        if (!value) {
+          showLAInlineError('Add at least one local authority');
+          showErrorSummary([{ text: 'Add at least one local authority', href: INPUT_SELECTOR }]);
+          return;
+        }
+        if (!isAllowedLA(value)) {
+          showLAInlineError('Select a local authority from the list');
+          showErrorSummary([{ text: 'Select a local authority from the list', href: INPUT_SELECTOR }]);
+          return;
+        }
+        locations.push(value);
+      }
+
+      if (locations.length > MAX_LAS) {
+        showLAInlineError('You can only add up to 10 local authorities');
+        showErrorSummary([{ text: 'You can only add up to 10 local authorities', href: INPUT_SELECTOR }]);
+        return;
+      }
+
+      // Final de-dupe + re-validate
+      const unique = [];
+      const seen = new Set();
+      for (const v of locations) {
+        const l = v.toLowerCase();
+        if (!isAllowedLA(v)) {
+          showLAInlineError('Select a local authority from the list');
+          showErrorSummary([{ text: 'Select a local authority from the list', href: INPUT_SELECTOR }]);
+          return;
+        }
+        if (seen.has(l)) {
+          showLAInlineError('This local authority has already been added');
+          showErrorSummary([{ text: 'This local authority has already been added', href: INPUT_SELECTOR }]);
+          return;
+        }
+        seen.add(l);
+        unique.push(v);
+      }
+
+      clearLAInlineError();
+      clearErrorSummary();
+      sessionStorage.setItem(KEY_LA_LIST, JSON.stringify(unique));
+    }
+
+    // Back to summary
+    window.location.href = 'create-pollutant.html';
+  });
+});
+</script>
+
+{% endblock %}

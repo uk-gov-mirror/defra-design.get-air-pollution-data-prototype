@@ -1,0 +1,207 @@
+
+// New chart for beta
+
+rect {
+    position: relative;
+    pointer-events: all;
+    fill-opacity: 0;
+    stroke-opacity: 0;
+    z-index: 1;
+  }
+
+  .graph-tooltip {
+    position: absolute;
+    padding: 15px;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    display: none;
+    pointer-events: none; /* This prevents the tooltip from blocking mouse events */
+    z-index: 1000;
+}
+
+.graph-container {
+    margin-top: 0px;
+    overflow-x: hidden;
+}
+
+.aq-chart-key {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  padding: 0;
+  margin: 0 0 16px 0;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 19px;
+    line-height: 1;
+  }
+}
+
+
+// Nitrogen dioxide graphs
+#chart-container {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#no2-container-2026 {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#no2-container-2024 {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#no2-container-24 {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#no2-container-week {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#no2-container-month {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+// PM10 graphs
+#pm10-container {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#pm10-container-2026 {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#pm10-container-2024 {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#pm10-container-month {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#pm10-container-week {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#pm10-container-24 {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+// PM2.5 graphs
+#pm2_5-container {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#pm25-container-2026 {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#pm25-container-2024 {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#pm25-container-month {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#pm25-container-week {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#pm25-container-24 {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+// Ozone graphs
+#ozone-container {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#o3-container-2026 {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#o3-container-2024 {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#o3-container-month {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#o3-container-week {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+#o3-container-24 {
+    max-width: 1080px;  /* Set the maximum width to 1080px */
+    width: 100%;         /* Make it responsive */
+    margin: 0 auto;     /* Center the container */
+}
+
+.exceedance-label-container {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    padding: 10px; /* Add padding for text spacing */
+    display: block;
+    @include govuk-font($size: 19);
+  }  
+  
+
+  #pm10-container-2024 .focus-points circle:focus {
+  outline: none;
+  z-index: 5;
+}

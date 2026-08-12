@@ -1,0 +1,1300 @@
+{% extends "layouts/phase1-map.html" %}
+
+{% set pageName="Home" %}
+
+{% block beforeContent %}
+
+<a href="../hub.html" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-three-quarters-from-desktop">
+
+        <div id="no-stations-error"
+     class="govuk-error-summary"
+     data-module="govuk-error-summary"
+     role="alert"
+     tabindex="-1"
+     hidden>
+  <div role="alert">
+    <h2 class="govuk-error-summary__title">There is a problem</h2>
+    <div class="govuk-error-summary__body">
+      <p class="govuk-body">There are no stations available based on your selection. Change the year or location.</p>
+      <ul class="govuk-list govuk-error-summary__list">
+        <li><a href="add-time.html">Change the year</a></li>
+        <li><a href="add-location.html">Change the location</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+        <h1 class="govuk-heading-l">Create and download datasets</h1>
+
+        <p class="govuk-body govuk-!-margin-bottom-6"><a href="#" id="clear-selections" class="govuk-link">Clear selections</a></p>
+
+
+        <div id="station-inset-container" aria-live="polite" style="display: none;"></div>
+
+<!-- <p class="govuk-body">Choose pollutant(s)</p> -->
+     
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Pollutant
+    </dt>
+    <dd class="govuk-summary-list__value" id="pollutant-summary-list">
+     None selected
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="add-pollutant.html">Add<span class="govuk-visually-hidden"> pollutant</span></a>
+    </dd>
+  </div>
+   <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Data sources
+    </dt>
+    <dd class="govuk-summary-list__value" id="data-source-list">
+    Any
+    </dd>
+    <dd class="govuk-summary-list__actions" id="data-source-action" hidden>
+  <a class="govuk-link" href="https://draft-origin.publishing.service.gov.uk/government/collections/sources-of-air-pollution-data-in-the-uk?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwZmU1YmNiZS02MmNiLTRhMTEtODVmNy0xNDc1NDE1Y2I0ZWEiLCJjb250ZW50X2lkIjoiYmM2ZTcwMzQtNTEwNi00NGU3LTgzODctZmE5NTI1OWE2ZjhkIiwiaWF0IjoxNzc0ODYxOTM2LCJleHAiOjE3Nzc1NDAzMzZ9.wJzjOkohA3a_EVyGcDHOOB6_4igPADVvInEvZGn4xTQ&utm_campaign=govuk_publishing&utm_medium=preview&utm_source=share">View network information<span class="govuk-visually-hidden">information about data sources</span></a>
+</dd>
+  </div>
+
+    <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Year
+    </dt>
+    <dd class="govuk-summary-list__value" id="time-period-value">
+      None selected
+    </dd>
+   <dd class="govuk-summary-list__actions" id="time-period-action" hidden>
+  <a class="govuk-link" href="add-time.html">Add<span class="govuk-visually-hidden"> time period</span></a>
+</dd>
+  </div>
+
+   <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Location
+    </dt>
+<dd class="govuk-summary-list__value" id="location-value">
+  None selected
+</dd>
+<dd class="govuk-summary-list__actions" id="location-action" hidden>
+  <a class="govuk-link" href="add-location.html">Add<span class="govuk-visually-hidden"> location</span></a>
+</dd>
+
+
+  </div>
+  
+  
+</dl>  
+
+
+
+
+          </div>
+      
+        </div>
+
+        {{ govukButton({
+          text: "Continue",
+          href: "download.html"
+        }) }}
+</div>
+</div>
+<script>
+/**
+ * Station inset (strict per-network + site-type aware)
+ * - Counts stations by EXACT networks selected in `selectedDataSources` (if present).
+ * - Falls back to all networks available for chosen pollutants when no selection exists.
+ * - Splits each network's stations into your SIX site types, then filters by selected site types.
+ * - Applies your location scaling (countries / LAs).
+ * - Saves a debug one-liner to sessionStorage.computedSiteTypeBreakdownString.
+ *
+ * Drop this in place of your existing "station-inset" script on the form page.
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('station-inset-container'); // may not exist; still compute
+
+
+  const SHOW_DEBUG = false; // set true to render a breakdown <details> under the inset
+
+  // =============== 1) Read selections ===============
+  // Pollutants
+  const pollutantsRaw = sessionStorage.getItem('selectedPollutants');
+  let pollutants = [];
+  try { pollutants = pollutantsRaw ? JSON.parse(pollutantsRaw) : []; } catch { pollutants = []; }
+
+  if (!Array.isArray(pollutants) || pollutants.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  // Data source selection (strict mode if present)
+  let ds = null;
+  try { ds = JSON.parse(sessionStorage.getItem('selectedDataSources') || 'null'); } catch { ds = null; }
+
+  // Site types selection (from your site-type form)
+  let selectedSiteTypes = [];
+  try {
+    const stRaw = sessionStorage.getItem('selectedSiteTypes');
+    selectedSiteTypes = stRaw ? JSON.parse(stRaw) : [];
+  } catch { selectedSiteTypes = []; }
+
+  // =============== 2) Site types (matches your form EXACTLY) ===============
+  const ALL_SITE_TYPES = [
+    'Rural background',
+    'Suburban background',
+    'Urban background',
+    'Suburban industrial',
+    'Urban industrial',
+    'Urban traffic'
+  ];
+
+  // Canonicalise any legacy values to your six labels
+  const SITE_TYPE_CANON = {
+    'rural background': 'Rural background',
+    'suburban background': 'Suburban background',
+    'urban background': 'Urban background',
+    'suburban industrial': 'Suburban industrial',
+    'urban industrial': 'Urban industrial',
+    'urban traffic': 'Urban traffic',
+
+    // legacy/aliases (if older values creep in)
+    'rural': 'Rural background',
+    'suburban': 'Suburban background',
+    'industrial': 'Urban industrial',
+    'roadside': 'Urban traffic',
+    'kerbside': 'Urban traffic',
+    'background urban': 'Urban background',
+    'urban roadside': 'Urban traffic',
+    'urban kerbside': 'Urban traffic'
+  };
+  const canon = (s) => (SITE_TYPE_CANON[(s || '').trim().toLowerCase()] || s);
+
+  const selectedSiteTypesCanon = Array.isArray(selectedSiteTypes)
+    ? selectedSiteTypes.map(canon).filter(Boolean)
+    : [];
+
+  // =============== 3) Network availability from pollutants ===============
+  const HOUR_HDR   = '<strong>Near real-time data from Defra</strong>';
+  const MONTH_HDR  = '<strong>Other data from Defra</strong>';
+  const NONDEF_HDR = '<strong>Local authority data</strong>';
+
+  // ---- mapping function (top-level, not nested) ----
+// ---- mapping function (top-level, not nested) ----
+function buildNetworksForPollutant(rawName) {
+  const name = String(rawName || '').trim().toLowerCase();
+
+  // strip a single trailing "(...)" — keeps internal PAH parentheses like "Benzo(a)pyrene"
+  const baseName = name.replace(/\s*\([^)]*\)\s*$/,'').trim();
+
+  // Headings (must match elsewhere on the page)
+  const HOUR_HDR   = '<strong>Near real-time data from Defra</strong>';
+  const MONTH_HDR  = '<strong>Other data from Defra</strong>';
+  const NONDEF_HDR = '<strong>Local authority data</strong>';
+
+  // helpers (preserve headings; avoid duplicates)
+  const sections = [];
+  const seen = new Set();
+  const add = (label) => { if (!seen.has(label)) { sections.push(label); seen.add(label); } };
+  const addHourly   = (net) => { add(HOUR_HDR); add(net); };
+  const addMonthly  = (net) => { add(MONTH_HDR); add(net); };
+  const addNonDefra = ()     => { add(NONDEF_HDR); add('Locally managed automatic monitoring'); };
+
+  // === Core gases & PM (support with or without symbol suffix) ===
+  const isSO2      = baseName === 'sulphur dioxide' || baseName === 'gaseous sulphur dioxide';
+  const isO3       = baseName === 'ozone';
+  const isCO       = baseName === 'carbon monoxide';
+  const isNO2      = baseName === 'nitrogen dioxide';
+  const isNOxAsNO2 = baseName === 'nitrogen oxides as nitrogen dioxide';
+  const isNO       = baseName === 'nitric oxide';
+  const isBlackCarbon = baseName === 'black carbon';
+  const tompsName = baseName.replace(/-/g, ' ').replace(/\s+/g, ' ').trim();
+  const isTOMPs = new Set([
+    'pcbs',
+    'co planar pcbs',
+    'pcdds',
+    'pcdfs',
+    'pbdes',
+    'decabde',
+    'hbcdd'
+  ]).has(tompsName);
+
+  // PM mass (keep exact names including PM10/PM2.5; users can pick both wordings)
+  const pmMass =
+    name === 'particulate matter (pm10)' ||
+    name === 'fine particulate matter (pm2.5)' ||
+    baseName === 'particulate matter' ||          // safety if a variant ever appears without symbol
+    baseName === 'fine particulate matter';
+
+  // VOCs (names only)
+  const vocs = new Set([
+    'ethane','ethene','ethyne','propane','propene','iso-butane','n-butane','1-butene',
+    'trans-2-butene','cis-2-butene','iso-pentane','n-pentane','1,3-butadiene','trans-2-pentene',
+    '1-pentene','2-methylpentane','isoprene','n-hexane','n-heptane','iso-octane','n-octane',
+    'benzene','toluene','ethylbenzene','m+p-xylene','o-xylene','1,2,3-trimethylbenzene',
+    '1,2,4-trimethylbenzene','1,3,5-trimethylbenzene'
+  ]);
+
+  // PAHs (the () here are part of the name, not a trailing symbol)
+  const paHs = [
+    'benzo(a)pyrene','benzo(a)anthracene','benzo(b)fluoranthene','benzo(j)fluoranthene','benzo(b+j)fluoranthene',
+    'benzo(k)fluoranthene','indeno(1,2,3-cd)pyrene','dibenzo(ac)anthracene','dibenzo(ah)anthracene','dibenzo(ah+ac)anthracene',
+    '1-methyl anthracene','1-methyl naphthalene','1-methyl phenanthrene','2-methyl anthracene','2-methyl naphthalene',
+    '2-methyl phenanthrene','4.5-methylene phenanthrene','5-methyl chrysene','9-methyl anthracene'
+  ];
+
+  // Particulate ions & "in PMxx" cues — works even with trailing symbols because we test substrings
+  const particulateIonKeywords = [
+    'particulate ', ' in pm10', ' in pm2.5',
+    'nitrate','nitrite','sulphate','chloride','ammonium',
+    'calcium','magnesium','sodium','potassium'
+  ];
+
+  // Acid gases (compare on the base name)
+  const gaseousAcids = new Set([
+    'gaseous hydrochloric acid','gaseous nitric acid','gaseous nitrous acid'
+  ]);
+
+  // Heavy metals in air — use base name (autocomplete adds trailing symbols)
+  const metalsAir = new Set([
+    'arsenic','cadmium','chromium','cobalt','copper','iron','lead','manganese',
+    'nickel','selenium','vanadium','zinc','aluminium','antimony','antinomy'
+  ]);
+
+  // Metals in precipitation: items end with "in precipitation"
+  const isMetalInPrecip = /in precipitation$/i.test(baseName);
+
+  // Ammonia variants — compare on base name so "(NH3)/(NH4)" suffixes are fine
+  const ammoniaBase = new Set([
+    'gaseous ammonia','gaseous ammonia (active)','gaseous ammonia (passive)',
+    'gaseous ammonia (diffusion tube)','particulate ammonium'
+  ]);
+
+  // Mercury variants — compare on base name so "(Hg)" suffix is fine
+  const mercuryBase = new Set(['reactive mercury','elemental mercury','mercury in pm2.5']);
+
+  // === Rules → networks ===
+  if (isSO2 || isO3 || isCO || isNO2 || isNOxAsNO2 || isNO || pmMass) {
+    addHourly('Automatic Urban and Rural Network (AURN)');
+    addNonDefra();
+  }
+
+  if (isNO2) {
+    addMonthly('UK Urban NO2 Network');
+    addMonthly('UKEAP: Rural NO2 Network');
+    add(NONDEF_HDR);
+    add('Locally managed automatic monitoring');
+    add('Automatic nitrogen dioxide data');
+    add('Nitrogen dioxide (NO2) diffusion tubes');
+  }
+
+  if (vocs.has(baseName)) {
+    addHourly('Automatic Hydrocarbon Network');
+    addMonthly('Non-Automatic Hydrocarbon Network');
+  }
+
+  if (paHs.includes(baseName)) {
+    addMonthly('PAH Network');
+  }
+
+  if (isBlackCarbon) {
+    addMonthly('Black Carbon Network');
+  }
+
+  if (isTOMPs) {
+    addMonthly('Toxic Organic Micro-Pollutants (TOMPs)');
+  }
+
+  const looksLikeParticulateIon =
+    particulateIonKeywords.some(k => baseName.includes(k)) && !pmMass;
+
+  if (looksLikeParticulateIon) {
+    addMonthly('UKEAP: MARGA Network');
+    addMonthly('UKEAP: Acid Gas & Aerosol Network');
+  }
+
+  if (gaseousAcids.has(baseName)) {
+    if (baseName.includes('nitric')) addHourly('UKEAP: MARGA Network'); // nitric acid has hourly via MARGA
+    addMonthly('UKEAP: Acid Gas & Aerosol Network');
+  }
+
+  if (ammoniaBase.has(baseName)) {
+    addMonthly('UKEAP: National Ammonia Monitoring Network (NAMN)');
+  }
+
+  if (metalsAir.has(baseName)) {
+    addMonthly('Heavy Metals Network');
+  }
+
+  if (isMetalInPrecip) {
+    addMonthly('UKEAP: Precipitation Chemistry Network (Precip-Net)');
+  }
+
+  if (mercuryBase.has(baseName)) {
+    addMonthly('UKEAP: Rural Mercury Network');
+  }
+
+  if (isSO2) {
+    addMonthly('UKEAP: Acid Gas & Aerosol Network');
+    addMonthly('UKEAP: MARGA Network');
+  }
+
+  return sections;
+}
+
+
+ 
+ function availabilityFromPollutants(polls) {
+  const buckets = { hourly: [], monthly: [], nonDefra: [] };
+  const seen = { hourly: new Set(), monthly: new Set() };
+
+  (Array.isArray(polls) ? polls : []).forEach(p => {
+    let current = null;
+    (buildNetworksForPollutant(p) || []).forEach(item => {
+      if (item === HOUR_HDR) current = 'hourly';
+      else if (item === MONTH_HDR) current = 'monthly';
+      else if (item === NONDEF_HDR) current = 'nonDefra';
+      else if (current === 'hourly' && !seen.hourly.has(item)) {
+        seen.hourly.add(item); buckets.hourly.push(item);
+      } else if (current === 'monthly' && !seen.monthly.has(item)) {
+        seen.monthly.add(item); buckets.monthly.push(item);
+      } else if (current === 'nonDefra') {
+        if (!buckets.nonDefra.length) buckets.nonDefra.push('Locally managed automatic monitoring');
+      }
+    });
+  });
+
+  return buckets;
+}
+
+
+  const available = availabilityFromPollutants(pollutants);
+
+  // =============== 4) STRICT network selection when ds exists ===============
+  function intersect(selArr, availArr) {
+    if (!Array.isArray(selArr) || !selArr.length) return [];
+    const availSet = new Set(availArr);
+    return selArr.filter(n => availSet.has(n));
+  }
+
+  const chosen = (!ds)
+    ? {
+        hourly:  available.hourly.slice(),
+        monthly: available.monthly.slice(),
+        local:   available.nonDefra.length > 0
+      }
+    : {
+        hourly:  (ds.hourly?.enabled  ? intersect(ds.hourly.networks  || [], available.hourly)  : []),
+        monthly: (ds.monthly?.enabled ? intersect(ds.monthly.networks || [], available.monthly) : []),
+        local:   !!ds.local && available.nonDefra.length > 0
+      };
+
+  // =============== 5) Station counts per network (override-ready) ===============
+  const DEFAULT_COUNTS = {
+    'Automatic Urban and Rural Network (AURN)': 180,
+    'Automatic Hydrocarbon Network': 40,
+    'Non-Automatic Hydrocarbon Network': 35,
+    'Toxic Organic Micro-Pollutants (TOMPs)': 6,
+    'Black Carbon Network': 15,
+    'PAH Network': 30,
+    'Heavy Metals Network': 30,
+    'UKEAP: Acid Gas & Aerosol Network': 30,
+    'UKEAP: MARGA Network': 2,
+    'UKEAP: National Ammonia Monitoring Network (NAMN)': 100,
+    'UKEAP: Precipitation Chemistry Network (Precip-Net)': 30,
+    'UKEAP: Rural Mercury Network': 2,
+    'UK Urban NO2 Network': 60,   // adjust via sessionStorage override if you have authoritative numbers
+    'UKEAP: Rural NO2 Network': 20,
+    'Locally managed automatic monitoring': 300
+  };
+
+  let runtimeCounts = {};
+  try { runtimeCounts = JSON.parse(sessionStorage.getItem('networkStationCounts') || '{}'); } catch { runtimeCounts = {}; }
+  const COUNTS = new Proxy(DEFAULT_COUNTS, {
+    get: (obj, key) => (Object.prototype.hasOwnProperty.call(runtimeCounts, key) ? runtimeCounts[key] : obj[key])
+  });
+
+  // =============== 6) Site-type breakdown per network (counts or shares) ===============
+  // A) Exact counts override (preferred if you have them)
+  let NETWORK_SITE_TYPE_COUNTS = {};
+  try { NETWORK_SITE_TYPE_COUNTS = JSON.parse(sessionStorage.getItem('networkSiteTypeCounts') || '{}'); } catch { NETWORK_SITE_TYPE_COUNTS = {}; }
+
+  // B) Share override (if no exact counts)
+  let NETWORK_SITE_TYPE_SHARES = {};
+  try { NETWORK_SITE_TYPE_SHARES = JSON.parse(sessionStorage.getItem('networkSiteTypeShares') || '{}'); } catch { NETWORK_SITE_TYPE_SHARES = {}; }
+
+  // C) Defaults mapped to your SIX site types; sums ~ 1.0 per network
+  const DEFAULT_SITE_TYPE_SHARES = {
+    'Automatic Urban and Rural Network (AURN)': {
+      'Urban background': 0.35,
+      'Urban traffic': 0.50,              // Roadside + Kerbside
+      'Suburban background': 0.05,
+      'Rural background': 0.07,
+      'Urban industrial': 0.02,
+      'Suburban industrial': 0.01
+    },
+    'Automatic Hydrocarbon Network': {
+      'Urban background': 0.60,
+      'Urban traffic': 0.30,
+      'Rural background': 0.10
+    },
+    'Toxic Organic Micro-Pollutants (TOMPs)': {
+      'Urban background': 0.34,
+      'Urban traffic': 0.33,
+      'Rural background': 0.33
+    },
+    'Black Carbon Network': {
+      'Urban background': 0.40,
+      'Urban traffic': 0.50,
+      'Suburban background': 0.05,
+      'Rural background': 0.05
+    },
+    'Non-Automatic Hydrocarbon Network': {
+      'Urban background': 0.70,
+      'Urban traffic': 0.10,
+      'Suburban background': 0.15,
+      'Rural background': 0.05
+    },
+    'PAH Network': {
+      'Urban background': 0.50,
+      'Urban traffic': 0.10,
+      'Suburban background': 0.20,
+      'Rural background': 0.15,
+      'Urban industrial': 0.05
+    },
+    'Heavy Metals Network': {
+      'Urban background': 0.30,
+      'Urban traffic': 0.10,
+      'Suburban background': 0.10,
+      'Rural background': 0.20,
+      'Urban industrial': 0.20,
+      'Suburban industrial': 0.10
+    },
+    'UKEAP: Acid Gas & Aerosol Network': {
+      'Urban background': 0.10,
+      'Suburban background': 0.20,
+      'Rural background': 0.70
+    },
+    'UKEAP: MARGA Network': {
+      'Urban background': 0.30,
+      'Rural background': 0.70
+    },
+    'UKEAP: National Ammonia Monitoring Network (NAMN)': {
+      'Urban background': 0.10,
+      'Suburban background': 0.20,
+      'Rural background': 0.70
+    },
+    'UKEAP: Precipitation Chemistry Network (Precip-Net)': {
+      'Rural background': 1.00
+    },
+    'UKEAP: Rural Mercury Network': {
+      'Rural background': 1.00
+    },
+    'UK Urban NO2 Network': {
+      'Urban traffic': 1.00
+    },
+    'UKEAP: Rural NO2 Network': {
+      'Rural background': 1.00
+    },
+    'Locally managed automatic monitoring': {
+      'Urban background': 0.25,
+      'Urban traffic': 0.65,
+      'Suburban background': 0.05,
+      'Urban industrial': 0.05
+    }
+  };
+
+  // Largest-remainder apportioning to keep integer counts and exact totals
+  function apportionCounts(total, shares) {
+    if (!total || total <= 0) return {};
+    const entries = Object.entries(shares || {}).map(([t, s]) => [canon(t), Math.max(0, Number(s) || 0)]);
+    const sumShares = entries.reduce((a, [, s]) => a + s, 0);
+    if (sumShares <= 0) return {};
+    const norm = entries.map(([t, s]) => [t, s / sumShares]);
+    const raw = norm.map(([t, s]) => [t, total * s, Math.floor(total * s)]);
+    let floorSum = raw.reduce((a, [, , f]) => a + f, 0);
+    let remainder = total - floorSum;
+
+    const out = {};
+    raw.forEach(([t, , f]) => { out[t] = f; });
+
+    const byFrac = raw.map(([t, r, f]) => [t, r - f]).sort((a, b) => b[1] - a[1]);
+    let i = 0;
+    while (remainder > 0 && i < byFrac.length) {
+      out[byFrac[i][0]]++;
+      remainder--; i++;
+    }
+    return out;
+  }
+
+  function siteTypeCountsFor(networkName, total) {
+    const exact = NETWORK_SITE_TYPE_COUNTS[networkName];
+    if (exact && typeof exact === 'object') {
+      const out = {};
+      Object.entries(exact).forEach(([k, v]) => {
+        const key = canon(k);
+        out[key] = Math.max(0, Math.round(Number(v) || 0));
+      });
+      return out; // trust exact counts even if they don't sum to 'total'
+    }
+    const shares = NETWORK_SITE_TYPE_SHARES[networkName] || DEFAULT_SITE_TYPE_SHARES[networkName] || {};
+    return apportionCounts(total, shares);
+  }
+
+  // =============== 7) Compute totals (filtered by site types) ===============
+  const uniqueDefra = new Set([...(chosen.hourly || []), ...(chosen.monthly || [])]);
+
+  const breakdownLines = [];
+  let defraTotal = 0;
+
+  uniqueDefra.forEach(n => {
+    const total = COUNTS[n] || 0;
+    const perType = siteTypeCountsFor(n, total);
+
+    const typesToUse = selectedSiteTypesCanon.length ? selectedSiteTypesCanon : ALL_SITE_TYPES;
+    const filteredSum = typesToUse.reduce((sum, t) => sum + (perType[t] || 0), 0);
+    defraTotal += filteredSum;
+
+    const lineParts = ALL_SITE_TYPES
+      .map(t => [t, perType[t] || 0])
+      .filter(([, v]) => v > 0)
+      .map(([t, v]) => `${t} ${v}`);
+    breakdownLines.push(`${n}: ${lineParts.join(', ')}`);
+  });
+
+  let localTotal = 0;
+  if (chosen.local) {
+    const net = 'Locally managed automatic monitoring';
+    const total = COUNTS[net] || 0;
+    const perType = siteTypeCountsFor(net, total);
+
+    const typesToUse = selectedSiteTypesCanon.length ? selectedSiteTypesCanon : ALL_SITE_TYPES;
+    const filteredSum = typesToUse.reduce((sum, t) => sum + (perType[t] || 0), 0);
+    localTotal += filteredSum;
+
+    const lineParts = ALL_SITE_TYPES
+      .map(t => [t, perType[t] || 0])
+      .filter(([, v]) => v > 0)
+      .map(([t, v]) => `${t} ${v}`);
+    breakdownLines.push(`${net}: ${lineParts.join(', ')}`);
+  }
+
+  // Save compact debug string for programmatic checks
+  const breakdownString = breakdownLines.join(' | ');
+  sessionStorage.setItem('computedSiteTypeBreakdownString', breakdownString);
+
+  // =============== 8) Location scaling (same approach as before) ===============
+  const COUNTRY_WEIGHTS = { 'England': 0.75, 'Scotland': 0.15, 'Wales': 0.06, 'Northern Ireland': 0.04 };
+
+  const countriesRaw = sessionStorage.getItem('selectedCountries');
+  const zonesAggRaw  = sessionStorage.getItem('selectedZonesAgglomerations');
+  const lasRaw       = sessionStorage.getItem('selectedLocations');
+  const singleLegacy = sessionStorage.getItem('selectedLocation');
+
+  let countries = []; try { countries = countriesRaw ? JSON.parse(countriesRaw) : []; } catch { countries = []; }
+  let zonesAgg = [];  try { zonesAgg = zonesAggRaw ? JSON.parse(zonesAggRaw) : []; } catch { zonesAgg = []; }
+  let las = [];       try { las = lasRaw ? JSON.parse(lasRaw) : []; } catch { las = []; }
+
+  let countryScale = 0;
+  if (Array.isArray(countries) && countries.length) {
+    countryScale = countries.reduce((acc, c) => acc + (COUNTRY_WEIGHTS[c] || 0), 0);
+    countryScale = Math.max(0, Math.min(1, countryScale));
+  } else if (singleLegacy && COUNTRY_WEIGHTS[singleLegacy]) {
+    countryScale = COUNTRY_WEIGHTS[singleLegacy];
+  } else if (singleLegacy === 'United Kingdom') {
+    countryScale = 1;
+  }
+
+  // LA scaling based on categories of networks chosen (same categories as before)
+  const NETWORK_TAG = {
+    'Automatic Urban and Rural Network (AURN)': 'core',
+    'Automatic Hydrocarbon Network': 'hydrocarbon',
+    'Non-Automatic Hydrocarbon Network': 'hydrocarbon',
+    'Toxic Organic Micro-Pollutants (TOMPs)': 'tomps',
+    'PAH Network': 'pah',
+    'Heavy Metals Network': 'heavy-metals',
+    'UKEAP: Acid Gas & Aerosol Network': 'aganet',
+    'UKEAP: MARGA Network': 'aganet',
+    'UKEAP: National Ammonia Monitoring Network (NAMN)': 'namn',
+    'UKEAP: Precipitation Chemistry Network (Precip-Net)': 'precipnet',
+    'UKEAP: Rural Mercury Network': 'ruralmercury',
+    'UK Urban NO2 Network': 'core',
+    'UKEAP: Rural NO2 Network': 'core',
+    'Locally managed automatic monitoring': 'core'
+  };
+  const LA_SHARE_BY_TAG = {
+    'core': 0.012, 'hydrocarbon': 0.006, 'tomps': 0.006, 'aganet': 0.006, 'heavy-metals': 0.004,
+    'pah': 0.004, 'namn': 0.008, 'precipnet': 0.003, 'ruralmercury': 0.002
+  };
+  const DEFAULT_LA_SHARE = 0.006;
+
+  const chosenTags = new Set();
+  uniqueDefra.forEach(n => chosenTags.add(NETWORK_TAG[n] || 'core'));
+  if (chosen.local) chosenTags.add('core');
+
+  const effLaShare = chosenTags.size
+    ? (Array.from(chosenTags).reduce((s, t) => s + (LA_SHARE_BY_TAG[t] ?? DEFAULT_LA_SHARE), 0) / chosenTags.size)
+    : DEFAULT_LA_SHARE;
+
+  let laScale = 0;
+  if (Array.isArray(las) && las.length) laScale = las.length * effLaShare;
+
+  const ZONE_SHARE = 0.075;
+  const AGGLOMERATION_SHARE = 0.03;
+  let zonesAggScale = 0;
+  if (Array.isArray(zonesAgg) && zonesAgg.length) {
+    zonesAggScale = zonesAgg.reduce((acc, item) => {
+      const label = String(item || '').toLowerCase();
+      return acc + (label.includes('agglomeration') ? AGGLOMERATION_SHARE : ZONE_SHARE);
+    }, 0);
+  }
+
+  let locationScale = 1;
+  const hasCountry = countryScale > 0;
+  const hasZonesAgg = zonesAggScale > 0;
+  const hasLA = laScale > 0;
+  if (hasCountry && hasZonesAgg && hasLA) locationScale = Math.min(countryScale, zonesAggScale, laScale);
+  else if (hasCountry && hasZonesAgg) locationScale = Math.min(countryScale, zonesAggScale);
+  else if (hasCountry && hasLA) locationScale = Math.min(countryScale, laScale);
+  else if (hasZonesAgg && hasLA) locationScale = Math.min(zonesAggScale, laScale);
+  else if (hasCountry) locationScale = countryScale;
+  else if (hasZonesAgg) locationScale = Math.min(zonesAggScale, 1);
+  else if (hasLA) locationScale = Math.min(laScale, 1);
+
+  // =============== 9) Combine, scale, render ===============
+  const nationalTotal = defraTotal + localTotal; // strict add/remove by network; filtered by site type
+  const scaledTotal = Math.max(0, Math.min(nationalTotal, Math.round(nationalTotal * locationScale)));
+
+  const insetHtml = (scaledTotal > 0)
+    ? `<div class="govuk-inset-text" style="border-left: 10px solid #00703c; background-color: #d4fae2;">
+         ${scaledTotal} stations available
+       </div>`
+    : `<div class="govuk-inset-text" style="border-left: 10px solid #f47738; background-color: #f9e2d7;">
+         0 stations available
+       </div>`;
+
+  const debugHtml = SHOW_DEBUG
+    ? `<details class="govuk-details govuk-!-margin-top-2">
+         <summary class="govuk-details__summary">
+           <span class="govuk-details__summary-text">Breakdown by network & site type</span>
+         </summary>
+         <div class="govuk-details__text">
+           <p class="govuk-body-s"><strong>Selected site types:</strong> ${
+             selectedSiteTypesCanon.length ? selectedSiteTypesCanon.join(', ') : 'All'
+           }</p>
+           <p class="govuk-body-s">${breakdownLines.map(l => `<span>${l}</span>`).join('<br>')}</p>
+           <p class="govuk-body-s"><strong>Location scale:</strong> ${locationScale.toFixed(2)}</p>
+         </div>
+       </details>`
+    : '';
+
+  container.innerHTML = insetHtml + debugHtml;
+  // make the count available to other logic on this page
+ try { sessionStorage.setItem('availableStationCount', String(scaledTotal)); } catch {}
+
+ // only render inset if the container exists on this page
+  if (container) {
+   container.innerHTML = insetHtml + debugHtml;
+  }
+});
+</script>
+
+
+
+
+
+<script>
+// ---- mapping function (top-level, not nested) ----
+function buildNetworksForPollutant(rawName) {
+  const name = String(rawName || '').trim().toLowerCase();
+
+  // strip a single trailing "(...)" — keeps internal PAH parentheses like "Benzo(a)pyrene"
+  const baseName = name.replace(/\s*\([^)]*\)\s*$/,'').trim();
+
+  // Headings (must match elsewhere on the page)
+  const HOUR_HDR   = '<strong>Near real-time data from Defra</strong>';
+  const MONTH_HDR  = '<strong>Other data from Defra</strong>';
+  const NONDEF_HDR = '<strong>Local authority data</strong>';
+
+  // helpers (preserve headings; avoid duplicates)
+  const sections = [];
+  const seen = new Set();
+  const add = (label) => { if (!seen.has(label)) { sections.push(label); seen.add(label); } };
+  const addHourly   = (net) => { add(HOUR_HDR); add(net); };
+  const addMonthly  = (net) => { add(MONTH_HDR); add(net); };
+  const addNonDefra = ()     => { add(NONDEF_HDR); add('Locally managed automatic monitoring'); };
+
+  // === Core gases & PM (support with or without symbol suffix) ===
+  const isSO2      = baseName === 'sulphur dioxide' || baseName === 'gaseous sulphur dioxide';
+  const isO3       = baseName === 'ozone';
+  const isCO       = baseName === 'carbon monoxide';
+  const isNO2      = baseName === 'nitrogen dioxide';
+  const isNOxAsNO2 = baseName === 'nitrogen oxides as nitrogen dioxide';
+  const isNO       = baseName === 'nitric oxide';
+  const isBlackCarbon = baseName === 'black carbon';
+  const tompsName = baseName.replace(/-/g, ' ').replace(/\s+/g, ' ').trim();
+  const isTOMPs = new Set([
+    'pcbs',
+    'co planar pcbs',
+    'pcdds',
+    'pcdfs',
+    'pbdes',
+    'decabde',
+    'hbcdd'
+  ]).has(tompsName);
+
+  // PM mass (keep exact names including PM10/PM2.5; users can pick both wordings)
+  const pmMass =
+    name === 'particulate matter (pm10)' ||
+    name === 'fine particulate matter (pm2.5)' ||
+    baseName === 'particulate matter' ||          // safety if a variant ever appears without symbol
+    baseName === 'fine particulate matter';
+
+  // VOCs (names only)
+  const vocs = new Set([
+    'ethane','ethene','ethyne','propane','propene','iso-butane','n-butane','1-butene',
+    'trans-2-butene','cis-2-butene','iso-pentane','n-pentane','1,3-butadiene','trans-2-pentene',
+    '1-pentene','2-methylpentane','isoprene','n-hexane','n-heptane','iso-octane','n-octane',
+    'benzene','toluene','ethylbenzene','m+p-xylene','o-xylene','1,2,3-trimethylbenzene',
+    '1,2,4-trimethylbenzene','1,3,5-trimethylbenzene'
+  ]);
+
+  // PAHs (the () here are part of the name, not a trailing symbol)
+  const paHs = [
+    'benzo(a)pyrene','benzo(a)anthracene','benzo(b)fluoranthene','benzo(j)fluoranthene','benzo(b+j)fluoranthene',
+    'benzo(k)fluoranthene','indeno(1,2,3-cd)pyrene','dibenzo(ac)anthracene','dibenzo(ah)anthracene','dibenzo(ah+ac)anthracene',
+    '1-methyl anthracene','1-methyl naphthalene','1-methyl phenanthrene','2-methyl anthracene','2-methyl naphthalene',
+    '2-methyl phenanthrene','4.5-methylene phenanthrene','5-methyl chrysene','9-methyl anthracene'
+  ];
+
+  // Particulate ions & "in PMxx" cues — works even with trailing symbols because we test substrings
+  const particulateIonKeywords = [
+    'particulate ', ' in pm10', ' in pm2.5',
+    'nitrate','nitrite','sulphate','chloride','ammonium',
+    'calcium','magnesium','sodium','potassium'
+  ];
+
+  // Acid gases (compare on the base name)
+  const gaseousAcids = new Set([
+    'gaseous hydrochloric acid','gaseous nitric acid','gaseous nitrous acid'
+  ]);
+
+  // Heavy metals in air — use base name (autocomplete adds trailing symbols)
+  const metalsAir = new Set([
+    'arsenic','cadmium','chromium','cobalt','copper','iron','lead','manganese',
+    'nickel','selenium','vanadium','zinc','aluminium','antimony','antinomy'
+  ]);
+
+  // Metals in precipitation: items end with "in precipitation"
+  const isMetalInPrecip = /in precipitation$/i.test(baseName);
+
+  // Ammonia variants — compare on base name so "(NH3)/(NH4)" suffixes are fine
+  const ammoniaBase = new Set([
+    'gaseous ammonia','gaseous ammonia (active)','gaseous ammonia (passive)',
+    'gaseous ammonia (diffusion tube)','particulate ammonium'
+  ]);
+
+  // Mercury variants — compare on base name so "(Hg)" suffix is fine
+  const mercuryBase = new Set(['reactive mercury','elemental mercury','mercury in pm2.5']);
+
+  // === Rules → networks ===
+  if (isSO2 || isO3 || isCO || isNOxAsNO2 || isNO || pmMass) {
+    addHourly('Automatic Urban and Rural Network (AURN)');
+    addNonDefra();
+  }
+
+  if (isNO2) {
+    addHourly('Automatic Urban and Rural Network (AURN)');
+    add(NONDEF_HDR);
+    add('Locally managed automatic monitoring');
+    add('Automatic nitrogen dioxide data');
+    add('Nitrogen dioxide (NO2) diffusion tubes');
+    addMonthly('UK Urban NO2 Network');
+    addMonthly('UKEAP: Rural NO2 Network');
+  }
+
+  if (vocs.has(baseName)) {
+    addHourly('Automatic Hydrocarbon Network');
+    addMonthly('Non-Automatic Hydrocarbon Network');
+  }
+
+  if (paHs.includes(baseName)) {
+    addMonthly('PAH Network');
+  }
+
+  if (isBlackCarbon) {
+    addMonthly('Black Carbon Network');
+  }
+
+  if (isTOMPs) {
+    addMonthly('Toxic Organic Micro-Pollutants (TOMPs)');
+  }
+
+  const looksLikeParticulateIon =
+    particulateIonKeywords.some(k => baseName.includes(k)) && !pmMass;
+
+  if (looksLikeParticulateIon) {
+    addMonthly('UKEAP: MARGA Network');
+    addMonthly('UKEAP: Acid Gas & Aerosol Network');
+  }
+
+  if (gaseousAcids.has(baseName)) {
+    if (baseName.includes('nitric')) addHourly('UKEAP: MARGA Network');
+    addMonthly('UKEAP: Acid Gas & Aerosol Network');
+  }
+
+  if (ammoniaBase.has(baseName)) {
+    addMonthly('UKEAP: National Ammonia Monitoring Network (NAMN)');
+  }
+
+  if (metalsAir.has(baseName)) {
+    addMonthly('Heavy Metals Network');
+  }
+
+  if (isMetalInPrecip) {
+    addMonthly('UKEAP: Precipitation Chemistry Network (Precip-Net)');
+  }
+
+  if (mercuryBase.has(baseName)) {
+    addMonthly('UKEAP: Rural Mercury Network');
+  }
+
+  if (isSO2) {
+    addMonthly('UKEAP: Acid Gas & Aerosol Network');
+    addMonthly('UKEAP: MARGA Network');
+  }
+
+  return sections;
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const pollutants = JSON.parse(sessionStorage.getItem('selectedPollutants') || '[]');
+  const pollutantListEl = document.getElementById('pollutant-summary-list');
+  const dataSourceEl = document.getElementById('data-source-list');
+
+  if (pollutants.length && pollutantListEl && dataSourceEl) {
+    pollutantListEl.innerHTML = pollutants.map(p => `<div>${p}</div>`).join('');
+
+    // NEW — change "Add" to "Change" if something is selected
+    const pollutantActionCell = document.querySelector(
+      '#pollutant-summary-list + .govuk-summary-list__actions a.govuk-link'
+    );
+    if (pollutantActionCell) {
+      pollutantActionCell.innerHTML = 'Change<span class="govuk-visually-hidden"> pollutant</span>';
+    }
+
+    const merged = [];
+    const seen = new Set();
+    pollutants.forEach(p => {
+      buildNetworksForPollutant(p).forEach(item => {
+        if (!seen.has(item)) { merged.push(item); seen.add(item); }
+      });
+    });
+
+    dataSourceEl.innerHTML = merged.map(dsRowDivHtml).join('');
+  } else if (dataSourceEl) {
+    dataSourceEl.textContent = 'Any';
+
+    // NEW — make sure link says "Add" if none selected
+    const pollutantActionCell = document.querySelector(
+      '#pollutant-summary-list + .govuk-summary-list__actions a.govuk-link'
+    );
+    if (pollutantActionCell) {
+      pollutantActionCell.innerHTML = 'Add<span class="govuk-visually-hidden"> pollutant</span>';
+    }
+  }
+});
+
+</script>
+
+<script>
+// Bucket PER pollutant, then union — avoids header leakage across pollutants
+function bucketsFromPollutants(polls) {
+  const H = '<strong>Near real-time data from Defra</strong>';
+  const M = '<strong>Other data from Defra</strong>';
+  const L = '<strong>Local authority data</strong>';
+
+  const out = { hourly: [], monthly: [], nonDefra: [] };
+  const seenH = new Set(), seenM = new Set();
+
+  (Array.isArray(polls) ? polls : []).forEach(p => {
+    let cur = null;
+    (buildNetworksForPollutant(p) || []).forEach(item => {
+      if (item === H) cur = 'h';
+      else if (item === M) cur = 'm';
+      else if (item === L) cur = 'l';
+      else if (cur === 'h' && !seenH.has(item)) { seenH.add(item); out.hourly.push(item); }
+      else if (cur === 'm' && !seenM.has(item)) { seenM.add(item); out.monthly.push(item); }
+      else if (cur === 'l') {
+        if (out.nonDefra.length === 0) {
+          out.nonDefra.push('Locally managed automatic monitoring');
+        }
+        if (item !== 'Locally managed automatic monitoring' && !out.nonDefra.includes(item)) {
+          out.nonDefra.push(item);
+        }
+      }
+    });
+  });
+
+  return out;
+}
+</script>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Time period
+  const timePeriod = sessionStorage.getItem('selectedTimePeriod');
+  const timeCell = document.getElementById('time-period-value');
+  const timeActionCell = document.getElementById('time-period-action');
+  if (timePeriod && timeCell && timeActionCell) {
+    let cleanedTime = timePeriod.replace(/^Last 7 days\s*/, '').trim();
+    if (cleanedTime.startsWith('(') && cleanedTime.endsWith(')')) {
+      cleanedTime = cleanedTime.slice(1, -1);
+    }
+    timeCell.textContent = cleanedTime;
+    timeActionCell.innerHTML = '<a class="govuk-link" href="add-time.html">Change<span class="govuk-visually-hidden"> time period</span></a>';
+  }
+
+  // Site types
+const siteTypes = sessionStorage.getItem('selectedSiteTypes');
+const siteTypeCell = document.getElementById('site-type-value');
+const siteTypeActionCell = document.getElementById('site-type-action');
+
+if (siteTypes && siteTypeCell && siteTypeActionCell) {
+  const list = JSON.parse(siteTypes);
+  siteTypeCell.innerHTML = list.join('<br>');
+  siteTypeActionCell.innerHTML = '<a class="govuk-link" href="add-site-type.html">Change<span class="govuk-visually-hidden"> site type</span></a>';
+}
+
+
+  const locationCell = document.getElementById('location-value');
+  const locationActionCell = document.getElementById('location-action');
+
+  const singleLocation = sessionStorage.getItem('selectedLocation');      // legacy
+  const countries = sessionStorage.getItem('selectedCountries');          // NEW
+  const zonesAgg = sessionStorage.getItem('selectedZonesAgglomerations'); // NEW
+  const laList = sessionStorage.getItem('selectedLocations');
+
+  if (countries && locationCell && locationActionCell) {
+    const list = JSON.parse(countries);
+    locationCell.innerHTML = list.join('<br>');
+    locationActionCell.innerHTML = '<a class="govuk-link" href="add-location.html">Change<span class="govuk-visually-hidden"> location</span></a>';
+  } else if (zonesAgg && locationCell && locationActionCell) {
+    const list = JSON.parse(zonesAgg);
+    locationCell.innerHTML = list.join('<br>');
+    locationActionCell.innerHTML = '<a class="govuk-link" href="add-location.html">Change<span class="govuk-visually-hidden"> location</span></a>';
+  } else if (laList && locationCell && locationActionCell) {
+    const list = JSON.parse(laList);
+    locationCell.innerHTML = list.join('<br>');
+    locationActionCell.innerHTML = '<a class="govuk-link" href="add-location.html">Change<span class="govuk-visually-hidden"> location</span></a>';
+  } else if (singleLocation && locationCell && locationActionCell) {
+    locationCell.textContent = singleLocation;
+    locationActionCell.innerHTML = '<a class="govuk-link" href="add-location.html">Change<span class="govuk-visually-hidden"> location</span></a>';
+  }
+});
+</script>
+
+<script>
+// === Save available networks for the "Add data source" page ===
+(function () {
+  const HOUR_HDR   = '<strong>Near real-time data from Defra</strong>';
+  const MONTH_HDR  = '<strong>Other data from Defra</strong>';
+  const NONDEF_HDR = '<strong>Local authority data</strong>';
+
+  const pollutants = JSON.parse(sessionStorage.getItem('selectedPollutants') || '[]');
+  if (!Array.isArray(pollutants) || !pollutants.length) {
+    sessionStorage.removeItem('availableDataSources');
+    return;
+  }
+
+
+
+  const buckets = bucketsFromPollutants(pollutants);
+
+
+  // Persist a minimal, clean payload for the next page
+  const payload = {
+    hourly: buckets.hourly,            // e.g. ["Automatic Urban and Rural Network (AURN)", ...]
+    monthly: buckets.monthly,          // e.g. ["UK Urban NO2 Network", "Heavy Metals Network", ...]
+    hasLocal: buckets.nonDefra.length > 0
+  };
+  sessionStorage.setItem('availableDataSources', JSON.stringify(payload));
+})();
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const dsListEl = document.getElementById('data-source-list');
+  const pollutantListEl = document.getElementById('pollutant-summary-list');
+
+  // read pollutants for the pollutant summary text (unchanged behaviour)
+  const pollutants = JSON.parse(sessionStorage.getItem('selectedPollutants') || '[]');
+  if (pollutants.length && pollutantListEl) {
+    pollutantListEl.innerHTML = pollutants.map(p => `<div>${p}</div>`).join('');
+  }
+
+  if (!dsListEl) return;
+
+
+  
+
+
+
+  // headings we use in the summary
+  const HOUR_HDR   = '<strong>Near real-time data from Defra</strong>';
+  const MONTH_HDR  = '<strong>Other data from Defra</strong>';
+  const NONDEF_HDR = '<strong>Local authority data</strong>';
+
+  // Renders one line in the "Data source" cell, adding 3px top margin
+  // to the two header rows you specified.
+  function dsRowDivHtml(x) {
+    const isMonthlyHdr = x === '<strong>Other data from Defra</strong>';
+    const isNonDefraHdr = x === '<strong>Local authority data</strong>';
+    const mt = (isMonthlyHdr || isNonDefraHdr) ? ' style="margin-top:6px;"' : '';
+    return `<div${mt}>${x}</div>`;
+  }
+
+  // --- HEADER-SAFE BUCKETING (per pollutant, then union) ---
+  const buckets = bucketsFromPollutants(pollutants);
+
+  // Save availability for add-datasource page
+  sessionStorage.setItem('availableDataSources', JSON.stringify({
+    hourly:  buckets.hourly,
+    monthly: buckets.monthly,
+    hasLocal: buckets.nonDefra.length > 0
+  }));
+
+  // Try to read the user's saved selection from add-datasource
+  let selected = null;
+  try { selected = JSON.parse(sessionStorage.getItem('selectedDataSources') || 'null'); } catch {}
+
+  // Helper to render a grouped summary from a selection object
+  const renderSelection = (sel) => {
+    const out = [];
+    if (sel.hourly?.enabled && sel.hourly.networks?.length) {
+      out.push(HOUR_HDR, ...sel.hourly.networks);
+    }
+    if (sel.monthly?.enabled && sel.monthly.networks?.length) {
+      out.push(MONTH_HDR, ...sel.monthly.networks);
+    }
+    if (sel.local) {
+      out.push(NONDEF_HDR, 'Locally managed automatic monitoring');
+    }
+    return out.map(dsRowDivHtml).join('');
+
+  };
+
+  // If we have a selection, filter it against current availability (in case the pollutant changed)
+  if (selected) {
+    const filtered = {
+      hourly: {
+        enabled: !!selected.hourly?.enabled,
+        networks: (selected.hourly?.networks || []).filter(n => buckets.hourly.includes(n))
+      },
+      monthly: {
+        enabled: !!selected.monthly?.enabled,
+        networks: (selected.monthly?.networks || []).filter(n => buckets.monthly.includes(n))
+      },
+      local: !!selected.local && buckets.nonDefra.length > 0
+    };
+
+    const hasAny =
+      (filtered.hourly.enabled  && filtered.hourly.networks.length) ||
+      (filtered.monthly.enabled && filtered.monthly.networks.length) ||
+      filtered.local;
+
+    if (hasAny) {
+      dsListEl.innerHTML = renderSelection(filtered);
+      return; // don't fall through and overwrite with availability
+    } else {
+      // stale selection → drop it so we fall back to availability display
+      sessionStorage.removeItem('selectedDataSources');
+    }
+  }
+
+  // No valid selection → show the available networks (what the user can pick from)
+  const flat = [];
+  if (buckets.hourly.length)   flat.push(HOUR_HDR,  ...buckets.hourly);
+  if (buckets.monthly.length)  flat.push(MONTH_HDR, ...buckets.monthly);
+  if (buckets.nonDefra.length) flat.push(NONDEF_HDR, ...buckets.nonDefra);
+
+  dsListEl.innerHTML = flat.length ? flat.map(dsRowDivHtml).join('') : 'Any';
+});
+</script>
+
+
+<script>
+// Minimal visibility gate for summary-list action links
+document.addEventListener('DOMContentLoaded', () => {
+  // Ensure [hidden] always hides, even if CSS overrides it.
+  (function enforceHidden() {
+    const style = document.createElement('style');
+    style.textContent = '[hidden]{display:none!important;}';
+    document.head.appendChild(style);
+  })();
+
+  // Show other action cells only when at least one pollutant is selected
+  let hasPollutants = false;
+  try {
+    const arr = JSON.parse(sessionStorage.getItem('selectedPollutants') || '[]');
+    hasPollutants = Array.isArray(arr) && arr.length > 0;
+  } catch (e) { /* ignore */ }
+
+  ['time-period-action', 'location-action', 'data-source-action', 'site-type-action']
+    .forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (hasPollutants) {
+        el.removeAttribute('hidden');   // unhide when pollutants exist
+      } else {
+        el.setAttribute('hidden', '');  // keep hidden until then
+      }
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const link = document.getElementById('clear-selections');
+  if (!link) return;
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    sessionStorage.clear();
+    window.location.reload();
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const continueBtn = document.querySelector('.govuk-button[href="download.html"]');
+  if (!continueBtn) return;
+
+  // NEW: do we have at least one pollutant?
+  const hasPollutant = () => {
+    let arr = [];
+    try { arr = JSON.parse(sessionStorage.getItem('selectedPollutants') || '[]'); } catch {}
+    return Array.isArray(arr) && arr.length > 0;
+  };
+
+  const hasYear = () => {
+    const tp = sessionStorage.getItem('selectedTimePeriod');
+    return !!(tp && tp.trim());
+  };
+
+  const hasLocation = () => {
+    const countriesRaw = sessionStorage.getItem('selectedCountries');
+    const zonesAggRaw  = sessionStorage.getItem('selectedZonesAgglomerations');
+    const lasRaw       = sessionStorage.getItem('selectedLocations');
+    const single       = sessionStorage.getItem('selectedLocation');
+    let countries = [], zonesAgg = [], las = [];
+    try { countries = countriesRaw ? JSON.parse(countriesRaw) : []; } catch {}
+    try { zonesAgg  = zonesAggRaw ? JSON.parse(zonesAggRaw) : []; } catch {}
+    try { las       = lasRaw ? JSON.parse(lasRaw) : []; } catch {}
+    if (Array.isArray(countries) && countries.length) return true;
+    if (Array.isArray(zonesAgg) && zonesAgg.length) return true;
+    if (Array.isArray(las) && las.length) return true;
+    if (single && single.trim() && single.trim().toLowerCase() !== 'none selected') return true;
+    return false;
+  };
+
+  function showErrorSummary(kind) {
+    const err = document.getElementById('no-stations-error');
+    if (!err) return;
+    const titleEl = err.querySelector('.govuk-error-summary__title');
+    const bodyEl  = err.querySelector('.govuk-error-summary__body');
+
+    let bodyHtml = '';
+    if (kind === 'pollutant-missing') {
+      bodyHtml = `
+        <p class="govuk-body">Select a pollutant to continue.</p>
+        <ul class="govuk-list govuk-error-summary__list">
+          <li><a href="add-pollutant.html">Add pollutant</a></li>
+        </ul>`;
+    } else if (kind === 'both-missing') {
+      bodyHtml = `
+        <p class="govuk-body">Select a year and a location to continue.</p>
+        <ul class="govuk-list govuk-error-summary__list">
+          <li><a href="add-time.html">Add year</a></li>
+          <li><a href="add-location.html">Add location</a></li>
+        </ul>`;
+    } else if (kind === 'year-missing') {
+      bodyHtml = `
+        <p class="govuk-body">Select a year to continue.</p>
+        <ul class="govuk-list govuk-error-summary__list">
+          <li><a href="add-time.html">Add year</a></li>
+        </ul>`;
+    } else if (kind === 'location-missing') {
+      bodyHtml = `
+        <p class="govuk-body">Select a location to continue.</p>
+        <ul class="govuk-list govuk-error-summary__list">
+          <li><a href="add-location.html">Add location</a></li>
+        </ul>`;
+    } else {
+      bodyHtml = `
+        <p class="govuk-body">There are no stations available based on your selection. Change the year or location.</p>
+        <ul class="govuk-list govuk-error-summary__list">
+          <li><a href="add-time.html">Change the year</a></li>
+          <li><a href="add-location.html">Change the location</a></li>
+        </ul>`;
+    }
+
+    if (titleEl) titleEl.textContent = 'There is a problem';
+    if (bodyEl)  bodyEl.innerHTML = bodyHtml;
+
+    err.hidden = false;
+    err.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    err.focus();
+  }
+
+  continueBtn.addEventListener('click', (e) => {
+    // NEW: require pollutant first
+    if (!hasPollutant()) {
+      e.preventDefault();
+      showErrorSummary('pollutant-missing');
+      return;
+    }
+
+    const yearSelected = hasYear();
+    const locationSelected = hasLocation();
+
+    if (!yearSelected && !locationSelected) {
+      e.preventDefault();
+      showErrorSummary('both-missing');
+      return;
+    }
+    if (!yearSelected && locationSelected) {
+      e.preventDefault();
+      showErrorSummary('year-missing');
+      return;
+    }
+    if (yearSelected && !locationSelected) {
+      e.preventDefault();
+      showErrorSummary('location-missing');
+      return;
+    }
+
+    // As before: block if 0 stations available
+    let count = NaN;
+    try { count = parseInt(sessionStorage.getItem('availableStationCount'), 10); } catch {}
+    if (!Number.isFinite(count) || count <= 0) {
+      e.preventDefault();
+      showErrorSummary('no-stations');
+      return;
+    }
+  });
+});
+</script>
+
+
+
+{% endblock %}

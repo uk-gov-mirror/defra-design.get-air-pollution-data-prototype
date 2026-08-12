@@ -370,3 +370,65 @@
   @import "version-16/components/autocomplete";
 
 }
+
+.version-17 {
+    // map
+  @import "version-17/map";
+  @import "version-17/forecast-map";
+
+    // Tools
+  @import "version-17/tools/mixins";
+
+  // Components
+  @import "version-17/components/aq-buttons";
+  @import "version-17/components/aq-charts";
+  @import "version-17/components/aq-features";
+  @import "version-17/components/aq-levels-list";
+  @import "version-17/components/status";
+  @import "version-17/components/aq-levels-table";
+  @import "version-17/components/aq-stations-table";
+  @import "version-17/components/aq-daqi-stations-table";
+  @import "version-17/components/govuk-cards";
+
+
+  
+  // Other
+  @import "version-17/other/fixes";
+
+  // Settings
+  @import "version-17/settings";
+
+  @import "version-17/components/autocomplete";
+
+}
+
+.phase1-map {
+    // map
+  @import "phase1-map/map";
+  @import "phase1-map/forecast-map";
+
+    // Tools
+  @import "phase1-map/tools/mixins";
+
+  // Components
+  @import "phase1-map/components/aq-buttons";
+  @import "phase1-map/components/aq-charts";
+  @import "phase1-map/components/aq-features";
+  @import "phase1-map/components/aq-levels-list";
+  @import "phase1-map/components/status";
+  @import "phase1-map/components/aq-levels-table";
+  @import "phase1-map/components/aq-stations-table";
+  @import "phase1-map/components/aq-daqi-stations-table";
+  @import "phase1-map/components/govuk-cards";
+
+
+  
+  // Other
+  @import "phase1-map/other/fixes";
+
+  // Settings
+  @import "phase1-map/settings";
+
+  @import "phase1-map/components/autocomplete";
+
+}

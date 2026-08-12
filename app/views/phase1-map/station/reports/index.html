@@ -1,0 +1,37 @@
+{% extends "layouts/phase1-map.html" %}
+
+{% set pageName="Air Pollution Reports - Birmingham City Council - GOV.UK" %}
+
+{% block beforeContent %}
+<a href="#" class="govuk-back-link" onclick="if (document.referrer) { window.history.back(); } else { window.location.href='../birmingham-la.html'; } return false;">Back to Birmingham City Council</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">Air Pollution Reports</h1>
+    <p class="govuk-body">Birmingham City Council's air quality reports and action plans.</p>
+
+    <h2 class="govuk-heading-l govuk-!-margin-top-6">Air Quality Action Plans (AQAP)</h2>
+    <p class="govuk-body">Air Quality Action Plans set out how air quality will be improved in the designated Air Quality Management Areas.</p>
+    
+    <ul class="govuk-list govuk-list--bullet">
+      <li><a href="#" class="govuk-link">Birmingham AQAP 2024-2029</a></li>
+      <li><a href="#" class="govuk-link">Birmingham AQAP 2019-2024</a></li>
+      <li><a href="#" class="govuk-link">Birmingham AQAP 2014-2019</a></li>
+    </ul>
+
+    <h2 class="govuk-heading-l govuk-!-margin-top-6">Air Quality Review & Assessments (ASR)</h2>
+    <p class="govuk-body">Annual reports on air quality monitoring and progress towards achieving air quality standards.</p>
+    
+    <ul class="govuk-list govuk-list--bullet">
+      <li><a href="#" class="govuk-link">Birmingham ASR 2023</a></li>
+      <li><a href="#" class="govuk-link">Birmingham ASR 2022</a></li>
+      <li><a href="#" class="govuk-link">Birmingham ASR 2021</a></li>
+      <li><a href="#" class="govuk-link">Birmingham ASR 2020</a></li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "layouts/phase1-map.html" %}
+
+{% set pageName="Get air pollution data - GOV.UK" %}
+
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">Get air pollution data</h1>
+  <p class="govuk-body govuk-!-margin-bottom-7">View and download air pollution data from the UK.</p>
+   
+    </div>
+    </div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+   <div class="gem-c-cards">
+    <ul class="gem-c-cards__list gem-c-cards__list--one-column">
+
+        <li class="gem-c-cards__list-item">
+          <div class="gem-c-cards__list-item-wrapper">
+            <h2 class="gem-c-cards__sub-heading govuk-heading-s">
+              <a class="govuk-link gem-c-cards__link gem-c-force-print-link-styles" href="station/search-by.html">Search by town or postcode</a>
+</h2>            
+          </div>
+        </li>
+
+        <li class="gem-c-cards__list-item">
+          <div class="gem-c-cards__list-item-wrapper">
+            <h2 class="gem-c-cards__sub-heading govuk-heading-s">
+              <a class="govuk-link gem-c-cards__link gem-c-force-print-link-styles" href="map.html">Search on a map</a></h2>
+          </div>
+        </li>
+
+        <li class="gem-c-cards__list-item">
+          <div class="gem-c-cards__list-item-wrapper">
+            <h2 class="gem-c-cards__sub-heading govuk-heading-s">
+              <a class="govuk-link gem-c-cards__link gem-c-force-print-link-styles" href="data-selector/create-pollutant.html">Create and download datasets</a>
+</h2>              
+          </div>
+        </li>
+       
+        
+
+      <aside class="govuk-prototype-kit-common-templates-related-items govuk-!-margin-top-6" role="complementary">
+        <h2 class="govuk-heading-m" id="subsection-title">
+          Related content
+        </h2>
+        <nav role="navigation" aria-labelledby="subsection-title">
+          <ul class="govuk-list govuk-!-font-size-16">
+              <li>
+              <a href="https://check-local-aq-c31e075e52e2.herokuapp.com/version-5">
+                Check air quality
+              </a>
+            </li>
+            <li>
+              <a href="https://www.gov.uk/government/collections/air-pollution-in-the-uk-sources-of-monitoring-data">
+                Sources of air pollution data
+              </a>
+            </li>
+         
+            
+           
+          
+          
+          </ul>
+        </nav>
+      </aside>
+
+      </div>
+      </div>
+
+  
+
+    </div>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,1159 @@
+{% extends "layouts/v17.html" %}
+
+{% set pageName="Home" %}
+
+{% block beforeContent %}
+<a href="create-pollutant.html" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters-from-desktop">
+
+    <h1 class="govuk-heading-l">Download your data</h1>
+<details class="govuk-details" style="display: none;">
+  <summary class="govuk-details__summary">
+    <span class="govuk-details__summary-text">
+     View and change your search details
+    </span>
+  </summary>
+  <div class="govuk-details__text">
+   <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+  <dt class="govuk-summary-list__key">
+    Pollutant
+  </dt>
+  <dd class="govuk-summary-list__value" id="download-pollutant">
+    None selected
+  </dd>
+  <dd class="govuk-summary-list__actions">
+    <a class="govuk-link" href="add-pollutant.html">Change<span class="govuk-visually-hidden"> pollutant</span></a>
+  </dd>
+</div>
+<div class="govuk-summary-list__row">
+  <dt class="govuk-summary-list__key">
+    Data source
+  </dt>
+  <dd class="govuk-summary-list__value" id="download-data-source">
+    Any
+  </dd>
+  <dd class="govuk-summary-list__actions">
+    <a class="govuk-link" href="add-datasource.html">View<span class="govuk-visually-hidden"> data source</span></a>
+  </dd>
+</div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+     Year
+    </dt>
+    <dd class="govuk-summary-list__value" id="download-time-period">
+  
+</dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="add-time.html">Change<span class="govuk-visually-hidden"> Year</span></a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Location
+    </dt>
+    <dd class="govuk-summary-list__value" id="download-location">
+
+</dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="add-location.html">Change<span class="govuk-visually-hidden"> location</span></a>
+    </dd>
+  </div>
+  
+
+</dl>
+  </div>
+</details>
+ 
+    
+  </div>
+</div>
+<details class="govuk-details govuk-!-margin-top-0">
+  <summary class="govuk-details__summary">
+    <span class="govuk-details__summary-text">
+      File format and metadata
+    </span>
+  </summary>
+  <div class="govuk-details__text">
+   <h3 class="govuk-heading-s">File format</h3>
+                  <p class="govuk-body">This data will download in a long format (CSV).</p>
+              <p class="govuk-body">Data in a long format is stacked vertically.</p>
+           <!--    <p class="govuk-body">You can use wide format when you want to interpret and analyse data.</p> -->
+
+                 <h3 class="govuk-heading-s">Metadata</h3>
+                 <p class="govuk-body">These files could contain the following metadata:</p>
+                 <ul class="govuk-body govuk-list--bullet">
+                  <li>name of monitoring station</li>
+                  <li>site type</li>
+                  <li>site ID</li>
+                  <li>map coordinates</li>
+                  <li>local authority</li>
+                  <li>region</li>
+                  <li>instrument type</li>
+                  <li>inlet height</li>
+                 </ul>
+  </div>
+</details>
+                
+
+
+<div class="govuk-grid-row govuk-!-margin-top-3">
+  <div class="govuk-grid-column-full">
+    <div class="govuk-tabs" data-module="govuk-tabs">
+
+  <h2 class="govuk-tabs__title">
+    Contents
+  </h2>
+  <ul class="govuk-tabs__list">
+    <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+      <a class="govuk-tabs__tab" href="#past-day">
+        Near real-time data from Defra
+      </a>
+    </li>
+    <li class="govuk-tabs__list-item">
+      <a class="govuk-tabs__tab" href="#past-week">
+        Other data from Defra
+      </a>
+    </li>
+    <li class="govuk-tabs__list-item">
+      <a class="govuk-tabs__tab" href="#past-month">
+        Local authority data
+      </a>
+    </li>
+   
+  </ul>
+  <div class="govuk-tabs__panel" id="past-day">
+    <h2 class="govuk-heading-l">Past day</h2>
+    
+  </div>
+  <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="past-month">
+    <h2 class="govuk-heading-l">Past month</h2>
+   
+  </div>
+</div>
+  <div class="govuk-grid-column-full" id="download-content-container">
+ 
+   
+      
+ 
+</div>
+      
+    </div>
+<!-- end of second row--><!-- 1) Shared summary initialisers (safe even if details section is commented out) -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Time period
+  const time = sessionStorage.getItem('selectedTimePeriod');
+  const timeTarget = document.getElementById('download-time-period');
+  if (time && timeTarget) timeTarget.innerHTML = time.replace(/\n/g, '<br>');
+
+  // Location
+  const locationTarget = document.getElementById('download-location');
+  const countriesRaw = sessionStorage.getItem('selectedCountries');
+  const zonesAggRaw  = sessionStorage.getItem('selectedZonesAgglomerations');
+  const lasRaw       = sessionStorage.getItem('selectedLocations');
+  const single       = sessionStorage.getItem('selectedLocation'); // legacy
+  let countries = [], zonesAgg = [], las = [];
+  try { countries = countriesRaw ? JSON.parse(countriesRaw) : []; } catch {}
+  try { zonesAgg = zonesAggRaw ? JSON.parse(zonesAggRaw) : []; } catch {}
+  try { las = lasRaw ? JSON.parse(lasRaw) : []; } catch {}
+  if (locationTarget) {
+    const parts = [];
+    if (countries.length) parts.push(countries.join('<br>'));
+    if (zonesAgg.length)  parts.push(zonesAgg.join('<br>'));
+    if (las.length)       parts.push(las.join('<br>'));
+    if (!parts.length && single) parts.push(single);
+    locationTarget.innerHTML = parts.length ? parts.join('<br>') : 'None selected';
+  }
+
+  // Site type
+  const siteTypes = sessionStorage.getItem('selectedSiteTypes');
+  const siteTypeTarget = document.getElementById('download-site-type');
+  if (siteTypes && siteTypeTarget) {
+    let list = [];
+    try { list = JSON.parse(siteTypes); } catch {}
+    siteTypeTarget.innerHTML = list.length ? list.join('<br>') : 'Any';
+  }
+});
+</script>
+
+<!-- 2) Pollutants (normalise + show) -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const target = document.getElementById('download-pollutant');
+  if (!target) return;
+
+  let raw = sessionStorage.getItem('selectedPollutants');
+  let arr = [];
+  try { arr = raw ? JSON.parse(raw) : []; } catch {}
+
+  const getName = (x) => typeof x === 'string'
+    ? x
+    : (x && typeof x === 'object' ? (x.name || x.label || x.text || x.title || x.pollutant || x.value || '') : '');
+
+  // Map common legacy inputs to the new canonical strings with symbols.
+  const CANON = new Map([
+    ['pm10', 'Particulate matter (PM10)'],
+    ['pm 10', 'Particulate matter (PM10)'],
+    ['pm2.5', 'Fine particulate matter (PM2.5)'],
+    ['pm 2.5', 'Fine particulate matter (PM2.5)'],
+    ['particulate matter (pm2.5)', 'Fine particulate matter (PM2.5)'],
+
+    ['nitrogen dioxide', 'Nitrogen dioxide (NO2)'],
+    ['no2', 'Nitrogen dioxide (NO2)'],
+    ['nitrogen oxides as nitrogen dioxide', 'Nitrogen oxides as nitrogen dioxide (NOx as NO2)'],
+
+    ['ozone', 'Ozone (O3)'],
+    ['o3', 'Ozone (O3)'],
+
+    ['carbon monoxide', 'Carbon monoxide (CO)'],
+    ['co', 'Carbon monoxide (CO)'],
+
+    ['sulphur dioxide', 'Sulphur dioxide (SO2)'],
+    ['so2', 'Sulphur dioxide (SO2)'],
+
+    ['nitric oxide', 'Nitric oxide (NO)'],
+    ['no', 'Nitric oxide (NO)'],
+  ]);
+
+  const canonicalise = (s) => {
+    const t = String(s || '').trim();
+    const key = t.toLowerCase();
+    return CANON.get(key) || t; // keep exact user string if already canonical
+  };
+
+  const list = arr.map(getName).map(canonicalise).filter(Boolean);
+  target.innerHTML = list.length ? list.map(p => `<div>${p}</div>`).join('') : 'None selected';
+
+  // Downstream code reads this key — save the canonical list here.
+  sessionStorage.setItem('selectedPollutants_normalised', JSON.stringify(list));
+});
+</script>
+
+
+<!-- 3) Mapping: pollutants → networks (headings preserved) -->
+<script>
+function buildNetworksForPollutant(rawName) {
+  const H = '<strong>Near real-time data from Defra</strong>';
+  const M = '<strong>Other data from Defra</strong>';
+  const L = '<strong>Non-Defra data</strong>';
+
+  const name = String(rawName || '').trim().toLowerCase();
+  const base = name.replace(/\s*\([^)]+\)\s*$/,''); // drop trailing "(...)" when we need a plain-name match
+
+  const sections = [];
+  const seen = new Set();
+  const add = (label) => { if (!seen.has(label)) { sections.push(label); seen.add(label); } };
+  const addHourly  = (net) => { add(H); add(net); };
+  const addMonthly = (net) => { add(M); add(net); };
+  const addNonDefra = ()    => { add(L); add('Locally managed automatic monitoring'); };
+
+  // Core gases & PM (accept symbol forms)
+  const isSO2      = name === 'sulphur dioxide (so2)' || base === 'sulphur dioxide' || base === 'gaseous sulphur dioxide';
+  const isO3       = name === 'ozone (o3)'            || base === 'ozone';
+  const isCO       = name === 'carbon monoxide (co)'  || base === 'carbon monoxide';
+  const isNO2      = name === 'nitrogen dioxide (no2)'|| base === 'nitrogen dioxide';
+  const isNOxAsNO2 = name === 'nitrogen oxides as nitrogen dioxide (nox as no2)' || base === 'nitrogen oxides as nitrogen dioxide';
+  const isNO       = name === 'nitric oxide (no)'     || base === 'nitric oxide';
+  const isBlackCarbon = name === 'black carbon (bc)'  || base === 'black carbon';
+  const tompsName = base.replace(/-/g, ' ').replace(/\s+/g, ' ').trim();
+  const isTOMPs = new Set([
+    'pcbs',
+    'co planar pcbs',
+    'pcdds',
+    'pcdfs',
+    'pbdes',
+    'decabde',
+    'hbcdd'
+  ]).has(tompsName);
+
+  const pmMass = (name === 'particulate matter (pm10)') ||
+                 (name === 'fine particulate matter (pm2.5)');
+
+  // VOCs (exact names from your source list — all lower-case here)
+  const vocs = new Set([
+    'ethane','ethene','ethyne','propane','propene','iso-butane','n-butane','1-butene',
+    'trans-2-butene','cis-2-butene','iso-pentane','n-pentane','1,3-butadiene','trans-2-pentene',
+    '1-pentene','2-methylpentane','isoprene','n-hexane','n-heptane','iso-octane','n-octane',
+    'benzene','toluene','ethylbenzene','m+p-xylene','o-xylene','1,2,3-trimethylbenzene',
+    '1,2,4-trimethylbenzene','1,3,5-trimethylbenzene'
+  ]);
+
+  // PAHs
+  const paHs = [
+    'benzo(a)pyrene','benzo(a)anthracene','benzo(b)fluoranthene','benzo(j)fluoranthene','benzo(b+j)fluoranthene',
+    'benzo(k)fluoranthene','indeno(1,2,3-cd)pyrene','dibenzo(ac)anthracene','dibenzo(ah)anthracene','dibenzo(ah+ac)anthracene',
+    '1-methyl anthracene','1-methyl naphthalene','1-methyl phenanthrene','2-methyl anthracene','2-methyl naphthalene',
+    '2-methyl phenanthrene','4.5-methylene phenanthrene','5-methyl chrysene','9-methyl anthracene'
+  ].map(s => s.toLowerCase());
+
+  // Particulate ions & PM10/PM2.5 cues (symbols allowed)
+  const particulateIonKeywords = [
+    'particulate ', ' in pm10', ' in pm2.5',
+    'nitrate','nitrite','sulphate','chloride','ammonium',
+    'calcium','magnesium','sodium','potassium'
+  ];
+
+  // Acids / ammonia / mercury — match on the base name (no symbols)
+  const gaseousAcids = new Set(['gaseous hydrochloric acid','gaseous nitric acid','gaseous nitrous acid']);
+  const ammoniaVariants = new Set([
+    'gaseous ammonia','gaseous ammonia (active)','gaseous ammonia (passive)',
+    'gaseous ammonia (diffusion tube)','particulate ammonium'
+  ].map(s => s.toLowerCase()));
+  const mercuryVariants = new Set(['reactive mercury','elemental mercury','mercury in pm2.5']);
+
+  // Metals (air) — compare against base (no symbols)
+  const metalsAir = new Set([
+    'arsenic','cadmium','chromium','cobalt','copper','iron','lead','manganese',
+    'nickel','selenium','vanadium','zinc','aluminium','antimony','antinomy'
+  ]);
+
+  // Metals in precipitation — allow an optional trailing symbol in brackets
+  const metalsInPrecip = /in precipitation(?:\s*\([^)]+\))?$/i;
+
+  // === Rules → networks (use the exact labels your download page expects) ===
+  if (isSO2 || isO3 || isCO || isNOxAsNO2 || isNO || pmMass) {
+    addHourly('Automatic Urban and Rural Network (AURN)');
+    addNonDefra();
+  }
+
+  if (isNO2) {
+    addHourly('Automatic Urban and Rural Network (AURN)');
+    add(L);
+    add('Locally managed automatic monitoring');
+    add('Automatic nitrogen dioxide data');
+    add('Nitrogen dioxide (NO2) diffusion tubes');
+    addMonthly('UK Urban NO2 Network');
+    addMonthly('UKEAP: Rural NO2 Network');
+  }
+
+  if (vocs.has(base)) {
+    addHourly('Automatic Hydrocarbon Network');
+    addMonthly('Non-Automatic Hydrocarbon Network');
+  }
+
+  if (paHs.includes(base)) {
+    addMonthly('PAH Network');
+  }
+
+  if (isBlackCarbon) {
+    addMonthly('Black Carbon Network');
+  }
+
+  if (isTOMPs) {
+    addMonthly('Toxic Organic Micro-Pollutants (TOMPs)');
+  }
+
+  const looksLikeParticulateIon = particulateIonKeywords.some(k => name.includes(k)) && !pmMass;
+  if (looksLikeParticulateIon) {
+    addMonthly('UKEAP: MARGA Network');
+    addMonthly('UKEAP: Acid Gas & Aerosol Network (AGANet)');
+  }
+
+  if (gaseousAcids.has(base)) {
+    if (base.includes('nitric')) addHourly('UKEAP: MARGA Network');
+    addMonthly('UKEAP: Acid Gas & Aerosol Network (AGANet)');
+  }
+
+  if (ammoniaVariants.has(base)) {
+    addMonthly('UKEAP: National Ammonia Monitoring Network (NAMN)');
+  }
+
+  if (metalsAir.has(base)) {
+    addMonthly('Heavy Metals Network');
+  }
+
+  if (metalsInPrecip.test(rawName)) {
+    addMonthly('UKEAP: Precipitation Chemistry Network (Precip-Net)');
+  }
+
+  if (mercuryVariants.has(base)) {
+    addMonthly('UKEAP: Rural Mercury Network');
+  }
+
+  if (isSO2) {
+    addMonthly('UKEAP: Acid Gas & Aerosol Network (AGANet)');
+  }
+
+  return sections;
+}
+</script>
+
+
+<!-- 4) Shared UI bits: buttons, descriptions, network start years -->
+<script>
+// Button HTML (original styling)
+function buttonHtml(label) {
+  return `
+    <a href="#" role="button" class="aq-button-secondary aq-button-secondary--icon govuk-!-margin-bottom-3">
+      <span class="aq-button-secondary__icon">
+        <svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20">
+          <path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"></path>
+        </svg>
+      </span>
+      <span class="aq-button-secondary__text">${label}</span>
+    </a>`;
+}
+
+// Network descriptions
+const NETWORK_DESCRIPTIONS = {
+  'Automatic Urban and Rural Network (AURN)': 'The most reliable air pollution data in the UK. Provides hourly measurements of particulate matter (PM10 and PM2.5), nitrogen dioxide, ozone, sulphur dioxide and carbon monoxide.',
+  'Automatic Hydrocarbon Network': 'Hourly measurements of hydrocarbons such as benzene.',
+  'Non-Automatic Hydrocarbon Network': 'Measures ambient hydrocarbon and benzene.',
+  'UK Urban NO2 Network': 'Measures nitrogen dioxide at urban traffic sites.',
+  'UKEAP: Rural NO2 Network': 'Monthly diffusion tube measurements of nitrogen dioxide at rural background locations.',
+  'UKEAP: Acid Gas & Aerosol Network (AGANet)': 'Measures acid gases and inorganic aerosols to track long-term rural trends.',
+  'UKEAP: MARGA Network': 'Measures aerosols and gases in ambient air.',
+  'PAH Network': 'Measures ambient concentrations of PAH in PM10 and PAH in deposition.',
+  'Heavy Metals Network': 'Measures arsenic, cadmium, chromium, cobalt, copper, iron, manganese, nickel, lead and selenium.',
+  'UKEAP: National Ammonia Monitoring Network (NAMN)': 'National ammonia measurements using active and passive samplers.',
+  'UKEAP: Precipitation Chemistry Network (Precip-Net)': 'Chemical composition of rainfall at rural sites.',
+  'UKEAP: Rural Mercury Network': 'Speciated mercury measurements at rural background locations.',
+  'Locally managed automatic monitoring': 'This data is measured at air pollution hot spots across the UK. It mostly comes from local authority monitoring stations. This data is usually published every hour (near real-time). It varies in quality.',
+  // Extras supported
+  'Black Carbon Network': 'Black carbon (BC) and UVPM measurements.',
+  'Toxic Organic Micro-Pollutants (TOMPs)': 'Measures persistent organic pollutants (PCBs, PCDDs, PCDFs, PBDEs and decaBDE).',
+  'Particle Concentrations & Numbers (PCN)': 'Particle number, size distributions, OC/EC, elemental composition.',
+  'Automatic nitrogen dioxide data': 'Local authority submitted data from automatic stations measuring nitrogen dioxide.',
+  'Nitrogen dioxide (NO2) diffusion tubes': 'Local authority submitted diffusion tube data providing monthly measurements of nitrogen dioxide, presented as annual averages.'
+};
+
+// Network start years (default to 1980 if unknown)
+const NETWORK_START_YEARS = {
+  'Automatic Urban and Rural Network (AURN)': 1972,
+  'Automatic Hydrocarbon Network': 1992,
+  'Locally-managed automatic monitoring': 1973,
+  'Locally managed automatic monitoring': 1973,
+  'UKEAP: Precipitation Chemistry Network (Precip-Net)': 1986,
+  'UKEAP — Precip-Net': 1986,
+  'UKEAP: Acid Gas & Aerosol Network (AGANet)': 1980,
+  'UKEAP: National Ammonia Monitoring Network (NAMN)': 1980,
+  'UKEAP: Rural NO2 Network': 1980,
+  'UKEAP: MARGA Network': 1980,
+  'UKEAP: Rural Mercury Network': 1980,
+  'Black Carbon Network': 2006,
+  'PAH Network': 1991,
+  'Toxic Organic Micro-Pollutants (TOMPs)': 1991,
+  'Non-Automatic Hydrocarbon Network': 2001,
+  'Heavy Metals Network': 1980,
+  'Particle Concentrations & Numbers (PCN)': 2001,
+  'UK Urban NO2 Network': 2020,
+  'Automatic nitrogen dioxide data': 2024,
+  'Nitrogen dioxide (NO2) diffusion tubes': 2024,
+};
+function getNetworkStartYear(name) {
+  if (NETWORK_START_YEARS[name]) return NETWORK_START_YEARS[name];
+  const normalized = name.replace(/\s*—\s*/g, ': ').replace(/\s+/g, ' ').trim();
+  return NETWORK_START_YEARS[normalized] || 1980;
+}
+const CURRENT_YEAR = new Date().getFullYear();
+</script>
+
+<!-- 5) Build tabs + per-network station insets + gated CTA -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const HOUR_HDR   = '<strong>Near real-time data from Defra</strong>';
+  const MONTH_HDR  = '<strong>Other data from Defra</strong>';
+  const NONDEF_HDR = '<strong>Non-Defra data</strong>';
+
+  const getJSON = (k, fallback) => { try { return JSON.parse(sessionStorage.getItem(k) || JSON.stringify(fallback)); } catch { return fallback; } };
+  const pollutants        = getJSON('selectedPollutants_normalised', []);
+  let   selected          = getJSON('selectedDataSources', null);
+  const selectedSiteTypes = getJSON('selectedSiteTypes', []);
+  const countries         = getJSON('selectedCountries', []);
+  const zonesAgg          = getJSON('selectedZonesAgglomerations', []);
+  const las               = getJSON('selectedLocations', []);
+  const singleLegacyLoc   = sessionStorage.getItem('selectedLocation') || null;
+
+  const dsTarget = document.getElementById('download-data-source');
+  if (!pollutants.length) {
+    if (dsTarget) dsTarget.innerHTML = 'Any';
+    return;
+  }
+
+  // Availability from pollutants
+  function availabilityFromPollutants(polls) {
+    const flat = [], seen = new Set();
+    (polls || []).forEach(p => {
+      (buildNetworksForPollutant(p) || []).forEach(x => { if (!seen.has(x)) { flat.push(x); seen.add(x); } });
+    });
+    const buckets = { hourly: [], monthly: [], nonDefra: [] };
+    let current = null;
+    flat.forEach(item => {
+      if      (item === HOUR_HDR)   current = 'hourly';
+      else if (item === MONTH_HDR)  current = 'monthly';
+      else if (item === NONDEF_HDR) current = 'nonDefra';
+      else if (current)             buckets[current].push(item);
+    });
+    return { flat, buckets };
+  }
+
+  // Respect user's selected data sources
+  function selectionRespectingAvailability(selected, available) {
+    if (!selected) return null;
+    const hourlyChosen  = (selected.hourly?.networks  || []).filter(n => available.buckets.hourly.includes(n));
+    const monthlyChosen = (selected.monthly?.networks || []).filter(n => available.buckets.monthly.includes(n));
+    const hasHourly  = !!selected.hourly?.enabled && hourlyChosen.length > 0;
+    const hasMonthly = !!selected.monthly?.enabled && monthlyChosen.length > 0;
+    const hasLocal   = !!selected.local && available.buckets.nonDefra.length > 0;
+    if (!(hasHourly || hasMonthly || hasLocal)) return null;
+
+    const flat = [];
+    if (hasHourly)  flat.push(HOUR_HDR,  ...hourlyChosen);
+    if (hasMonthly) flat.push(MONTH_HDR, ...monthlyChosen);
+    if (hasLocal)   flat.push(NONDEF_HDR, 'Locally managed automatic monitoring');
+
+    return {
+      flat,
+      buckets: {
+        hourly:   hasHourly  ? [...hourlyChosen]  : [],
+        monthly:  hasMonthly ? [...monthlyChosen] : [],
+        nonDefra: hasLocal   ? ['Locally managed automatic monitoring'] : []
+      }
+    };
+  }
+
+  const available = availabilityFromPollutants(pollutants);
+  const filtered  = selectionRespectingAvailability(selected, available);
+  const finalFlat    = filtered ? filtered.flat    : available.flat;
+  const finalBuckets = filtered ? filtered.buckets : available.buckets;
+
+  if (dsTarget) {
+    dsTarget.innerHTML = finalFlat.length ? finalFlat.map(x => `<div>${x}</div>`).join('') : 'Any';
+  }
+
+  // === Station counting (per-network) ===
+  const ALL_SITE_TYPES = [
+    'Rural background','Suburban background','Urban background',
+    'Suburban industrial','Urban industrial','Urban traffic'
+  ];
+  const SITE_TYPE_CANON = {
+    'rural background':'Rural background','suburban background':'Suburban background','urban background':'Urban background',
+    'suburban industrial':'Suburban industrial','urban industrial':'Urban industrial','urban traffic':'Urban traffic',
+    'rural':'Rural background','suburban':'Suburban background','industrial':'Urban industrial',
+    'roadside':'Urban traffic','kerbside':'Urban traffic','background urban':'Urban background',
+    'urban roadside':'Urban traffic','urban kerbside':'Urban traffic'
+  };
+  const canonSiteType = (s) => SITE_TYPE_CANON[(s || '').toLowerCase().trim()] || s;
+
+  const DEFAULT_COUNTS = {
+    'Automatic Urban and Rural Network (AURN)': 180,
+    'Automatic Hydrocarbon Network': 40,
+    'Non-Automatic Hydrocarbon Network': 35,
+    'Toxic Organic Micro-Pollutants (TOMPs)': 6,
+    'PAH Network': 30,
+    'Heavy Metals Network': 30,
+    'UKEAP: Acid Gas & Aerosol Network (AGANet)': 30,
+    'UKEAP: MARGA Network': 2,
+    'UKEAP: National Ammonia Monitoring Network (NAMN)': 100,
+    'UKEAP: Precipitation Chemistry Network (Precip-Net)': 30,
+    'UKEAP: Rural Mercury Network': 2,
+    'Black Carbon Network': 15,
+    'UK Urban NO2 Network': 60,
+    'UKEAP: Rural NO2 Network': 20,
+    'Locally managed automatic monitoring': 300,
+    'Automatic nitrogen dioxide data': 300,
+    'Nitrogen dioxide (NO2) diffusion tubes': 4725
+  };
+  const runtimeCounts = getJSON('networkStationCounts', {});
+  const COUNTS = new Proxy(DEFAULT_COUNTS, { get: (obj, k) => (k in runtimeCounts ? runtimeCounts[k] : obj[k]) });
+
+  const NETWORK_SITE_TYPE_COUNTS = getJSON('networkSiteTypeCounts', {});
+  const NETWORK_SITE_TYPE_SHARES = getJSON('networkSiteTypeShares', {});
+  const DEFAULT_SITE_TYPE_SHARES = {
+    'Automatic Urban and Rural Network (AURN)': { 'Urban background':0.35,'Urban traffic':0.50,'Suburban background':0.05,'Rural background':0.07,'Urban industrial':0.02,'Suburban industrial':0.01 },
+    'Automatic Hydrocarbon Network': { 'Urban background':0.60,'Urban traffic':0.30,'Rural background':0.10 },
+    'Non-Automatic Hydrocarbon Network': { 'Urban background':0.70,'Urban traffic':0.10,'Suburban background':0.15,'Rural background':0.05 },
+    'Toxic Organic Micro-Pollutants (TOMPs)': { 'Urban background':0.34,'Urban traffic':0.33,'Rural background':0.33 },
+    'PAH Network': { 'Urban background':0.50,'Urban traffic':0.10,'Suburban background':0.20,'Rural background':0.15,'Urban industrial':0.05 },
+    'Heavy Metals Network': { 'Urban background':0.30,'Urban traffic':0.10,'Suburban background':0.10,'Rural background':0.20,'Urban industrial':0.20,'Suburban industrial':0.10 },
+    'UKEAP: Acid Gas & Aerosol Network (AGANet)': { 'Urban background':0.10,'Suburban background':0.20,'Rural background':0.70 },
+    'UKEAP: MARGA Network': { 'Urban background':0.30,'Rural background':0.70 },
+    'UKEAP: National Ammonia Monitoring Network (NAMN)': { 'Urban background':0.10,'Suburban background':0.20,'Rural background':0.70 },
+    'UKEAP: Precipitation Chemistry Network (Precip-Net)': { 'Rural background':1.00 },
+    'UKEAP: Rural Mercury Network': { 'Rural background':1.00 },
+    'Black Carbon Network': { 'Urban background':0.40,'Urban traffic':0.50,'Suburban background':0.05,'Rural background':0.05 },
+    'UK Urban NO2 Network': { 'Urban traffic':1.00 },
+    'UKEAP: Rural NO2 Network': { 'Rural background':1.00 },
+    'Locally managed automatic monitoring': { 'Urban background':0.25,'Urban traffic':0.65,'Suburban background':0.05,'Urban industrial':0.05 },
+    'Automatic nitrogen dioxide data': { 'Urban background':0.30,'Urban traffic':0.60,'Suburban background':0.05,'Rural background':0.05 },
+    'Nitrogen dioxide (NO2) diffusion tubes': { 'Urban background':0.35,'Urban traffic':0.50,'Suburban background':0.10,'Rural background':0.05 }
+  };
+
+  function apportionCounts(total, shares) {
+    if (!total || total <= 0) return {};
+    const entries = Object.entries(shares || {}).map(([t, s]) => [canonSiteType(t), Math.max(0, Number(s) || 0)]);
+    const sum = entries.reduce((a, [, s]) => a + s, 0);
+    if (sum <= 0) return {};
+    const norm = entries.map(([t, s]) => [t, s / sum]);
+    const raw  = norm.map(([t, s]) => [t, total * s, Math.floor(total * s)]);
+    const out = {}; let remainder = total - raw.reduce((a, [, , f]) => a + f, 0);
+    raw.forEach(([t, , f]) => out[t] = f);
+    raw.map(([t, r, f]) => [t, r - f]).sort((a,b) => b[1]-a[1]).forEach(([t]) => { if (remainder > 0) { out[t]++; remainder--; } });
+    return out;
+  }
+
+  function siteTypeCountsFor(networkName, total) {
+    const exact = NETWORK_SITE_TYPE_COUNTS[networkName];
+    if (exact && typeof exact === 'object') {
+      const out = {};
+      Object.entries(exact).forEach(([k, v]) => out[canonSiteType(k)] = Math.max(0, Math.round(Number(v) || 0)));
+      return out;
+    }
+    const shares = NETWORK_SITE_TYPE_SHARES[networkName] || DEFAULT_SITE_TYPE_SHARES[networkName] || {};
+    return apportionCounts(total, shares);
+  }
+
+  const COUNTRY_WEIGHTS = { 'England':0.75,'Scotland':0.15,'Wales':0.06,'Northern Ireland':0.04 };
+  const NETWORK_TAG = {
+    'Automatic Urban and Rural Network (AURN)':'core',
+    'Automatic Hydrocarbon Network':'hydrocarbon',
+    'Non-Automatic Hydrocarbon Network':'hydrocarbon',
+    'Toxic Organic Micro-Pollutants (TOMPs)':'tomps',
+    'PAH Network':'pah',
+    'Heavy Metals Network':'heavy-metals',
+    'UKEAP: Acid Gas & Aerosol Network (AGANet)':'aganet',
+    'UKEAP: MARGA Network':'aganet',
+    'UKEAP: National Ammonia Monitoring Network (NAMN)':'namn',
+    'UKEAP: Precipitation Chemistry Network (Precip-Net)':'precipnet',
+    'UKEAP: Rural Mercury Network':'ruralmercury',
+    'Black Carbon Network':'core',
+    'UK Urban NO2 Network':'core',
+    'UKEAP: Rural NO2 Network':'core',
+    'Locally managed automatic monitoring':'core',
+    'Automatic nitrogen dioxide data':'core',
+    'Nitrogen dioxide (NO2) diffusion tubes':'core'
+  };
+  const LA_SHARE_BY_TAG = { 'core':0.012,'hydrocarbon':0.006,'tomps':0.006,'aganet':0.006,'heavy-metals':0.004,'pah':0.004,'namn':0.008,'precipnet':0.003,'ruralmercury':0.002 };
+  const DEFAULT_LA_SHARE = 0.006;
+  const ZONE_SHARE = 0.075;
+  const AGGLOMERATION_SHARE = 0.03;
+
+  function networkLocationScale(networkName) {
+    let countryScale = 0;
+    if (Array.isArray(countries) && countries.length) {
+      countryScale = countries.reduce((acc, c) => acc + (COUNTRY_WEIGHTS[c] || 0), 0);
+      countryScale = Math.max(0, Math.min(1, countryScale));
+    } else if (singleLegacyLoc && COUNTRY_WEIGHTS[singleLegacyLoc]) {
+      countryScale = COUNTRY_WEIGHTS[singleLegacyLoc];
+    } else if (singleLegacyLoc === 'United Kingdom') {
+      countryScale = 1;
+    }
+    const tag = NETWORK_TAG[networkName] || 'core';
+    const share = LA_SHARE_BY_TAG[tag] ?? DEFAULT_LA_SHARE;
+    let laScale = 0;
+    if (Array.isArray(las) && las.length) laScale = Math.min(las.length * share, 1);
+
+    let zonesAggScale = 0;
+    if (Array.isArray(zonesAgg) && zonesAgg.length) {
+      zonesAggScale = zonesAgg.reduce((acc, item) => {
+        const label = String(item || '').toLowerCase();
+        return acc + (label.includes('agglomeration') ? AGGLOMERATION_SHARE : ZONE_SHARE);
+      }, 0);
+      zonesAggScale = Math.min(zonesAggScale, 1);
+    }
+
+    if (countryScale && zonesAggScale && laScale) return Math.min(countryScale, zonesAggScale, laScale);
+    if (countryScale && zonesAggScale) return Math.min(countryScale, zonesAggScale);
+    if (countryScale && laScale) return Math.min(countryScale, laScale);
+    if (zonesAggScale && laScale) return Math.min(zonesAggScale, laScale);
+    return (countryScale || zonesAggScale || laScale || 1);
+  }
+
+  function filteredCountBySiteType(networkName) {
+    const total = COUNTS[networkName] || 0;
+    const perType = siteTypeCountsFor(networkName, total);
+    const chosen = Array.isArray(selectedSiteTypes) && selectedSiteTypes.length
+      ? selectedSiteTypes.map(canonSiteType)
+      : ALL_SITE_TYPES;
+    return chosen.reduce((sum, t) => sum + (perType[t] || 0), 0);
+  }
+
+  // Time parsing
+  function parseTimeMode() {
+    const timeText = sessionStorage.getItem('selectedTimePeriod') || '';
+    const rangeMatch = timeText.match(/(\d{4}).*to.*(\d{4})/);
+    const lastYear   = timeText.match(/1 January to 31 December (\d{4})/);
+    const ytd        = timeText.match(/1 January to \d{1,2} \w+ (\d{4})/);
+    if (rangeMatch) {
+      let startYear = parseInt(rangeMatch[1], 10);
+      let endYear   = parseInt(rangeMatch[2], 10);
+      endYear = Math.min(endYear, CURRENT_YEAR);
+      return (isNaN(startYear) || isNaN(endYear) || startYear > endYear) ? { mode:'invalid' } : { mode:'range', startYear, endYear, text: timeText };
+    }
+    if (lastYear) return { mode:'single', year: parseInt(lastYear[1], 10), text: timeText };
+    if (ytd)      return { mode:'single', year: parseInt(ytd[1], 10), text: timeText };
+    return { mode:'none', text: timeText };
+  }
+  function networkHasTimeData(networkName, tm) {
+    const start = getNetworkStartYear(networkName);
+    if (tm.mode === 'single') return !isNaN(start) ? (tm.year >= start) : true;
+    if (tm.mode === 'range')  return Math.max(start, tm.startYear) <= tm.endYear;
+    return true;
+  }
+
+  // Counts and insets
+  function stationCountFor(networkName, tm) {
+    if (!networkHasTimeData(networkName, tm)) return 0;
+    const base = filteredCountBySiteType(networkName);
+    const scaled = Math.max(0, Math.min(base, Math.round(base * networkLocationScale(networkName))));
+    if (networkName === 'Black Carbon Network' && base > 0 && scaled === 0) return 1;
+    return scaled;
+  }
+  function insetHtmlForCount(count) {
+    const style = count > 0
+      ? 'border-left: 10px solid #00703c; background-color: #d4fae2;'
+      : 'border-left: 10px solid #f47738; background-color: #f9e2d7;';
+    return `<div class="govuk-inset-text govuk-!-margin-top-1 govuk-!-margin-bottom-3" style="${style}">
+      ${count} station${count===1?'':'s'} available
+    </div>`;
+  }
+  const ALWAYS_DOWNLOAD_NETWORKS = new Set([
+    'Automatic nitrogen dioxide data',
+    'Nitrogen dioxide (NO2) diffusion tubes'
+  ]);
+
+  function allYearsActionText(networkName, count, startYear, endYear) {
+    if (ALWAYS_DOWNLOAD_NETWORKS.has(networkName)) return 'Download data';
+    const yearSpan = (endYear - startYear + 1);
+    return (count < 50 && yearSpan <= 5) ? 'Download data' : 'Request data';
+  }
+  const NO_STATIONS_MSG = '<p class="govuk-body">No stations available for your current filters (time period and/or location). Adjust your filters to enable downloads.</p>';
+
+  // NEW: inline CTA helper — visible only for LA selection AND when count > 0
+  function monitoringCtaHtml(count) {
+    if (!(count > 0)) return '';
+    let lasSel = [], countriesSel = [];
+    try { lasSel = JSON.parse(sessionStorage.getItem('selectedLocations') || '[]'); } catch {}
+    try { countriesSel = JSON.parse(sessionStorage.getItem('selectedCountries') || '[]'); } catch {}
+    const show = Array.isArray(lasSel) && lasSel.length > 0 && (!Array.isArray(countriesSel) || countriesSel.length === 0);
+    return show ? `` : '';
+  }
+
+  // Renderers (description immediately under heading; CTA under inset; hide downloads when count=0)
+function renderMonthlyBlock(networkName, tm) {
+  const desc  = NETWORK_DESCRIPTIONS[networkName] || '';
+  const count = stationCountFor(networkName, tm);
+  const inset = insetHtmlForCount(count);
+  const cta   = monitoringCtaHtml(count);
+  const headingAndDesc = `<h3 class="govuk-heading-s">${networkName}</h3><p class="govuk-body">${desc}</p>`;
+
+  if (tm.mode === 'range') {
+    const start = Math.max(getNetworkStartYear(networkName), tm.startYear);
+    const end   = Math.min(tm.endYear, CURRENT_YEAR);
+    const allYearsLinkText = allYearsActionText(networkName, count, start, end);
+    if (start > end) {
+      return `${headingAndDesc}${inset}
+              <p class="govuk-body">No data available for the selected range. Data for this network starts in ${getNetworkStartYear(networkName)}.</p>`;
+    }
+    if (count === 0) {
+      return `${headingAndDesc}${inset}${NO_STATIONS_MSG}`;
+    }
+
+    // Build rows with an "Download all years" row at the top
+    let rows = `
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">Download all years</th>
+        <td class="govuk-table__cell"><a href="#" class="govuk-link">${allYearsLinkText}</a></td>
+      </tr>`;
+    for (let y = end; y >= start; y--) {
+      rows += `<tr class="govuk-table__row">
+                 <th scope="row" class="govuk-table__header">${y}</th>
+                 <td class="govuk-table__cell"><a href="#" class="govuk-link">Download data</a></td>
+               </tr>`;
+    }
+
+    return `${headingAndDesc}${inset}${cta}
+            <table class="govuk-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Year</th>
+                  <th scope="col" class="govuk-table__header">Download</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">${rows}</tbody>
+            </table>`;
+  }
+
+  if (tm.mode === 'invalid') return `${headingAndDesc}${inset}
+    <p class="govuk-body">Invalid year range selected. <a href="add-time.html" class="govuk-link">Go back</a>.</p>`;
+  if (tm.mode === 'none')    return `${headingAndDesc}${inset}
+    <p class="govuk-body">No valid time period selected. <a href="add-time.html" class="govuk-link">Choose one</a>.</p>`;
+
+  const start = getNetworkStartYear(networkName);
+  if (tm.year < start) {
+    return `${headingAndDesc}${inset}
+            <p class="govuk-body">No data available for the selected period (${tm.year}). Data for this network starts in ${start}.</p>`;
+  }
+  if (count === 0) {
+    return `${headingAndDesc}${inset}${NO_STATIONS_MSG}`;
+  }
+
+  // Single-year (no metadata button)
+  return `${headingAndDesc}${inset}${cta}
+          ${buttonHtml('Download data')}`;
+}
+
+
+function renderHourlyBlock(networkName, tm) {
+  const desc  = NETWORK_DESCRIPTIONS[networkName] || '';
+  const count = stationCountFor(networkName, tm);
+  const inset = insetHtmlForCount(count);
+  const cta   = monitoringCtaHtml(count);
+  const headingAndDesc = `<h3 class="govuk-heading-s">${networkName}</h3><p class="govuk-body">${desc}</p>`;
+
+  if (tm.mode === 'range') {
+    
+    const start = Math.max(getNetworkStartYear(networkName), tm.startYear);
+    const end   = Math.min(tm.endYear, CURRENT_YEAR);
+    const allYearsLinkText = allYearsActionText(networkName, count, start, end);
+    
+
+    if (start > end) {
+      return `${headingAndDesc}${inset}
+              <p class="govuk-body">No data available for the selected range. Data for this network starts in ${getNetworkStartYear(networkName)}.</p>`;
+    }
+    if (count === 0) {
+      return `${headingAndDesc}${inset}${NO_STATIONS_MSG}`;
+    }
+
+    const isSimple = SIMPLE_HOURLY_NETWORKS.has(networkName);
+    const showAnnual = ANNUAL_AVG_NETWORKS.has(networkName);
+
+    // Build rows with "Download all years" row first
+    let rows = '';
+    if (isSimple) {
+      rows += `<tr class="govuk-table__row">
+                 <th scope="row" class="govuk-table__header">Download all years</th>
+                 <td class="govuk-table__cell"><a href="#" class="govuk-link">${allYearsLinkText}</a></td>
+                 <td class="govuk-table__cell"><a href="#" class="govuk-link">Download annual average data</a></td>
+               </tr>`;
+    } else {
+      rows += `<tr class="govuk-table__row">
+                 <th scope="row" class="govuk-table__header">Download all years</th>
+                 <td class="govuk-table__cell"><a href="#" class="govuk-link">${allYearsLinkText}</a></td>
+                 <td class="govuk-table__cell"></td>
+                 <td class="govuk-table__cell"><a href="#" class="govuk-link">Download annual average data</a></td>
+               </tr>`;
+    }
+
+    for (let y = end; y >= start; y--) {
+      if (isSimple) {
+  rows += `<tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">${y}</th>
+            <td class="govuk-table__cell"><a href="#" class="govuk-link">Download data</a></td>
+            ${showAnnual ? `<td class="govuk-table__cell"><a href="#" class="govuk-link">Download annual average data</a></td>` : ``}
+          </tr>`;
+} else {
+        rows += `<tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">${y}</th>
+                  <td class="govuk-table__cell"><a href="#" class="govuk-link">Download hourly data</a></td>
+                  <td class="govuk-table__cell"><a href="#" class="govuk-link">Download daily average data</a></td>
+                  <td class="govuk-table__cell"><a href="#" class="govuk-link">Download annual average data</a></td>
+                </tr>`;
+      }
+    }
+
+    const headSimple2 = `
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Year</th>
+      <th scope="col" class="govuk-table__header">Hourly data</th>
+    </tr>
+  </thead>`;
+
+const headSimple3 = `
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Year</th>
+      <th scope="col" class="govuk-table__header">Hourly data</th>
+      <th scope="col" class="govuk-table__header">Annual average data</th>
+    </tr>
+  </thead>`;
+
+
+    const headFull = `
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Year</th>
+          <th scope="col" class="govuk-table__header">Hourly data</th>
+          <th scope="col" class="govuk-table__header">Daily average</th>
+          <th scope="col" class="govuk-table__header">Annual average</th>
+        </tr>
+      </thead>`;
+
+    return `${headingAndDesc}${inset}${cta}
+  <table class="govuk-table">
+    ${isSimple ? (showAnnual ? headSimple3 : headSimple2) : headFull}
+    <tbody class="govuk-table__body">${rows}</tbody>
+  </table>`;
+
+  }
+
+  if (tm.mode === 'invalid') return `${headingAndDesc}${inset}
+    <p class="govuk-body">Invalid year range selected. <a href="add-time.html" class="govuk-link">Go back</a>.</p>`;
+  if (tm.mode === 'none')    return `${headingAndDesc}${inset}
+    <p class="govuk-body">No valid time period selected. <a href="add-time.html" class="govuk-link">Choose one</a>.</p>`;
+
+  const start = getNetworkStartYear(networkName);
+  if (tm.year < start) {
+    return `${headingAndDesc}${inset}
+            <p class="govuk-body">No data available for the selected period (${tm.year}). Data for this network starts in ${start}.</p>`;
+  }
+  if (count === 0) {
+    return `${headingAndDesc}${inset}${NO_STATIONS_MSG}`;
+  }
+
+
+      // Single-year (no metadata button)
+      const isSimple = SIMPLE_HOURLY_NETWORKS.has(networkName);
+      const showAnnual = ANNUAL_AVG_NETWORKS.has(networkName);
+
+      return `${headingAndDesc}${inset}${cta}
+              ${buttonHtml('Download hourly data')}
+              ${isSimple
+                ? (showAnnual ? '<br>' + buttonHtml('Download annual average data') : '')
+                : '<br>' + buttonHtml('Download daily average data') + '<br>' + buttonHtml('Download annual average data')
+              }`;
+
+}
+
+
+function renderNonDefraBlock(networkName, tm) {
+  const desc  = NETWORK_DESCRIPTIONS[networkName] || '';
+  const count = stationCountFor(networkName, tm);
+  const inset = insetHtmlForCount(count);
+  const cta   = monitoringCtaHtml(count);
+  const headingAndDesc = `<h3 class="govuk-heading-s">${networkName}</h3><p class="govuk-body">${desc}</p>`;
+
+  if (tm.mode === 'range') {
+    const start = Math.max(getNetworkStartYear(networkName), tm.startYear);
+    const end   = Math.min(tm.endYear, CURRENT_YEAR);
+    const allYearsLinkText = allYearsActionText(networkName, count, start, end);
+    if (start > end) {
+      return `${headingAndDesc}${inset}
+              <p class="govuk-body">No data available for the selected range. Data for this network starts in ${getNetworkStartYear(networkName)}.</p>`;
+    }
+    if (count === 0) {
+      return `${headingAndDesc}${inset}${NO_STATIONS_MSG}`;
+    }
+
+    const isSimple = SIMPLE_HOURLY_NETWORKS.has(networkName);
+    const isAnnualOnly = ANNUAL_ONLY_NETWORKS.has(networkName);
+    const isLocalManaged = networkName === 'Locally managed automatic monitoring';
+
+    // Build rows with "Download all years" row first
+    let rows = '';
+    if (isSimple && !isLocalManaged) {
+      rows += `<tr class="govuk-table__row">
+                 <th scope="row" class="govuk-table__header">Download all years</th>
+                 <td class="govuk-table__cell"><a href="#" class="govuk-link">${allYearsLinkText}</a></td>
+               </tr>`;
+    } else if (isLocalManaged) {
+      rows += `<tr class="govuk-table__row">
+                 <th scope="row" class="govuk-table__header">Download all years</th>
+                 <td class="govuk-table__cell"><a href="#" class="govuk-link">${allYearsLinkText}</a></td>
+                 <td class="govuk-table__cell"><a href="#" class="govuk-link">Download annual average data</a></td>
+               </tr>`;
+    } else if (isAnnualOnly) {
+      rows += `<tr class="govuk-table__row">
+                 <th scope="row" class="govuk-table__header">Download all years</th>
+                 <td class="govuk-table__cell"><a href="#" class="govuk-link">Download annual average data</a></td>
+               </tr>`;
+    } else {
+      rows += `<tr class="govuk-table__row">
+                 <th scope="row" class="govuk-table__header">Download all years</th>
+                 <td class="govuk-table__cell"><a href="#" class="govuk-link">${allYearsLinkText}</a></td>
+                 <td class="govuk-table__cell"></td>
+                 <td class="govuk-table__cell"><a href="#" class="govuk-link">Download annual average data</a></td>
+               </tr>`;
+    }
+
+    for (let y = end; y >= start; y--) {
+      if (isSimple && !isLocalManaged) {
+        rows += `<tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">${y}</th>
+                  <td class="govuk-table__cell"><a href="#" class="govuk-link">Download data</a></td>
+                </tr>`;
+      } else if (isLocalManaged) {
+        rows += `<tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">${y}</th>
+                  <td class="govuk-table__cell"><a href="#" class="govuk-link">Download data</a></td>
+                  <td class="govuk-table__cell"><a href="#" class="govuk-link">Download annual average data</a></td>
+                </tr>`;
+      } else if (isAnnualOnly) {
+        rows += `<tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">${y}</th>
+                  <td class="govuk-table__cell"><a href="#" class="govuk-link">Download annual average data</a></td>
+                </tr>`;
+      } else {
+        rows += `<tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">${y}</th>
+                  <td class="govuk-table__cell"><a href="#" class="govuk-link">Download hourly data</a></td>
+                  <td class="govuk-table__cell"><a href="#" class="govuk-link">Download daily average data</a></td>
+                  <td class="govuk-table__cell"><a href="#" class="govuk-link">Download annual average data</a></td>
+                </tr>`;
+      }
+    }
+
+    const headSimple = `
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Year</th>
+          <th scope="col" class="govuk-table__header">Hourly data</th>
+        </tr>
+      </thead>`;
+
+    const headSimpleWithAnnual = `
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Year</th>
+          <th scope="col" class="govuk-table__header">Hourly data</th>
+          <th scope="col" class="govuk-table__header">Annual average</th>
+        </tr>
+      </thead>`;
+
+    const headAnnual = `
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Year</th>
+          <th scope="col" class="govuk-table__header">Annual average</th>
+        </tr>
+      </thead>`;
+
+    const headFull = `
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Year</th>
+          <th scope="col" class="govuk-table__header">Hourly data</th>
+          <th scope="col" class="govuk-table__header">Daily average</th>
+          <th scope="col" class="govuk-table__header">Annual average</th>
+        </tr>
+      </thead>`;
+
+    return `${headingAndDesc}${inset}${cta}
+            <table class="govuk-table">
+              ${isLocalManaged ? headSimpleWithAnnual : (isSimple ? headSimple : (isAnnualOnly ? headAnnual : headFull))}
+              <tbody class="govuk-table__body">${rows}</tbody>
+            </table>`;
+  }
+
+  if (tm.mode === 'invalid') return `${headingAndDesc}${inset}
+    <p class="govuk-body">Invalid year range selected. <a href="add-time.html" class="govuk-link">Go back</a>.</p>`;
+  if (tm.mode === 'none')    return `${headingAndDesc}${inset}
+    <p class="govuk-body">No valid time period selected. <a href="add-time.html" class="govuk-link">Choose one</a>.</p>`;
+
+  const start = getNetworkStartYear(networkName);
+  if (tm.year < start) {
+    return `${headingAndDesc}${inset}
+            <p class="govuk-body">No data available for the selected period (${tm.year}). Data for this network starts in ${start}.</p>`;
+  }
+  if (count === 0) {
+    return `${headingAndDesc}${inset}${NO_STATIONS_MSG}`;
+  }
+
+  // Single-year (no metadata button)
+const isSimple = SIMPLE_HOURLY_NETWORKS.has(networkName);
+const showAnnual = ANNUAL_AVG_NETWORKS.has(networkName);
+const isAnnualOnly = ANNUAL_ONLY_NETWORKS.has(networkName);
+
+if (isAnnualOnly) {
+  return `${headingAndDesc}${inset}${cta}
+          ${buttonHtml('Download annual average data')}`;
+}
+
+return `${headingAndDesc}${inset}${cta}
+        ${buttonHtml('Download hourly data')}
+        ${isSimple
+          ? (showAnnual ? '<br>' + buttonHtml('Download annual average data') : '')
+          : '<br>' + buttonHtml('Download daily average data') + '<br>' + buttonHtml('Download annual average data')
+        }`;
+
+}
+
+
+  // Build tabs & panels
+  const tabsList  = document.querySelector('.govuk-tabs__list');
+  const tabsRoot  = document.querySelector('.govuk-tabs');
+  if (!tabsList || !tabsRoot) return;
+
+  const sources = [];
+  if (finalBuckets.hourly.length)   sources.push('Near real-time data from Defra');
+  if (finalBuckets.monthly.length)  sources.push('Other data from Defra');
+  if (finalBuckets.nonDefra.length) sources.push('Local authority data');
+  if (!sources.length) sources.push('Other data from Defra');
+
+  const slugify = t => t.toLowerCase().replace(/\s+/g,'-').replace(/[^\w-]+/g,'');
+  const tm = parseTimeMode();
+
+  tabsList.innerHTML = '';
+  tabsRoot.querySelectorAll('.govuk-tabs__panel').forEach(el => el.remove());
+
+  function buildPanelHTML(source) {
+  const header = `<h2 class="govuk-heading-m">${source}</h2>`;
+
+  // New one-liners under the panel heading
+  const descMap = {
+    'Near real-time data from Defra':
+      '<p class="govuk-body govuk-!-margin-bottom-5">This data is automatically measured and published every hour.</p>',
+    'Other data from Defra':
+      '<p class="govuk-body govuk-!-margin-bottom-5">Data is measured hourly, weekly or monthly depending on the network.</p>'
+  };
+  const desc = descMap[source] || '';
+
+  if (source === 'Near real-time data from Defra') {
+    return header + desc + (finalBuckets.hourly || []).map(n => renderHourlyBlock(n, tm)).join('');
+  }
+  if (source === 'Other data from Defra') {
+    return header + desc + (finalBuckets.monthly || []).map(n => renderMonthlyBlock(n, tm)).join('');
+  }
+  // Non-Defra tab has no extra paragraph
+  return header + (finalBuckets.nonDefra || []).map(n => renderNonDefraBlock(n, tm)).join('');
+}
+
+
+  sources.forEach((source, i) => {
+    const id = slugify(source);
+    tabsList.insertAdjacentHTML('beforeend',
+      `<li class="govuk-tabs__list-item${i===0?' govuk-tabs__list-item--selected':''}">
+        <a class="govuk-tabs__tab" href="#${id}">${source}</a>
+      </li>`
+    );
+    tabsRoot.insertAdjacentHTML('beforeend',
+      `<div class="govuk-tabs__panel${i===0?'':' govuk-tabs__panel--hidden'}" id="${id}">
+        ${buildPanelHTML(source)}
+      </div>`
+    );
+  });
+});
+</script>
+<script>
+// Networks that should only show a single "Download" action (no daily/annual)
+const SIMPLE_HOURLY_NETWORKS = new Set([
+  'Automatic Urban and Rural Network (AURN)',
+  'Automatic Hydrocarbon Network',
+  'Locally managed automatic monitoring'
+]);
+
+const ANNUAL_AVG_NETWORKS = new Set([
+  'Automatic Urban and Rural Network (AURN)',
+  'Automatic Hydrocarbon Network',
+  'Locally managed automatic monitoring'
+]);
+
+const ANNUAL_ONLY_NETWORKS = new Set([
+  'Automatic nitrogen dioxide data',
+  'Nitrogen dioxide (NO2) diffusion tubes'
+]);
+
+</script>
+
+
+
+
+{% endblock %}

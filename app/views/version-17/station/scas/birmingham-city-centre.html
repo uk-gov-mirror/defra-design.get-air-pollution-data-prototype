@@ -1,0 +1,49 @@
+{% extends "layouts/v17.html" %}
+
+{% set pageName="Birmingham City Centre - Smoke control area - GOV.UK" %}
+
+{% block beforeContent %}
+<a href="#" class="govuk-back-link" onclick="if (document.referrer) { window.history.back(); } else { window.location.href='index.html'; } return false;">Back to Smoke control areas</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">Birmingham City Centre Smoke Control Area</h1>
+
+    <p class="govuk-body">Smoke control areas are areas where the burning of certain fuels in open fires and stoves is prohibited.</p>
+    <p class="govuk-body"><a href="https://www.gov.uk/smoke-control-area-rules" class="govuk-link">Smoke control areas: the rules</a></p>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Start date</dt>
+        <dd class="govuk-summary-list__value">15 April 1968</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Area</dt>
+        <dd class="govuk-summary-list__value">Central Birmingham city centre</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Status</dt>
+        <dd class="govuk-summary-list__value"><strong class="govuk-tag govuk-tag--green">Active</strong></dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Restrictions</dt>
+        <dd class="govuk-summary-list__value">No burning of certain fuels in open fires and stoves</dd>
+      </div>
+    </dl>
+
+    <a href="../../management-areas-map.html" role="button" id="map-btn" class="aq-button-secondary aq-button-secondary--icon" onclick="sessionStorage.setItem('mapFlyTo', JSON.stringify({lat:52.48,lng:-1.90,zoom:12})); sessionStorage.setItem('mapLayer', 'sca')">
+      <span class="aq-button-secondary__icon">
+        <svg focusable="false" width="15" height="20" viewBox="0 0 15 20">
+          <path d="M15,7.5c0.009,3.778 -4.229,9.665 -7.5,12.5c-3.271,-2.835 -7.509,-8.722 -7.5,-12.5c0,-4.142 3.358,-7.5 7.5,-7.5c4.142,0 7.5,3.358 7.5,7.5Zm-7.5,5.461c3.016,0 5.461,-2.445 5.461,-5.461c0,-3.016 -2.445,-5.461 -5.461,-5.461c-3.016,0 -5.461,2.445 -5.461,5.461c0,3.016 2.445,5.461 5.461,5.461Z" fill="currentColor"></path>
+        </svg>
+      </span>
+      <span class="aq-button-secondary__text">View map of smoke control areas</span>
+      <span class="govuk-visually-hidden">(Visual only)</span>
+    </a>
+  </div>
+</div>
+
+{% endblock %}

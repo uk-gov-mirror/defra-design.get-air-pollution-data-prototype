@@ -1,0 +1,50 @@
+{% extends "layouts/phase1-map.html" %}
+
+{% set pageName="Perry Barr AQMA - GOV.UK" %}
+
+{% block beforeContent %}
+<a href="#" class="govuk-back-link" onclick="if (document.referrer) { window.history.back(); } else { window.location.href='index.html'; } return false;">Back to AQMAs</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">Perry Barr AQMA</h1>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Pollutant</dt>
+        <dd class="govuk-summary-list__value">Nitrogen dioxide (NO2)</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Start date</dt>
+        <dd class="govuk-summary-list__value">8 September 2001</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Status</dt>
+        <dd class="govuk-summary-list__value"><strong class="govuk-tag govuk-tag--red">Revoked</strong></dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Revocation date</dt>
+        <dd class="govuk-summary-list__value">15 May 2018</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Area description</dt>
+        <dd class="govuk-summary-list__value">Perry Barr area - revoked due to improved air quality</dd>
+      </div>
+    </dl>
+
+    <a href="../../management-areas-map.html" role="button" id="map-btn" class="aq-button-secondary aq-button-secondary--icon" onclick="sessionStorage.setItem('mapFlyTo', JSON.stringify({lat:52.48,lng:-1.90,zoom:12})); sessionStorage.setItem('mapLayer', 'aqma')">
+      <span class="aq-button-secondary__icon">
+        <svg focusable="false" width="15" height="20" viewBox="0 0 15 20">
+          <path d="M15,7.5c0.009,3.778 -4.229,9.665 -7.5,12.5c-3.271,-2.835 -7.509,-8.722 -7.5,-12.5c0,-4.142 3.358,-7.5 7.5,-7.5c4.142,0 7.5,3.358 7.5,7.5Zm-7.5,5.461c3.016,0 5.461,-2.445 5.461,-5.461c0,-3.016 -2.445,-5.461 -5.461,-5.461c-3.016,0 -5.461,2.445 -5.461,5.461c0,3.016 2.445,5.461 5.461,5.461Z" fill="currentColor"></path>
+        </svg>
+      </span>
+      <span class="aq-button-secondary__text">View map of air quality management areas</span>
+      <span class="govuk-visually-hidden">(Visual only)</span>
+    </a>
+  </div>
+</div>
+
+{% endblock %}

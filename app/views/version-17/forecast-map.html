@@ -1,0 +1,122 @@
+{% extends "layouts/v17-forecast-map.html" %}
+
+{% set pageName="Forecast map - GOV.UK" %}
+
+{# Hide header and footer on map page #}
+{% block header %}{% endblock %}
+{% block beforeContent %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+
+<div id="maphigh" class="defra-map" aria-hidden="false" style="outline: 3px solid transparent;
+  box-shadow: 0px 0px 0px 2px white, inset 0px 0px 0px 0px #0b0c0c, 0px 0px 0px 5px #0b0c0c, 0px 0px 0px 8px #ffdd00;">
+  <h1 id="mapLabel" class="defra-map__title">Forecast map</h1>
+
+  <div
+    id="map-viewport"
+    class="defra-map-viewport"
+    role="region"
+    aria-label="Interactive map showing air quality forecasts"
+    >
+  </div>
+
+  <div class="defra-map-controls">
+
+  <!-- Floating panel -->
+  <div class="panel" id="floating-panel" tabindex="-1" role="region" aria-label="Map menu">
+    <div id="mobile-key-panel">
+      <button class="defra-map-info__close" id="panel-close" aria-label="Close menu" style="z-index:5;">
+        <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20">
+          <path d="M10,8.6L15.6,3L17,4.4L11.4,10L17,15.6L15.6,17L10,11.4L4.4,17L3,15.6L8.6,10L3,4.4L4.4,3L10,8.6Z"></path>
+        </svg>
+        <span class="govuk-visually-hidden">Close</span>
+      </button>
+
+      <div class="btn-container measurement-container" id="measurement-container">
+        <strong><span style="font-size: 19px;">Map type</span></strong>
+       <div class="btn-grp" style="margin-top: 5px;">
+        <button class="panel-btn map-type-btn" data-map-href="map.html" aria-pressed="false"><span>Monitoring stations</span></button>
+        <button class="panel-btn map-type-btn" data-map-href="" aria-pressed="true"><span>Forecast</span></button>
+       </div>
+
+        <strong><span style="font-size: 19px; display: block; margin-top: 16px;">Forecast</span></strong>
+       <div class="btn-grp" id="forecast-btn-group">
+        <!-- Forecast date buttons will be inserted here by JavaScript -->
+       </div>
+
+       <div id="national-forecast" class="national-forecast">
+        <!-- National forecast content will be inserted here by JavaScript -->
+       </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Zoom controls -->
+  <div class="defra-map-controls__bottom-v3">
+    <div class="reopen-stack" aria-label="Map actions">
+
+    <button class="defra-map__menu reopen-btn" id="menu-button" aria-label="Open map menu" hidden>
+  <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20"><path d="M17.215,11.31L19,12.5L10,18.5L1,12.5L2.785,11.31L9.945,16.083C9.978,16.106 10.022,16.106 10.055,16.083L17.215,11.31Z" style="fill:currentColor;"></path><path d="M10,1.5L1,7.5L10,14.5L19,7.5L10,1.5ZM10,3.88L15.43,7.5L10,11.12L4.57,7.5L10,3.88Z" style="fill:currentColor;"></path></svg>
+  <span class="reopen-text">Menu</span>
+</button>
+
+<button class="defra-map__menu reopen-btn" id="key-button" aria-label="Open map key" hidden>
+     <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill-rule="evenodd" fill="currentColor"><circle cx="3.5" cy="4" r="1.5"></circle><circle cx="3.5" cy="10" r="1.5"></circle><circle cx="3.5" cy="16" r="1.5"></circle><path d="M7 4h11M7 10h11M7 16h11" fill="none" stroke="currentColor" stroke-width="2"></path></svg>
+  <span class="reopen-text">Key</span>
+</button>
+</div>
+
+    <div class="defra-map-zoom ol-unselectable ol-control">
+
+      <button id="zoomIn" class="defra-map-zoom-in" type="button" aria-controls="map-viewport" aria-label="Zoom in">
+        <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20">
+          <path d="M9 3h2v6h6v2h-6v6H9v-6H3V9h6z"></path>
+        </svg>
+        <span class="govuk-visually-hidden">Zoom in</span>
+      </button>
+
+      <button id="zoomOut" class="defra-map-zoom-out" type="button" aria-controls="map-viewport" aria-label="Zoom out">
+        <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20">
+          <path d="M3 9h14v2H3z"></path>
+        </svg>
+        <span class="govuk-visually-hidden">Zoom out</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Exit map button -->
+  <button class="defra-map__exit" id="exit-map" aria-label="Exit map">
+    <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20">
+      <path d="M4.828,11L12.314,18.485L10.899,19.899L1,10L10.899,0.101L12.314,1.515L4.828,9L19,9L19,11L4.828,11Z"></path>
+    </svg>
+    <span>Exit map</span>
+  </button>
+
+
+</div>
+
+
+
+</div>
+
+<script>
+  document.querySelectorAll('.map-type-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var href = this.getAttribute('data-map-href');
+      if (href) {
+        try {
+          var centre = window.AQMap ? window.AQMap.getCenter() : null;
+          var zoom   = window.AQMap ? window.AQMap.getZoom()   : null;
+          if (centre && zoom != null) {
+            sessionStorage.setItem('mapFlyTo', JSON.stringify({ lat: centre.lat, lng: centre.lng, zoom: zoom }));
+          }
+        } catch (e) {}
+        window.location.replace(href);
+      }
+    });
+  });
+</script>
+
+{% endblock %}

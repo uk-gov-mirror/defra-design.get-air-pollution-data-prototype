@@ -1,0 +1,217 @@
+{#
+For guidance on how to use layouts see:
+https://prototype-kit.service.gov.uk/docs/how-to-use-layouts
+#}
+
+{% extends "govuk-prototype-kit/layouts/govuk-branded.njk" %}
+
+{% set version = "phase1-map" %}
+{% set bodyClasses = "phase1-map" %}
+
+
+{% block header %}
+  {{ govukHeader({
+    homepageUrl: "/",
+    serviceName: serviceName,
+    serviceUrl: "/phase1-map/hub.html",
+    containerClasses: "govuk-width-container"
+  }) }}
+
+  <div class="govuk-width-container">
+<div class="govuk-phase-banner">
+  <p class="govuk-phase-banner__content" >
+    <strong class="govuk-tag govuk-phase-banner__content__tag">
+      Beta
+    </strong>
+    <span class="govuk-phase-banner__text">
+      This is a new service. Help us improve it and <a class="govuk-link" href="#">give your feedback (opens in new tab)</a>.
+    </span>
+  </p>
+</div>
+</div>
+
+
+{% endblock %}
+
+{% block beforeContent %}
+
+{% endblock %}
+
+
+
+{% block footer %}
+
+
+  {{ govukFooter({
+    meta: {
+      items: [
+        {
+          href: "/mvp-final/privacy.html",
+          text: "Privacy"
+        },
+        {
+          href: "/mvp-final/cookies.html",
+          text: "Cookies"
+        },
+        {
+          href: "/mvp-final/accessibility.html",
+          text: "Accessibility statement"
+        },
+        {
+          href: "#",
+          text: "Reset prototype",
+          attributes: {
+            id: "reset-prototype"
+          }
+        }
+      ],
+      visuallyHiddenTitle: "Footer links"
+    }
+  }) }}
+
+{% endblock %}
+
+
+
+
+{% block scripts %}
+  {{ super() }}
+
+
+<script>document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+  <!-- <script src="/public/javascripts/version_8/main.js"></script> -->
+
+  <script src="/public/javascripts/bundles/autocomplete_p_phase1_map.bundle.js"></script>
+  <script src="/public/javascripts/bundles/autocomplete_la_phase1_map.bundle.js"></script>
+
+  <!-- Components -->
+  <script src="/public/javascripts/phase1_map/components/toggletip.js"></script>
+  <script src="/public/javascripts/phase1_map/components/status.js"></script>
+
+    <!-- Graphs for this year -->
+  <script src="/public/javascripts/phase1_map/graphs/this-year/nitrogen.js"></script>
+    <script src="/public/javascripts/phase1_map/graphs/this-year/ozone.js"></script>
+      <script src="/public/javascripts/phase1_map/graphs/this-year/pm2_5.js"></script>
+        <script src="/public/javascripts/phase1_map/graphs/this-year/pm10.js"></script>
+
+  <!-- Graphs for last year -->
+  <script src="/public/javascripts/phase1_map/graphs/2024/nitrogen.js"></script>
+  <script src="/public/javascripts/phase1_map/graphs/2024/pm10.js"></script>
+  <script src="/public/javascripts/phase1_map/graphs/2024/pm2_5.js"></script>
+  <script src="/public/javascripts/phase1_map/graphs/2024/ozone.js"></script>
+
+  <!-- Graphs for last month -->
+  <script src="/public/javascripts/phase1_map/graphs/past-month/nitrogen.js"></script>
+  <script src="/public/javascripts/phase1_map/graphs/past-month/pm10.js"></script>
+  <script src="/public/javascripts/phase1_map/graphs/past-month/pm2_5.js"></script>
+  <script src="/public/javascripts/phase1_map/graphs/past-month/ozone.js"></script>
+
+  <!-- Graphs for last week -->
+  <script src="/public/javascripts/phase1_map/graphs/past-week/nitrogen.js"></script>
+  <script src="/public/javascripts/phase1_map/graphs/past-week/pm10.js"></script>
+  <script src="/public/javascripts/phase1_map/graphs/past-week/pm2_5.js"></script>
+  <script src="/public/javascripts/phase1_map/graphs/past-week/ozone.js"></script>
+
+  <!-- Graphs for last 24 hours -->
+  <script src="/public/javascripts/phase1_map/graphs/24/nitrogen.js"></script>
+  <script src="/public/javascripts/phase1_map/graphs/24/pm10.js"></script>
+  <script src="/public/javascripts/phase1_map/graphs/24/pm2_5.js"></script>
+  <script src="/public/javascripts/phase1_map/graphs/24/ozone.js"></script>
+    
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const resetLink = document.getElementById('reset-prototype');
+  if (resetLink) {
+    resetLink.addEventListener('click', e => {
+      e.preventDefault();
+      if (confirm('Clear all selections and start again?')) {
+        sessionStorage.clear();
+        // If you also store anything in localStorage, clear it too:
+        // localStorage.clear();
+        window.location.href = '/'; // or whatever your prototype start page is
+      }
+    });
+  }
+});
+</script>
+  
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const path = window.location.pathname.replace(/\/+$/, ''); // trim trailing slash
+
+    // Define your journeys by path prefixes and known pages
+    const journeys = [
+      {
+        key: 'home',
+        match: (p) => p === '/phase1-map/hub' || p === '/phase1-map/hub.html' || p === '/phase1-map',
+        navHref: '/phase1-map/hub'
+      },
+      {
+        key: 'station',
+        match: (p) =>
+          p.startsWith('/phase1-map/station/') &&
+          [
+            '/phase1-map/station/birmingham-la',
+            '/phase1-map/station/pm10-graph',
+            '/phase1-map/station/results-b2-4qa',
+            '/phase1-map/station/search-by',
+            '/phase1-map/station/station'
+          ].some(prefix => p.startsWith(prefix)),
+        navHref: '/phase1-map/station/search-by'
+      },
+      {
+        key: 'maps',
+        match: (p) =>
+          p === '/phase1-map/maps' ||
+          p === '/phase1-map/maps.html' ||
+          p.startsWith('/phase1-map/maps/'),
+        navHref: '/phase1-map/maps'
+      },
+      {
+        key: 'data-selector',
+        match: (p) =>
+          p.startsWith('/phase1-map/data-selector/') &&
+          [
+            '/phase1-map/data-selector/add-datasource',
+            '/phase1-map/data-selector/add-location',
+            '/phase1-map/data-selector/add-pollutant',
+            '/phase1-map/data-selector/add-time',
+            '/phase1-map/data-selector/create-pollutant',
+            '/phase1-map/data-selector/download'
+          ].some(prefix => p.startsWith(prefix)),
+        navHref: '/phase1-map/data-selector/create-pollutant'
+      }
+    ];
+
+    // Find which journey applies
+    const activeJourney = journeys.find(j => j.match(path));
+    if (!activeJourney) return;
+
+    // GOV.UK Service Navigation markup uses links; we mark the matching one as current
+    const nav = document.querySelector('.govuk-service-navigation');
+    if (!nav) return;
+
+    const links = nav.querySelectorAll('a.govuk-service-navigation__link');
+    links.forEach(function (link) {
+      const href = (link.getAttribute('href') || '').replace(/\/+$/, '');
+
+      // Clear state
+      link.removeAttribute('aria-current');
+      const li = link.closest('li');
+      if (li) li.classList.remove('govuk-service-navigation__item--active');
+
+      // Set active
+      if (href === activeJourney.navHref.replace(/\/+$/, '')) {
+        link.setAttribute('aria-current', 'page');
+        if (li) li.classList.add('govuk-service-navigation__item--active');
+      }
+    });
+  });
+</script>
+
+{% endblock %}

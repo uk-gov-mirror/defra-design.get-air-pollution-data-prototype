@@ -1,0 +1,138 @@
+.defra-aq-stations-table {
+  /* @extend .govuk-table; */
+  position: relative;
+  margin-top: -1px;
+  margin-bottom: 0px;
+
+  @include mq($until: tablet) {
+    display: block;
+    margin-top: 30px;
+  }
+
+  &__head {
+    @include mq($until: tablet) {
+      display: block;
+    }
+  }
+
+  &__head tr {
+    @include mq($until: tablet) {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+
+  &__head &__cell {
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    &--pollutant {
+      @include mq($until: tablet) {
+        @include defra-visually-hidden();
+      }
+    }
+  }
+
+  &__body {
+    @include mq($until: tablet) {
+      display: block;
+    }
+  }
+
+  &__row {
+    border-bottom: 1px solid govuk-tint($govuk-border-colour, 0);
+
+    @include mq($until: tablet) {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: -1px;
+    }
+  }
+
+  &__cell {
+    /* @extend .govuk-table__cell; */
+    border-bottom: 0px;
+    vertical-align: middle;
+    text-align: left;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    @include mq($until: tablet) {
+      display: inline-block;
+      padding-top: 0px;
+      padding-bottom: 10px;
+    }
+
+    a {
+      display: inline-block;
+    }
+  }
+
+  // Column 1: Station (name + network)
+  &__cell--pollutant {
+    @include govuk-font($size: 19, $weight: bold);
+    width: 35%;
+    padding-right: 20px;
+
+    @include mq($until: tablet) {
+      padding-top: 10px;
+      padding-bottom: 25px;
+      padding-right: 0px;
+      width: 100%;
+    }
+  }
+
+  &__cell--pollutant-title {
+    padding-bottom: 10px;
+
+    @include mq($until: tablet) {
+      @include defra-visually-hidden();
+    }
+  }
+
+  // Column 2: Site type
+  &__cell--average-title {
+    padding-bottom: 10px;
+  }
+
+  &__cell--average {
+    width: 25%;
+    text-align: right;
+
+    @include mq($until: tablet) {
+      width: 35%;
+      text-align: left;
+    }
+  }
+
+  // Column 3: Pollutants / Networks
+  &__cell--daily-title {
+    padding-bottom: 10px;
+  }
+
+  &__cell--daily {
+    width: 35%;
+    text-align: right;
+
+    @include mq($until: tablet) {
+      width: 65%;
+    }
+  }
+
+  // (No hourly column used for this 3-column variant, so we don’t need a width override)
+
+  &__cell--data {
+    font-size: 16px;
+    margin-top: 5px;
+    display: block;
+    font-weight: normal;
+
+    @include mq($until: tablet) {
+      font-size: 14px;
+    }
+  }
+}

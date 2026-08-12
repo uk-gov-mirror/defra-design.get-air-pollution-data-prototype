@@ -1,0 +1,76 @@
+// Forecast Map Styles
+
+// Legend styling uses existing defra-map-info class from map.scss
+// Only adjust size if needed for forecast-specific requirements
+
+// Forecast button group styling
+#forecast-btn-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  z-index: 1;
+  width: 100%;
+
+  .panel-btn {
+    height: 40px;
+    width: 20%;
+    background-color: rgb(248, 248, 248);
+    padding: 0 5px 0 5px;
+    border: none;
+    justify-content: center;
+    align-items: center;
+    outline: transparent solid 3px;
+    margin: 0px -1px 0px 0px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(231, 231, 231);
+    cursor: pointer;
+    display: flex;
+
+    span {
+      @include govuk-font($size: 14);
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &:hover {
+      background-color: #f3f2f1;
+    }
+
+    &:focus-visible {
+      border: 3px solid #0b0c0c;
+      outline: 3px solid #ffdd00;
+      z-index: 5;
+    }
+
+    &[aria-pressed="true"],
+    &.is-active {
+      border: 2px solid #0b0c0c;
+      background-color: #fff;
+      margin: 0px -1px 0px 0px;
+
+      &:focus-visible {
+        border: 3px solid #0b0c0c;
+        outline: 3px solid #ffdd00;
+        z-index: 5;
+      }
+    }
+  }
+}
+
+// Map controls panel adjustments
+.measurement-container {
+  strong {
+    display: block;
+    margin-bottom: 10px;
+  }
+}
+
+// National forecast section
+#national-forecast {
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid #b1b4b6;
+}

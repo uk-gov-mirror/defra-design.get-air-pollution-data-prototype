@@ -1,0 +1,103 @@
+{% extends "layouts/v17.html" %}
+
+{% set pageName="Search by location" %}
+
+{% block beforeContent %}
+<a href="../hub.html" class="govuk-back-link">
+  Back
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-l">Search by town, postcode or local authority</h1>
+
+    <div class="govuk-form-group">
+      <fieldset class="govuk-fieldset" aria-describedby="location-hint">
+        <div id="location-hint" class="govuk-hint">Select one option</div>
+
+        <div class="govuk-radios" data-module="govuk-radios">
+          <!-- Countries -->
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input"
+                   id="location-2"
+                   name="location"
+                   type="radio"
+                   value="countries"
+                   data-aria-controls="conditional-location-2">
+            <label class="govuk-label govuk-radios__label" for="location-2">Town or postcode</label>
+            <div class="govuk-hint govuk-radios__hint">
+            For locations in Northern Ireland, you can only search by postcode. 
+            </div>
+          </div>
+
+          <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-location-2">
+          <div class="govuk-form-group">
+          <label class="govuk-label" for="contact-by-email">
+          </label>
+          <input class="govuk-input govuk-!-width-one-third" id="contact-by-email" name="contactByEmail" type="email" spellcheck="false" autocomplete="email">
+        </div>
+          </div>
+
+          <!-- Local authority -->
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input"
+                   id="location-4"
+                   name="location"
+                   type="radio"
+                   value="la"
+                   data-aria-controls="conditional-location-4">
+            <label class="govuk-label govuk-radios__label" for="location-4">Local authority</label>
+          </div>
+
+          <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-location-4">
+            <div class="govuk-form-group">
+              <!-- Inline error will be inserted just before this container -->
+              <div id="autocomplete-container" class="govuk-body"></div>
+
+            
+            </div>
+
+            <table class="govuk-table govuk-!-margin-top-4" id="location-table" hidden>
+              <caption class="govuk-table__caption govuk-table__caption--m">Added local authorities</caption>
+              <tbody class="govuk-table__body"></tbody>
+            </table>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+<p class="govuk-body govuk-!-margin-bottom-6"><a href="../map.html" class="govuk-link">Skip to map</a></p>
+    
+  {{ govukButton({
+  text: "Continue",
+  classes: "govuk-button",
+  attributes: { id: "continue-button", type: "button" }
+}) }}
+
+<p class="govuk-body govuk-!-margin-bottom-6"><a href="https://www.gov.uk/find-local-council" class="govuk-link">Find your local authority (local council)</a></p>
+  </div>
+</div>
+
+<script>
+  document.getElementById("continue-button").addEventListener("click", function () {
+    const selected = document.querySelector('input[name="location"]:checked');
+
+    if (!selected) {
+      // Let GOV.UK validation handle this if needed
+      alert("Select a location option before continuing");
+      return;
+    }
+
+    if (selected.value === "countries") {
+      window.location.href = "results-b2-4qa.html";
+    } else if (selected.value === "la") {
+      window.location.href = "birmingham-la.html";
+    }
+  });
+</script>
+
+
+{% endblock %}

@@ -86,7 +86,27 @@ module.exports = {
       forecast_map_16 : './app/assets/javascripts/version_16/forecast-map.js',
 
       // Management Areas Map V16
-      management_areas_map_16 : './app/assets/javascripts/version_16/management-areas-map.js'
+      management_areas_map_16 : './app/assets/javascripts/version_16/management-areas-map.js',
+
+      // Version 17
+      autocomplete_p_17 :   './app/assets/javascripts/version_17/components/accessible-autocomplete-p-v8.js',
+      autocomplete_la_17 :   './app/assets/javascripts/version_17/components/accessible-autocomplete.js',
+
+      // Air Quality Map V17
+      AQ_map_17 : './app/assets/javascripts/version_17/air-quality-map.js',
+
+      // Forecast Map V17
+      forecast_map_17 : './app/assets/javascripts/version_17/forecast-map.js',
+
+      // Phase 1 Map
+      autocomplete_p_phase1_map :   './app/assets/javascripts/phase1_map/components/accessible-autocomplete-p-v8.js',
+      autocomplete_la_phase1_map :   './app/assets/javascripts/phase1_map/components/accessible-autocomplete.js',
+
+      // Air Quality Map Phase 1 Map
+      AQ_map_phase1_map : './app/assets/javascripts/phase1_map/air-quality-map.js',
+
+      // Forecast Map Phase 1 Map
+      forecast_map_phase1_map : './app/assets/javascripts/phase1_map/forecast-map.js'
    },
     // Adjust if your entry file has a different path
   output: {

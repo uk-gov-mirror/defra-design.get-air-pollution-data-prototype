@@ -1,0 +1,26 @@
+{#
+For guidance on how to use layouts see:
+https://prototype-kit.service.gov.uk/docs/how-to-use-layouts
+#}
+
+{% extends "govuk-prototype-kit/layouts/govuk-branded.njk" %}
+
+{% set version = "phase1-map" %}
+{% set bodyClasses = "phase1-map" %}
+
+
+{% block scripts %}
+  {{ super() }}
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+    <!-- Components -->
+  <script src="/public/javascripts/phase1_map/components/toggletip.js"></script>
+
+  <!-- Forecast Map -->
+   <script src="/public/javascripts/bundles/forecast_map_phase1_map.bundle.js"></script>
+
+
+
+{% endblock %}

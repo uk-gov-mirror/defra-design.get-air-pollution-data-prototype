@@ -1,0 +1,51 @@
+{% extends "layouts/phase1-map.html" %}
+
+{% set pageName="Get air pollution data - GOV.UK" %}
+
+
+{% block header %}
+  {{ govukHeader({
+    
+  }) }}
+
+
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">Air quality</h1>
+  <p class="govuk-body">Check air quality, get air pollution data and find out how air pollution affects your health.</p>
+   
+    <div class="div govuk-divider"></div>
+
+<h2 class="govuk-heading-m">Air pollution and your health</h2>
+  <p class="govuk-body"><a href="https://check-local-aq-c31e075e52e2.herokuapp.com/version-5" class="govuk-link">Check air quality</a></p>
+<p class="govuk-body"><a href="#" class="govuk-link">Get air pollution alerts</a></p>
+<p class="govuk-body"><a href="https://www.gov.uk/government/publications/health-effects-of-air-pollution" class="govuk-link">Health effects of air pollution</a></p>
+<p class="govuk-body"><a href="https://check-local-aq-c31e075e52e2.herokuapp.com/version-3/actions?locationName=undefined" class="govuk-link">Actions to reduce your exposure to air pollution</a></p>
+
+    <div class="div govuk-divider"></div>
+
+<h2 class="govuk-heading-m">Air pollution data</h2>
+  <p class="govuk-body"><a href="start.html" class="govuk-link">Get air pollution data</a></p>
+<p class="govuk-body"><a href="https://www.gov.uk/government/collections/air-pollution-in-the-uk-sources-of-monitoring-data" class="govuk-link">Sources of air pollution data</a></p>
+<p class="govuk-body"><a href="https://www.gov.uk/government/collections/air-pollution-in-the-uk-annual-reports" class="govuk-link">Air pollution in the UK annual reports</a></p>
+
+    <div class="div govuk-divider"></div>
+
+<h2 class="govuk-heading-m">How councils are reducing air pollution</h2>
+  
+<p class="govuk-body"><a href="" class="govuk-link">Clean air zones</a></p>
+<p class="govuk-body"><a href="" class="govuk-link">Smoke control areas: the rules</a></p>
+<p class="govuk-body"><a href="" class="govuk-link">Garden bonfires: the rules</a></p>
+<p class="govuk-body"><a href="" class="govuk-link">Preventing air pollution</a></p>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

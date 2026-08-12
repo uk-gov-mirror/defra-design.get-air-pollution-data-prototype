@@ -1,0 +1,1572 @@
+{% extends "layouts/phase1-map.html" %}
+{% set pageName="Birmingham A4540 Roadside monitoring station - GOV.UK" %}
+
+{% block beforeContent %}
+<a href="#"
+   class="govuk-back-link"
+   onclick="history.back(); return false;">
+  Back
+</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    {# H1 updated by JS to reflect selected period/year #}
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-3" id="js-page-title">
+      Last 24 hours: Birmingham A4540 Roadside
+    </h1>
+
+    <p class="govuk-body govuk-!-margin-bottom-2" id="js-range-text">
+      1 January to 31 December 2025
+    </p>
+
+    {# ----------------------------
+       TOP PERIOD NAV
+       ---------------------------- #}
+   <nav class="moj-sub-navigation govuk-!-margin-bottom-6" aria-label="Time period navigation">
+  <ul class="moj-sub-navigation__list" id="js-period-nav">
+    <li class="moj-sub-navigation__item">
+      <a class="moj-sub-navigation__link js-period-link"
+         data-mode="rolling"
+         data-period="24h"
+         href="#period-24h">
+        Last 24 hours
+      </a>
+    </li>
+
+    <li class="moj-sub-navigation__item">
+      <a class="moj-sub-navigation__link js-period-link"
+         data-mode="rolling"
+         data-period="7d"
+         href="#period-7d">
+        Last 7 days
+      </a>
+    </li>
+
+    <!-- <li class="moj-sub-navigation__item">
+      <a class="moj-sub-navigation__link js-period-link"
+         data-mode="year"
+         data-year="2026"
+         href="#year-2026">
+        2026
+      </a>
+    </li>
+
+    <li class="moj-sub-navigation__item">
+      <a class="moj-sub-navigation__link js-period-link"
+         data-mode="year"
+         data-year="2025"
+         href="#year-2025">
+        2025
+      </a>
+    </li> -->
+
+ <!--    <li class="moj-sub-navigation__item">
+      <a class="moj-sub-navigation__link js-period-link"
+         data-mode="year"
+         data-year="2024"
+         href="#year-2024">
+        2024
+      </a>
+    </li>
+
+    <li class="moj-sub-navigation__item">
+      <a class="moj-sub-navigation__link js-period-link"
+         data-mode="year"
+         data-year="2023"
+         href="#year-2023">
+        2023
+      </a>
+    </li>
+
+    <li class="moj-sub-navigation__item">
+      <a class="moj-sub-navigation__link js-period-link"
+         data-mode="year"
+         data-year="2022"
+         href="#year-2022">
+        2022
+      </a>
+    </li> -->
+  </ul>
+</nav>
+
+    <div class="govuk-inset-text half-verified govuk-!-margin-bottom-5" id="js-verified">
+      Data has been checked and verified until 31 October 2025
+    </div>
+
+ 
+
+
+
+  
+
+  
+
+    <details class="govuk-details govuk-!-margin-bottom-4" id="js-summary-details" data-module="govuk-details">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">
+          View pollutant summary
+        </span>
+      </summary>
+      <div class="govuk-details__text" style="padding-right: 0; border-left: 0; margin-left: 0;">
+        <nav class="moj-sub-navigation govuk-!-margin-bottom-4"
+             aria-label="Month navigation"
+             id="js-month-nav"
+             hidden>
+          <ul class="moj-sub-navigation__list" id="js-month-nav-list">
+            <li class="moj-sub-navigation__item">
+              <a class="moj-sub-navigation__link js-month-link" data-month="all" href="#month-all" aria-current="page">Year</a>
+            </li>
+            <li class="moj-sub-navigation__item"><a class="moj-sub-navigation__link js-month-link" data-month="1" href="#month-1">Jan</a></li>
+            <li class="moj-sub-navigation__item"><a class="moj-sub-navigation__link js-month-link" data-month="2" href="#month-2">Feb</a></li>
+            <li class="moj-sub-navigation__item"><a class="moj-sub-navigation__link js-month-link" data-month="3" href="#month-3">Mar</a></li>
+            <li class="moj-sub-navigation__item"><a class="moj-sub-navigation__link js-month-link" data-month="4" href="#month-4">Apr</a></li>
+            <li class="moj-sub-navigation__item"><a class="moj-sub-navigation__link js-month-link" data-month="5" href="#month-5">May</a></li>
+            <li class="moj-sub-navigation__item"><a class="moj-sub-navigation__link js-month-link" data-month="6" href="#month-6">Jun</a></li>
+            <li class="moj-sub-navigation__item"><a class="moj-sub-navigation__link js-month-link" data-month="7" href="#month-7">Jul</a></li>
+            <li class="moj-sub-navigation__item"><a class="moj-sub-navigation__link js-month-link" data-month="8" href="#month-8">Aug</a></li>
+            <li class="moj-sub-navigation__item"><a class="moj-sub-navigation__link js-month-link" data-month="9" href="#month-9">Sep</a></li>
+            <li class="moj-sub-navigation__item"><a class="moj-sub-navigation__link js-month-link" data-month="10" href="#month-10">Oct</a></li>
+            <li class="moj-sub-navigation__item"><a class="moj-sub-navigation__link js-month-link" data-month="11" href="#month-11">Nov</a></li>
+            <li class="moj-sub-navigation__item"><a class="moj-sub-navigation__link js-month-link" data-month="12" href="#month-12">Dec</a></li>
+          </ul>
+        </nav>
+
+        <div id="js-summary-table-slot"></div>
+
+        <p class="govuk-hint govuk-!-margin-top-2 govuk-!-margin-bottom-0" id="js-legal-hint">
+          The pollution levels shown are measured against
+          <a href="https://draft-origin.publishing.service.gov.uk/guidance/air-pollution-uk-legal-limits?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmMjc3ZmU0My03OGIyLTRjYTAtOTFhMy0xODU5OTI0OWQzZGQiLCJjb250ZW50X2lkIjoiMjMyYzJiZTgtMzkxNi00Mjg0LTk4MjItMThkYzExZmQyNDdhIiwiaWF0IjoxNzg0MDQyNDk4LCJleHAiOjE3ODY3MjA4OTh9.C-ZSqWMjRJSkDpE_y_CIBu8SOTzJptHchqAoUQnR8EU&utm_campaign=govuk_publishing&utm_medium=preview&utm_source=share"
+             class="govuk-link">
+            UK legal limits</a>.
+        </p>
+      </div>
+    </details>
+
+    <h2 class="govuk-heading-l govuk-!-margin-top-6" id="js-graph-heading">
+      View graph: daily average data
+    </h2>
+
+    <p class="govuk-body govuk-!-margin-bottom-6">The unit µg/m³ stands for micrograms (one millionth of a gram) per cubic metre of air.</p>
+
+    <div id="js-graph-slot">
+   <div class="graph-container">
+      <div id="pm10-container-2024" tabindex="0" aria-label="PM10 levels chart. Use left and right arrows to explore data points."></div>
+
+              <div id="chart-aria-live" class="govuk-visually-hidden" aria-live="polite" role="status"></div>
+              </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+{# ----------------------------
+   OPTIONAL: minimal inline script scaffold (IDs above match)
+   You can replace with your full JS later.
+   ---------------------------- #}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // ----------------------------
+  // ELEMENTS
+  // ----------------------------
+  const periodLinks = document.querySelectorAll('.js-period-link');
+  const pollutantLinks = document.querySelectorAll('.js-pollutant-link');
+
+  const title = document.getElementById('js-page-title');
+  const rangeText = document.getElementById('js-range-text');
+  const verified = document.getElementById('js-verified');
+  const summaryTableSlot = document.getElementById('js-summary-table-slot');
+  const legalHint = document.getElementById('js-legal-hint');
+
+  const monthNav = document.getElementById('js-month-nav');
+  const monthLinks = document.querySelectorAll('.js-month-link');
+
+  const chartTarget = document.getElementById('js-chart-target');
+  const graphHeading = document.getElementById('js-graph-heading');
+  const graphContainer = document.getElementById('js-graph-container');
+
+  // robust targets to hide when "no data available"
+  const metricsDl = document.getElementById('js-summary-details');
+
+  // ----------------------------
+  // STATE
+  // ----------------------------
+  let currentPollutant = 'pm25';
+  let mode = 'year';          // 'rolling' | 'year'
+  let rollingPeriod = '24h';  // '24h' | '7d'
+  let selectedYear = '2026';  // used when mode === 'year'
+  let selectedMonth = 'all';  // 'all' or 1-12 when mode === 'year'
+
+  // Chart instance placeholder (destroy if your lib supports it)
+  let currentChartInstance = null;
+
+  // ----------------------------
+  // HELPERS
+  // ----------------------------
+  const pollutantTitles = {
+    pm25: 'PM2.5',
+    pm10: 'PM10',
+    no2: 'Nitrogen dioxide',
+    o3: 'Ozone'
+  };
+
+  function applySelectionFromQueryString() {
+  const params = new URLSearchParams(window.location.search);
+
+  console.log('[applySelectionFromQueryString] URL search:', window.location.search);
+  console.log('[applySelectionFromQueryString] All params:', Array.from(params.entries()));
+
+  // Always default to PM2.5 unless you later want to allow overrides
+  currentPollutant = 'pm25';
+
+  const qMode = params.get('mode');
+  const qPeriod = params.get('period');
+  const qYear = params.get('year');
+
+  console.log('[applySelectionFromQueryString] Parsed - mode:', qMode, 'period:', qPeriod, 'year:', qYear);
+
+  if (qMode === 'rolling' && (qPeriod === '24h' || qPeriod === '7d')) {
+    mode = 'rolling';
+    rollingPeriod = qPeriod;
+    selectedMonth = 'all';
+    console.log('[applySelectionFromQueryString] Set to rolling mode, period:', rollingPeriod);
+    return;
+  }
+
+  if (qMode === 'year' && /^\d{4}$/.test(qYear || '')) {
+    mode = 'year';
+    selectedYear = qYear;
+    selectedMonth = 'all';
+    console.log('[applySelectionFromQueryString] Set to year mode, year:', selectedYear);
+  }
+}
+
+
+  const monthNamesShort = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const monthNamesLong = [
+    'January','February','March','April','May','June',
+    'July','August','September','October','November','December'
+  ];
+
+  function formatDMonth(date) {
+    return date.getDate() + ' ' + monthNamesLong[date.getMonth()];
+  }
+
+  function formatDMonthYear(date) {
+    return date.getDate() + ' ' + monthNamesLong[date.getMonth()] + ' ' + date.getFullYear();
+  }
+
+  function last7DaysLabel() {
+    const end = new Date();            // today
+    const start = new Date(end);
+    start.setDate(end.getDate() - 6);  // inclusive 7-day window
+
+    // Same year
+    if (start.getFullYear() === end.getFullYear()) {
+      // Same month too → remove FIRST month displayed (keep end month)
+      if (start.getMonth() === end.getMonth()) {
+        // e.g. "29 to 4 February 2026"
+        return start.getDate() + ' to ' + formatDMonthYear(end);
+      }
+
+      // Different month, same year → don’t repeat year on start
+      return formatDMonth(start) + ' to ' + formatDMonthYear(end);
+    }
+
+    // Different years → include years on both
+    return formatDMonthYear(start) + ' to ' + formatDMonthYear(end);
+  }
+
+  function formatDateLong(date) {
+    const d = date.getDate();
+    const m = monthNamesLong[date.getMonth()];
+    const y = date.getFullYear();
+    return d + ' ' + m + ' ' + y;
+  }
+
+  function yearRangeLabel(year) {
+    const now = new Date();
+    const y = parseInt(year, 10);
+    if (y === now.getFullYear()) {
+      return '1 January to ' + formatDateLong(now);
+    }
+    return '1 January to 31 December ' + year;
+  }
+
+  function monthRangeLabel(year, monthIndex1to12) {
+    const y = parseInt(year, 10);
+    const m = parseInt(monthIndex1to12, 10) - 1;
+    if (Number.isNaN(y) || Number.isNaN(m)) return '';
+
+    const now = new Date();
+
+    // Start = 1st of month
+    const start = new Date(y, m, 1);
+
+    // End = end of month
+    let end = new Date(y, m + 1, 0);
+
+    // If current year + current month, clamp to today (month-to-date)
+    if (y === now.getFullYear() && m === now.getMonth()) {
+      end = now;
+    }
+
+    // Remove FIRST month displayed when same month: "1 to 4 February 2026"
+    if (start.getFullYear() === end.getFullYear() && start.getMonth() === end.getMonth()) {
+      return '1 to ' + formatDMonthYear(end);
+    }
+
+    // Different month → keep "1 January to 4 February 2026" style (no year on start)
+    const startLabel = '1 ' + monthNamesLong[m]; // no year on start
+    const endLabel = formatDMonthYear(end);
+
+    return startLabel + ' to ' + endLabel;
+  }
+
+ function updateMonthNavAvailability() {
+  if (!monthNav) return;
+
+  if (mode !== 'year') {
+    monthNav.hidden = true;
+    return;
+  }
+
+  monthNav.hidden = false;
+
+  monthLinks.forEach((link) => {
+    const li = link.closest('li');
+    if (!li) return;
+
+    const m = link.dataset.month;
+
+    // Always show "Year"
+    if (m === 'all') {
+      li.hidden = false;
+      li.style.display = '';
+      link.removeAttribute('aria-disabled');
+      link.tabIndex = 0;
+      return;
+    }
+
+    const monthNum = parseInt(m, 10);
+    const hide = (selectedYear === '2026' && monthNum >= 3);
+
+    li.hidden = hide;
+    li.style.display = hide ? 'none' : '';
+
+    // Make sure hidden items can’t be tabbed/clicked if CSS fails
+    if (hide) {
+      link.setAttribute('aria-disabled', 'true');
+      link.tabIndex = -1;
+    } else {
+      link.removeAttribute('aria-disabled');
+      link.tabIndex = 0;
+    }
+  });
+
+  // Bounce back if currently on a hidden month
+  const sel = parseInt(selectedMonth, 10);
+  if (selectedYear === '2026' && !Number.isNaN(sel) && sel >= 3) {
+    selectedMonth = 'all';
+  }
+}
+
+
+// Matches station page toggletips (copy + where they exist)
+const toggletips = {
+  pm25: {
+    avg: {
+      label: 'More information about the UK annual average limit value for PM2.5',
+      content: 'Annual average PM2.5 levels at any site must not go above 20 micrograms per cubic metre (µg/m³) in a calendar year (when rounded to a whole number).'
+    },
+    daily: null,  // station page: no legal limit (no toggletip)
+    hourly: null  // station page: no legal limit (no toggletip)
+  },
+
+  pm10: {
+    avg: {
+      label: 'More information about the UK annual average limit value for PM10',
+      content: 'Annual average PM10 levels at any site must not go above 40 micrograms per cubic metre (µg/m³) in a calendar year (when rounded to a whole number).'
+    },
+    daily: {
+      label: 'More information about daily exceedances for PM10',
+      content: 'Daily average PM10 levels must not go above 50 micrograms per cubic metre (µg/m³) more than 35 times in a calendar year (when rounded to a whole number).'
+    },
+    hourly: null // station page: no legal limit (no toggletip)
+  },
+
+  no2: {
+    avg: {
+      label: 'More information about the UK annual average limit value for nitrogen dioxide',
+      content: 'Annual average nitrogen dioxide levels at any site must not go above 40 micrograms per cubic metre (µg/m³) in a calendar year (when rounded to a whole number).'
+    },
+    daily: null, // station page: no legal limit (no toggletip)
+    hourly: {
+      label: 'More information about hourly exceedances for nitrogen dioxide',
+      content: 'Hourly nitrogen dioxide levels must not go above 200 micrograms per cubic metre (µg/m³) more than 18 times in a calendar year (when rounded to a whole number).'
+    }
+  },
+
+  o3: {
+    avg: {
+      label: 'More information about the UK annual average limit value for ozone',
+      content: 'There is no annual average limit value for ozone.'
+    },
+    daily: null,  // station page: no legal limit (no toggletip)
+    hourly: null  // station page: no legal limit (no toggletip)
+  }
+};
+
+const ttAvg = document.getElementById('js-tt-avg');
+const ttDaily = document.getElementById('js-tt-daily');
+const ttHourly = document.getElementById('js-tt-hourly');
+
+function setToggleTip(wrapperEl, tip) {
+  if (!wrapperEl) return;
+
+  // If no tip should exist: show as plain text (keep wrapper visible)
+  if (!tip) {
+    wrapperEl.hidden = false;
+    wrapperEl.removeAttribute('data-toggletip');
+    wrapperEl.removeAttribute('data-toggletip-label');
+    wrapperEl.removeAttribute('data-toggletip-content');
+    wrapperEl.classList.remove('defra-toggletip');
+    return;
+  }
+
+  // Tip should exist
+  wrapperEl.hidden = false;
+  wrapperEl.classList.add('defra-toggletip');
+  wrapperEl.setAttribute('data-toggletip', '');
+  wrapperEl.setAttribute('data-toggletip-label', tip.label);
+  wrapperEl.setAttribute('data-toggletip-content', tip.content);
+}
+
+
+function applyToggletipsForPollutant(pollutantKey) {
+  const tt = toggletips[pollutantKey] || {};
+  setToggleTip(ttAvg, tt.avg || null);
+  setToggleTip(ttDaily, tt.daily || null);
+  setToggleTip(ttHourly, tt.hourly || null);
+}
+
+function getSummaryColumns() {
+  if (mode === 'rolling' && rollingPeriod === '24h') {
+    return [
+      { key: 'avg', label: '24 hour average', cellClass: 'average' },
+      { key: 'hourly', label: 'Hourly exceedances', cellClass: 'hourly' }
+    ];
+  }
+
+  return [
+    { key: 'avg', label: 'Average', cellClass: 'average' },
+    { key: 'daily', label: 'Daily exceedances', cellClass: 'daily' },
+    { key: 'hourly', label: 'Hourly exceedances', cellClass: 'hourly' }
+  ];
+}
+
+function getRecordForPollutant(pollutantKey) {
+  const pollutantData = data[pollutantKey];
+  if (!pollutantData) {
+    return { metrics: { avg: '–', daily: '–', hourly: '–', capture: '–' } };
+  }
+
+  if (mode === 'rolling') {
+    return pollutantData.rolling[rollingPeriod] || pollutantData.rolling['24h'];
+  }
+
+  const yearData = pollutantData.years[selectedYear] || pollutantData.years['2026'] || Object.values(pollutantData.years)[0];
+  if (!yearData) {
+    return { metrics: { avg: '–', daily: '–', hourly: '–', capture: '–' } };
+  }
+
+  if (selectedMonth !== 'all') {
+    const monthData = yearData.months && yearData.months[String(selectedMonth)];
+    if (monthData) return monthData;
+  }
+
+  return yearData.year;
+}
+
+function getPollutantDisplayName(pollutantKey) {
+  return pollutantTitles[pollutantKey] || pollutantKey.toUpperCase();
+}
+
+function getMetricCellHtml(pollutantKey, metricKey, value) {
+  const tips = toggletips[pollutantKey] || {};
+  const tip = tips[metricKey] || null;
+
+  if (!tip) return value;
+
+  return `
+    <div class="defra-toggletip"
+         data-toggletip
+         data-toggletip-label="${tip.label}"
+         data-toggletip-content="${tip.content}">
+      ${value}
+    </div>
+  `;
+}
+
+function renderSummaryTable() {
+  if (!summaryTableSlot) return;
+
+  const pollutants = ['pm25', 'pm10', 'no2', 'o3'];
+  const columns = getSummaryColumns();
+
+  let headHtml = '';
+  columns.forEach(function (col) {
+    headHtml += `
+      <th scope="col"
+          class="defra-aq-levels-table__cell defra-aq-levels-table__cell--${col.cellClass} defra-aq-levels-table__cell--${col.cellClass}-title">
+        ${col.label}
+      </th>
+    `;
+  });
+
+  let bodyHtml = '';
+  pollutants.forEach(function (pollutantKey) {
+    const record = getRecordForPollutant(pollutantKey);
+    const metrics = (record && record.metrics) || {};
+    const captureVal = metrics.capture || '–';
+
+    let metricCellsHtml = '';
+    columns.forEach(function (col) {
+      const metricVal = metrics[col.key] || '–';
+      const cellHtml = getMetricCellHtml(pollutantKey, col.key, metricVal);
+      metricCellsHtml += `
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--${col.cellClass}">
+          ${cellHtml}
+        </td>
+      `;
+    });
+
+    bodyHtml += `
+      <tr class="defra-aq-levels-table__row">
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+          ${getPollutantDisplayName(pollutantKey)}
+          <span class="defra-aq-levels-table__cell--data">Data capture: ${captureVal}</span>
+        </td>
+        ${metricCellsHtml}
+      </tr>
+    `;
+  });
+
+  summaryTableSlot.innerHTML = `
+    <table class="govuk-table defra-aq-levels-table govuk-!-margin-bottom-2">
+      <thead class="defra-aq-levels-table__head">
+        <tr class="defra-aq-levels-table__row">
+          <th scope="col"
+              class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant defra-aq-levels-table__cell--pollutant-title">
+            Pollutant
+          </th>
+          ${headHtml}
+        </tr>
+      </thead>
+      <tbody class="defra-aq-levels-table__body">
+        ${bodyHtml}
+      </tbody>
+    </table>
+  `;
+}
+
+
+
+  
+// ----------------------------
+// CHART SWAP (quick fix)
+// ----------------------------
+
+const graphSlot = document.getElementById('js-graph-slot');
+
+function getGraphIdForSelection() {
+  // Pick a suffix based on the time selection
+  let suffix = '2024';
+
+  if (mode === 'rolling' && rollingPeriod === '24h') suffix = '24';
+  else if (mode === 'rolling' && rollingPeriod === '7d') suffix = 'week';
+  else if (mode === 'year' && selectedMonth !== 'all') suffix = 'month';
+
+  // ✅ Only special-case 2026 year view
+  if (mode === 'year' && selectedMonth === 'all' && selectedYear === '2026') {
+    suffix = '2026';
+  }
+
+  return `${currentPollutant}-container-${suffix}`;
+}
+
+
+
+function renderGraphBlock() {
+  if (!graphSlot) return;
+
+  const id = getGraphIdForSelection();
+
+  const isWeek = mode === 'rolling' && rollingPeriod === '7d';
+  const isRolling = mode === 'rolling';
+  const keyHtml = isRolling ? `
+    <ul class="aq-chart-key" role="list" aria-label="Chart colour key">
+      <li class="aq-chart-key__item">
+        <svg width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="#12436D"/></svg>
+        <span class="govuk-body govuk-!-margin-bottom-0">PM2.5</span>
+      </li>
+      <li class="aq-chart-key__item">
+        <svg width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="#28A197"/></svg>
+        <span class="govuk-body govuk-!-margin-bottom-0">PM10</span>
+      </li>
+      <li class="aq-chart-key__item">
+        <svg width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="#801650"/></svg>
+        <span class="govuk-body govuk-!-margin-bottom-0">Nitrogen dioxide</span>
+      </li>
+      <li class="aq-chart-key__item">
+        <svg width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="#A285D1"/></svg>
+        <span class="govuk-body govuk-!-margin-bottom-0">Ozone</span>
+      </li>
+    </ul>
+  ` : '';
+
+  const downloadSvg = `<svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"></path></svg>`;
+  const btnClass = 'aq-button-secondary aq-button-secondary--icon govuk-!-margin-bottom-1';
+  const legalLimitsUrl = (legalHint && legalHint.querySelector('a'))
+    ? legalHint.querySelector('a').getAttribute('href')
+    : 'https://draft-origin.publishing.service.gov.uk/guidance/air-pollution-uk-legal-limits?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmMjc3ZmU0My03OGIyLTRjYTAtOTFhMy0xODU5OTI0OWQzZGQiLCJjb250ZW50X2lkIjoiMjMyYzJiZTgtMzkxNi00Mjg0LTk4MjItMThkYzExZmQyNDdhIiwiaWF0IjoxNzg0MDQyNDk4LCJleHAiOjE3ODY3MjA4OTh9.C-ZSqWMjRJSkDpE_y_CIBu8SOTzJptHchqAoUQnR8EU&utm_campaign=govuk_publishing&utm_medium=preview&utm_source=share';
+
+  const is24h = mode === 'rolling' && rollingPeriod === '24h';
+
+  const downloadHtml = (mode === 'rolling') ? `
+    <h2 class="govuk-heading-m ${isWeek ? 'govuk-!-margin-top-6' : 'govuk-!-margin-top-3'} govuk-!-margin-bottom-4">Download data</h2>
+    <a href="" role="button" class="${btnClass}">
+      <span class="aq-button-secondary__icon">${downloadSvg}</span>
+      <span class="aq-button-secondary__text">Download hourly data (CSV)</span>
+    </a>
+    ${isWeek ? `
+    <br>
+    <a href="" role="button" class="${btnClass} govuk-!-margin-top-2">
+      <span class="aq-button-secondary__icon">${downloadSvg}</span>
+      <span class="aq-button-secondary__text">Download daily average data (CSV)</span>
+    </a>` : ''}
+  ` : '';
+
+  graphSlot.innerHTML = `
+    ${keyHtml}
+    <div class="graph-container">
+      <div id="${id}" tabindex="0"
+           aria-label="PM10 levels chart. Use left and right arrows to explore data points."></div>
+      <div id="chart-aria-live" class="govuk-visually-hidden" aria-live="polite" role="status"></div>
+    </div>
+    <p class="govuk-hint govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+      Pollution levels are measured against
+      <a href="${legalLimitsUrl}" class="govuk-link">UK legal limits</a>.
+    </p>
+    ${downloadHtml}
+  `;
+
+  // ✅ IMPORTANT: after the new container exists, redraw the relevant graph
+  redrawCurrentGraph(id);
+}
+
+function redrawCurrentGraph(containerId) {
+  d3?.selectAll?.("body > .graph-tooltip")?.remove?.();
+  if (!window.AQGraphs) return;
+
+  // containerId format: "<pollutant>-container-<suffix>"
+  const parts = containerId.split('-container-');
+  const pollutant = parts[0];     // pm10 / pm25 / no2 / o3
+  const suffix = parts[1];        // year / month / week / 24
+
+  // Build key: "pm10_year", "no2_week", etc
+  const key = `${pollutant}_${suffix}`;
+
+  if (typeof window.AQGraphs[key] === 'function') {
+    window.AQGraphs[key]();
+  }
+}
+
+
+function rebuildChartMarkup(containerId) {
+  if (!chartTarget) return;
+
+  // IMPORTANT: do NOT inject another #chart-aria-live (duplicate ID)
+  // Only inject the chart mount div that the D3 file expects.
+  chartTarget.innerHTML = `
+    <div id="${containerId}"
+         tabindex="0"
+         aria-label="Chart. Use left and right arrows to explore data points."></div>
+  `;
+}
+
+
+function loadGraphScript(src, pollutantKey) {
+  if (!src) return;
+
+  // remove old injected script
+  const prev = document.querySelector('script[data-graph-script="true"]');
+  if (prev) prev.remove();
+
+  const s = document.createElement('script');
+  s.src = src;
+  s.defer = true;
+  s.setAttribute('data-graph-script', 'true');
+
+  s.onload = function () {
+    // call the draw function after script is loaded
+    if (window.drawSelectedGraph && typeof window.drawSelectedGraph[pollutantKey] === 'function') {
+      window.drawSelectedGraph[pollutantKey]();
+    }
+  };
+
+  document.body.appendChild(s);
+}
+
+
+// ----------------------------
+// SUPER SIMPLE CHART SWAP
+// Just inject the right container div into #js-chart-target
+// ----------------------------
+
+function getInjectedChartHtml() {
+  // Rolling periods: hourly containers (you’ll make files to match these IDs)
+  if (mode === 'rolling' && rollingPeriod === '24h') {
+    return `<div id="${currentPollutant}-container-last24h" tabindex="0"
+      aria-label="Chart. Use left and right arrows to explore data points."></div>`;
+  }
+
+  if (mode === 'rolling' && rollingPeriod === '7d') {
+    return `<div id="${currentPollutant}-container-last7d" tabindex="0"
+      aria-label="Chart. Use left and right arrows to explore data points."></div>`;
+  }
+
+  // Year mode: whole year selected (daily)
+  if (mode === 'year' && selectedMonth === 'all') {
+    // Your hack: 2025 PM10 should use pm10-container-2024
+    if (selectedYear === '2025' && currentPollutant === 'pm10') {
+      return `<div id="pm10-container-2024" tabindex="0"
+        aria-label="Chart. Use left and right arrows to explore data points."></div>`;
+    }
+
+    // Otherwise: year-based container id
+    return `<div id="${currentPollutant}-container-${selectedYear}" tabindex="0"
+      aria-label="Chart. Use left and right arrows to explore data points."></div>`;
+  }
+
+  // Year mode: month selected (hourly)
+  if (mode === 'year' && selectedMonth !== 'all') {
+    return `<div id="${currentPollutant}-container-${selectedYear}-m${selectedMonth}" tabindex="0"
+      aria-label="Chart. Use left and right arrows to explore data points."></div>`;
+  }
+
+  // Fallback
+  return '';
+}
+
+function getContainerIdForSelection() {
+  // your hack example
+  if (mode === 'year' && selectedYear === '2025' && selectedMonth === 'all' && currentPollutant === 'pm10') {
+    return 'pm10-container-2024';
+  }
+  // add more mappings later
+  return 'pm10-container-2024';
+}
+
+function swapChartHtml() {
+  if (!graphContainer) return;
+
+  if (isNoDataPeriod()) {
+    graphContainer.innerHTML = '';
+    return;
+  }
+
+  const id = getContainerIdForSelection();
+
+  const isRolling = mode === 'rolling';
+  const keyHtml = isRolling ? `
+    <ul class="aq-chart-key" role="list" aria-label="Chart colour key">
+      <li class="aq-chart-key__item">
+        <svg width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="#12436D"/></svg>
+        <span>PM2.5</span>
+      </li>
+      <li class="aq-chart-key__item">
+        <svg width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="#28A197"/></svg>
+        <span>PM10</span>
+      </li>
+      <li class="aq-chart-key__item">
+        <svg width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="#801650"/></svg>
+        <span>Nitrogen dioxide</span>
+      </li>
+      <li class="aq-chart-key__item">
+        <svg width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="#A285D1"/></svg>
+        <span>Ozone</span>
+      </li>
+    </ul>
+  ` : '';
+
+  graphContainer.innerHTML = `
+    ${keyHtml}
+    <div class="graph-container">
+      <div id="${id}"
+           tabindex="0"
+           aria-label="PM10 levels chart. Use left and right arrows to explore data points."></div>
+      <div id="chart-aria-live"
+           class="govuk-visually-hidden"
+           aria-live="polite"
+           role="status"></div>
+    </div>
+  `;
+}
+/* 
+function injectGraphHtml() {
+
+  let containerId = 'pm10-container-2024'; // default
+
+  // ----- EXAMPLES (you can expand later) -----
+
+  // Rolling 24 hours
+  if (mode === 'rolling' && rollingPeriod === '24h') {
+    containerId = 'pm10-container-24';
+  }
+
+  // Rolling 7 days
+  if (mode === 'rolling' && rollingPeriod === '7d') {
+    containerId = 'pm10-container-week';
+  }
+
+  // Year view (any year for now)
+  if (mode === 'year' && selectedMonth === 'all') {
+    containerId = 'pm10-container-2024';
+  }
+
+  // Month within year
+  if (mode === 'year' && selectedMonth !== 'all') {
+    containerId = 'pm10-container-month';
+  }
+
+  // -------------------------------------------
+
+  graphContainer.innerHTML = `
+    <div class="graph-container">
+      <div id="${containerId}"
+           tabindex="0"
+           aria-label="PM10 levels chart. Use left and right arrows to explore data points."></div>
+      <div id="chart-aria-live"
+           class="govuk-visually-hidden"
+           aria-live="polite"
+           role="status"></div>
+    </div>
+  `;
+} */
+
+
+
+
+  function setVerified(stateObj) {
+    if (!verified) return;
+    verified.classList.remove('not-verified', 'half-verified', 'verified');
+
+    if (stateObj.state === 'full') verified.classList.add('verified');
+    else if (stateObj.state === 'partial') verified.classList.add('half-verified');
+    else verified.classList.add('not-verified');
+
+    verified.textContent = stateObj.text;
+  }
+
+  function setAriaCurrent(links, isActiveFn, value) {
+    links.forEach(function (l) {
+      if (isActiveFn(l)) l.setAttribute('aria-current', value);
+      else l.removeAttribute('aria-current');
+    });
+  }
+
+function setNoDataUI(isNoData) {
+  const hide = !!isNoData;
+
+  // Metrics block
+  if (metricsDl) metricsDl.hidden = hide;
+  if (legalHint) legalHint.hidden = hide;
+
+  // "View graph..." heading
+  if (graphHeading) graphHeading.hidden = hide;
+
+  // ✅ The actual graph area you inject into
+  if (graphSlot) graphSlot.hidden = hide;
+}
+
+function updateSummarySectionVisibility() {
+  if (rangeText) rangeText.hidden = false;
+  if (verified) verified.hidden = false;
+}
+
+
+  function isNoDataPeriod() {
+    // Only applies in year mode
+    if (mode !== 'year') return false;
+
+    // 2026: months Mar-Dec => no data
+    if (selectedYear === '2026' && selectedMonth !== 'all') {
+      const m = parseInt(selectedMonth, 10);
+      if (!Number.isNaN(m) && m >= 3) return true;
+    }
+
+    return false;
+  }
+
+  function getVerifiedForSelection() {
+    // Rolling periods
+    if (mode === 'rolling') {
+      return { state: 'none', text: 'Data has not been checked and verified' };
+    }
+
+    // Year mode: 2026 rules
+    if (selectedYear === '2026') {
+      if (selectedMonth === 'all' || selectedMonth === '1' || selectedMonth === '2') {
+        return { state: 'none', text: 'Data has not been checked and verified' };
+      }
+      return { state: 'none', text: 'No data available' };
+    }
+
+    // Year mode: 2025 rules
+    if (selectedYear === '2025') {
+      if (selectedMonth === 'all') {
+        return { state: 'partial', text: 'Data has been checked and verified until 30 September 2025' };
+      }
+
+      const m = parseInt(selectedMonth, 10);
+      if (!Number.isNaN(m) && m >= 1 && m <= 9) {
+        return { state: 'full', text: 'Data has been checked and verified' };
+      }
+
+      return { state: 'none', text: 'Data has not been checked and verified' };
+    }
+
+    // 2024–2022 always fully verified
+    if (selectedYear === '2024' || selectedYear === '2023' || selectedYear === '2022') {
+      return { state: 'full', text: 'Data has been checked and verified' };
+    }
+
+    return { state: 'none', text: 'Data has not been checked and verified' };
+  }
+
+  function applyVerifiedUI() {
+    if (!verified) return;
+
+    const noData = isNoDataPeriod();
+    if (noData) {
+      verified.classList.remove('not-verified', 'half-verified', 'verified');
+      verified.textContent = 'No data available';
+      return;
+    }
+
+    setVerified(getVerifiedForSelection());
+  }
+
+  // ----------------------------
+  // CHART SELECTION (✅ YOUR NEW RULES)
+  // Everything is HOURLY unless a whole YEAR is selected.
+  // - Rolling 24h: hourly
+  // - Rolling 7d: hourly
+  // - Year mode + Year (month=all): daily
+  // - Year mode + Month: hourly
+  // ----------------------------
+  function getChartKey() {
+    if (mode === 'rolling') return 'hourly';
+    // year mode:
+    if (selectedMonth === 'all') return 'daily';
+    return 'hourly';
+  }
+
+  // ----------------------------
+  // DATA (PM10 EXAMPLE ONLY)
+  // ----------------------------
+  // ----------------------------
+// DATA (PM10 + OTHER POLLUTANTS)
+// ----------------------------
+// ----------------------------
+// DATA (filled from station page tables / annualDataByYear)
+// ----------------------------
+const data = {
+  pm25: {
+    rolling: {
+      '24h': {
+        range: formatDateLong(new Date()),
+        verified: { state: 'none', text: 'Data has not been checked and verified' },
+        metrics: { avg: '12 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' }
+      },
+      '7d': {
+        range: last7DaysLabel(),
+        verified: { state: 'none', text: 'Data has not been checked and verified' },
+        metrics: { avg: '8 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' }
+      }
+    },
+    years: {
+      '2026': {
+        year: {
+          range: yearRangeLabel('2026'),
+          verified: { state: 'none', text: 'Data has not been checked and verified' },
+          metrics: { avg: '8 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' }
+        },
+        months: {
+          '1': { range: monthRangeLabel('2026', 1), verified: { state: 'none', text: 'Data has not been checked and verified' }, metrics: { avg: '8 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' } },
+          '2': { range: monthRangeLabel('2026', 2), verified: { state: 'none', text: 'Data has not been checked and verified' }, metrics: { avg: '8 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' } }
+        }
+      },
+      '2025': {
+        year: {
+          range: yearRangeLabel('2025'),
+          verified: { state: 'partial', text: 'Data has been checked and verified until 30 September 2025' },
+          metrics: { avg: '10 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '97%' }
+        },
+        months: {}
+      },
+      '2024': {
+        year: {
+          range: yearRangeLabel('2024'),
+          verified: { state: 'full', text: 'Data has been checked and verified' },
+          metrics: { avg: '9 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' }
+        },
+        months: {}
+      },
+      '2023': {
+        year: {
+          range: yearRangeLabel('2023'),
+          verified: { state: 'full', text: 'Data has been checked and verified' },
+          metrics: { avg: '9 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' }
+        },
+        months: {}
+      },
+      '2022': {
+        year: {
+          range: yearRangeLabel('2022'),
+          verified: { state: 'full', text: 'Data has been checked and verified' },
+          metrics: { avg: '9 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' }
+        },
+        months: {}
+      }
+    }
+  },
+
+  pm10: {
+    rolling: {
+      '24h': {
+        range: formatDateLong(new Date()),
+        verified: { state: 'none', text: 'Data has not been checked and verified' },
+        metrics: { avg: '18 µg/m3', daily: 'n/a', hourly: 'no legal limit', capture: '100%' }
+      },
+      '7d': {
+        range: last7DaysLabel(),
+        verified: { state: 'none', text: 'Data has not been checked and verified' },
+        metrics: { avg: '14 µg/m3', daily: '0', hourly: 'no legal limit', capture: '100%' }
+      }
+    },
+    years: {
+      '2026': {
+        year: {
+          range: yearRangeLabel('2026'),
+          verified: { state: 'none', text: 'Data has not been checked and verified' },
+          metrics: { avg: '14 µg/m3', daily: '0', hourly: 'no legal limit', capture: '100%' }
+        },
+        months: {
+          '1': { range: monthRangeLabel('2026', 1), verified: { state: 'none', text: 'Data has not been checked and verified' }, metrics: { avg: '14 µg/m3', daily: '0', hourly: 'no legal limit', capture: '100%' } },
+          '2': { range: monthRangeLabel('2026', 2), verified: { state: 'none', text: 'Data has not been checked and verified' }, metrics: { avg: '14 µg/m3', daily: '0', hourly: 'no legal limit', capture: '100%' } }
+        }
+      },
+      '2025': {
+        year: {
+          range: yearRangeLabel('2025'),
+          verified: { state: 'partial', text: 'Data has been checked and verified until 30 September 2025' },
+          metrics: { avg: '16 µg/m3', daily: '3', hourly: 'no legal limit', capture: '95%' }
+        },
+        months: {}
+      },
+      '2024': {
+        year: {
+          range: yearRangeLabel('2024'),
+          verified: { state: 'full', text: 'Data has been checked and verified' },
+          metrics: { avg: '15 µg/m3', daily: '2', hourly: 'no legal limit', capture: '100%' }
+        },
+        months: {}
+      },
+      '2023': {
+        year: {
+          range: yearRangeLabel('2023'),
+          verified: { state: 'full', text: 'Data has been checked and verified' },
+          metrics: { avg: '15 µg/m3', daily: '2', hourly: 'no legal limit', capture: '100%' }
+        },
+        months: {}
+      },
+      '2022': {
+        year: {
+          range: yearRangeLabel('2022'),
+          verified: { state: 'full', text: 'Data has been checked and verified' },
+          metrics: { avg: '15 µg/m3', daily: '2', hourly: 'no legal limit', capture: '100%' }
+        },
+        months: {}
+      }
+    }
+  },
+
+  no2: {
+    rolling: {
+      '24h': {
+        range: formatDateLong(new Date()),
+        verified: { state: 'none', text: 'Data has not been checked and verified' },
+        metrics: { avg: '150 µg/m3', daily: 'no legal limit', hourly: '1', capture: '100%' }
+      },
+      '7d': {
+        range: last7DaysLabel(),
+        verified: { state: 'none', text: 'Data has not been checked and verified' },
+        metrics: { avg: '52 µg/m3', daily: 'no legal limit', hourly: '1', capture: '100%' }
+      }
+    },
+    years: {
+      '2026': {
+        year: {
+          range: yearRangeLabel('2026'),
+          verified: { state: 'none', text: 'Data has not been checked and verified' },
+          metrics: { avg: '52 µg/m3', daily: 'no legal limit', hourly: '1', capture: '100%' }
+        },
+        months: {
+          '1': { range: monthRangeLabel('2026', 1), verified: { state: 'none', text: 'Data has not been checked and verified' }, metrics: { avg: '52 µg/m3', daily: 'no legal limit', hourly: '1', capture: '100%' } },
+          '2': { range: monthRangeLabel('2026', 2), verified: { state: 'none', text: 'Data has not been checked and verified' }, metrics: { avg: '52 µg/m3', daily: 'no legal limit', hourly: '0', capture: '100%' } }
+        }
+      },
+      '2025': {
+        year: {
+          range: yearRangeLabel('2025'),
+          verified: { state: 'partial', text: 'Data has been checked and verified until 30 September 2025' },
+          metrics: { avg: '55 µg/m3', daily: 'no legal limit', hourly: '2', capture: '98%' }
+        },
+        months: {}
+      },
+      '2024': {
+        year: {
+          range: yearRangeLabel('2024'),
+          verified: { state: 'full', text: 'Data has been checked and verified' },
+          metrics: { avg: '50 µg/m3', daily: 'no legal limit', hourly: '1', capture: '100%' }
+        },
+        months: {}
+      },
+      '2023': {
+        year: {
+          range: yearRangeLabel('2023'),
+          verified: { state: 'full', text: 'Data has been checked and verified' },
+          metrics: { avg: '48 µg/m3', daily: 'no legal limit', hourly: '1', capture: '100%' }
+        },
+        months: {}
+      },
+      '2022': {
+        year: {
+          range: yearRangeLabel('2022'),
+          verified: { state: 'full', text: 'Data has been checked and verified' },
+          metrics: { avg: '46 µg/m3', daily: 'no legal limit', hourly: '1', capture: '100%' }
+        },
+        months: {}
+      }
+    }
+  },
+
+  o3: {
+    rolling: {
+      '24h': {
+        range: formatDateLong(new Date()),
+        verified: { state: 'none', text: 'Data has not been checked and verified' },
+        metrics: { avg: '35 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' }
+      },
+      '7d': {
+        range: last7DaysLabel(),
+        verified: { state: 'none', text: 'Data has not been checked and verified' },
+        metrics: { avg: '32 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' }
+      }
+    },
+    years: {
+      '2026': {
+        year: {
+          range: yearRangeLabel('2026'),
+          verified: { state: 'none', text: 'Data has not been checked and verified' },
+          metrics: { avg: '32 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' }
+        },
+        months: {
+          '1': { range: monthRangeLabel('2026', 1), verified: { state: 'none', text: 'Data has not been checked and verified' }, metrics: { avg: '32 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' } },
+          '2': { range: monthRangeLabel('2026', 2), verified: { state: 'none', text: 'Data has not been checked and verified' }, metrics: { avg: '32 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' } }
+        }
+      },
+      '2025': {
+        year: {
+          range: yearRangeLabel('2025'),
+          verified: { state: 'partial', text: 'Data has been checked and verified until 30 September 2025' },
+          metrics: { avg: '34 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '96%' }
+        },
+        months: {}
+      },
+      '2024': {
+        year: {
+          range: yearRangeLabel('2024'),
+          verified: { state: 'full', text: 'Data has been checked and verified' },
+          metrics: { avg: '33 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' }
+        },
+        months: {}
+      },
+      '2023': {
+        year: {
+          range: yearRangeLabel('2023'),
+          verified: { state: 'full', text: 'Data has been checked and verified' },
+          metrics: { avg: '33 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' }
+        },
+        months: {}
+      },
+      '2022': {
+        year: {
+          range: yearRangeLabel('2022'),
+          verified: { state: 'full', text: 'Data has been checked and verified' },
+          metrics: { avg: '33 µg/m3', daily: 'no legal limit', hourly: 'no legal limit', capture: '100%' }
+        },
+        months: {}
+      }
+    }
+  }
+};
+
+
+
+  function getCurrentRecord() {
+    const p = data[currentPollutant];
+    
+    // If pollutant doesn’t have data yet, still show the correct period label
+      if (!p) {
+        let range = '';
+
+        if (mode === 'rolling') {
+          range = (rollingPeriod === '7d') ? last7DaysLabel() : formatDateLong(new Date());
+        } else {
+          range = (selectedMonth !== 'all')
+            ? monthRangeLabel(selectedYear, selectedMonth)
+            : yearRangeLabel(selectedYear);
+        }
+
+        return {
+          range,
+          verified: { state: 'none', text: 'Data has not been checked and verified' },
+          metrics: { avg: '–', daily: '–', hourly: '–', capture: '–' }
+        };
+      }
+
+
+    if (mode === 'rolling') {
+      return p.rolling[rollingPeriod] || p.rolling['24h'];
+    }
+
+    // year mode
+    const y = p.years[selectedYear] || p.years['2026'] || Object.values(p.years)[0];
+    if (!y) {
+      return {
+        range: yearRangeLabel(selectedYear),
+        verified: { state: 'none', text: 'Data has not been checked and verified' },
+        metrics: { avg: '–', daily: '–', hourly: '–', capture: '–' }
+      };
+    }
+
+    if (selectedMonth !== 'all') {
+      const monthRec = y.months && y.months[String(selectedMonth)];
+      if (monthRec) return monthRec;
+
+      // fallback to computed month range + year metrics if month data not available yet
+      return {
+        range: monthRangeLabel(selectedYear, selectedMonth),
+        verified: y.year.verified,
+        metrics: y.year.metrics
+      };
+    }
+
+    return y.year;
+  }
+
+  // ----------------------------
+  // CHART (library-agnostic scaffolding)
+  // ----------------------------
+  function clearChart() {
+    // If using a chart lib that supports destroy()
+    if (currentChartInstance && typeof currentChartInstance.destroy === 'function') {
+      currentChartInstance.destroy();
+    }
+    currentChartInstance = null;
+
+    if (chartTarget) chartTarget.innerHTML = '';
+  }
+
+  async function loadSeriesData(selection, chartKey) {
+    // Replace with your real endpoints / data plumbing.
+    // This is a safe default mapping that matches your selection rules.
+    // Example URLs:
+    // /data/pm10/hourly/rolling-24h.json
+    // /data/pm10/hourly/rolling-7d.json
+    // /data/pm10/daily/year-2026.json
+    // /data/pm10/hourly/year-2026-month-2.json
+
+    let url = '';
+
+    if (selection.mode === 'rolling') {
+      url = `/data/${selection.pollutant}/${chartKey}/rolling-${selection.period}.json`;
+    } else {
+      if (selection.month !== 'all') {
+        url = `/data/${selection.pollutant}/${chartKey}/year-${selection.year}-month-${selection.month}.json`;
+      } else {
+        url = `/data/${selection.pollutant}/${chartKey}/year-${selection.year}.json`;
+      }
+    }
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return [];
+      return await res.json();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function renderHourlyChart(mountEl, seriesData, selection) {
+    // Replace with your Highcharts/Chart.js/D3 renderer.
+    // Must return an instance (optional) if your lib provides destroy().
+    mountEl.innerHTML =
+      `<p class="govuk-body govuk-!-margin-top-2">[Hourly chart] ${selection.pollutant.toUpperCase()} (${selection.mode === 'rolling' ? selection.period : (selection.year + ' / ' + selection.month)})</p>`;
+    return null;
+  }
+
+  function renderDailyChart(mountEl, seriesData, selection) {
+    mountEl.innerHTML =
+      `<p class="govuk-body govuk-!-margin-top-2">[Daily chart] ${selection.pollutant.toUpperCase()} (${selection.year})</p>`;
+    return null;
+  }
+
+  async function renderChart() {
+    if (!chartTarget) return;
+
+    // Match your no-data behaviour
+    if (isNoDataPeriod()) {
+      clearChart();
+      return;
+    }
+
+    clearChart();
+
+    const chartKey = getChartKey();
+    const selection = {
+      pollutant: currentPollutant,
+      mode,
+      period: rollingPeriod,
+      year: selectedYear,
+      month: selectedMonth
+    };
+
+    const seriesData = await loadSeriesData(selection, chartKey);
+
+    if (chartKey === 'hourly') {
+      currentChartInstance = renderHourlyChart(chartTarget, seriesData, selection);
+    } else {
+      currentChartInstance = renderDailyChart(chartTarget, seriesData, selection);
+    }
+  }
+
+  // ----------------------------
+  // UI UPDATE
+  // ----------------------------
+  function updateHeadings() {
+    const stationTitle = 'Birmingham A4540 Roadside';
+    const chartKey = getChartKey();
+
+    if (mode === 'rolling') {
+      if (title) title.textContent = (rollingPeriod === '24h' ? 'Last 24 hours' : 'Last 7 days') + ': ' + stationTitle;
+
+      // ✅ both rolling views are hourly now
+      if (graphHeading) graphHeading.textContent = 'View graph: hourly data';
+
+      if (monthNav) monthNav.setAttribute('hidden', '');
+      return;
+    }
+
+    // year mode
+    if (selectedMonth === 'all') {
+      if (title) title.textContent = selectedYear + ': ' + stationTitle;
+    } else {
+      const mName = monthNamesLong[parseInt(selectedMonth, 10) - 1] || '';
+      if (title) title.textContent = mName + ' ' + selectedYear + ': ' + stationTitle;
+    }
+
+    // ✅ year (all) = daily, month = hourly
+    if (graphHeading) {
+      graphHeading.textContent = (chartKey === 'daily')
+        ? 'View graph: daily average data'
+        : 'View graph: hourly data';
+    }
+
+    if (monthNav) monthNav.removeAttribute('hidden');
+  }
+
+  function updateSummary() {
+  const rec = getCurrentRecord();
+
+  if (rangeText) rangeText.textContent = rec.range || '';
+
+  applyVerifiedUI();
+  renderSummaryTable();
+
+  const noData = isNoDataPeriod();
+  setNoDataUI(noData);
+}
+
+
+  function tagChartTarget() {
+    if (!chartTarget) return;
+
+    chartTarget.setAttribute('data-pollutant', currentPollutant);
+    chartTarget.setAttribute('data-mode', mode);
+    chartTarget.setAttribute('data-chart', getChartKey()); // ✅ helpful hook for your real chart code
+
+    if (mode === 'rolling') {
+      chartTarget.setAttribute('data-period', rollingPeriod);
+      chartTarget.removeAttribute('data-year');
+      chartTarget.removeAttribute('data-month');
+    } else {
+      chartTarget.setAttribute('data-year', selectedYear);
+      chartTarget.setAttribute('data-month', selectedMonth);
+      chartTarget.removeAttribute('data-period');
+    }
+  }
+
+  function setActiveTopNav() {
+    setAriaCurrent(periodLinks, function (l) {
+      const m = l.dataset.mode;
+      if (m === 'rolling') return mode === 'rolling' && l.dataset.period === rollingPeriod;
+      if (m === 'year') return mode === 'year' && l.dataset.year === selectedYear;
+      return false;
+    }, 'page');
+  }
+
+  function setActiveMonthNav() {
+    setAriaCurrent(monthLinks, function (l) {
+      return String(l.dataset.month) === String(selectedMonth);
+    }, 'page');
+  }
+
+  function setActivePollutantNav() {
+    pollutantLinks.forEach(function (link) {
+      const li = link.closest('li');
+      if (!li) return;
+
+      const isActive = link.dataset.pollutant === currentPollutant;
+
+      li.classList.toggle('gem-c-contents-list__list-item--active', isActive);
+
+      if (isActive) {
+        link.setAttribute('aria-current', 'page');
+
+        // Styling to look like plain text
+        link.style.fontWeight = '700';
+        link.style.color = '#0b0c0c';
+        link.style.textDecoration = 'none';
+        link.style.cursor = 'default';
+
+        // Disable click
+        link.style.pointerEvents = 'none';
+      } else {
+        link.removeAttribute('aria-current');
+
+        // Restore normal link styling
+        link.style.fontWeight = '';
+        link.style.color = '';
+        link.style.textDecoration = '';
+        link.style.cursor = '';
+        link.style.pointerEvents = '';
+      }
+    });
+  }
+
+function refreshAll() {
+  setActiveTopNav();
+  setActivePollutantNav();
+
+  updateSummarySectionVisibility();
+  updateHeadings();               // shows/hides the month nav
+  updateMonthNavAvailability();   // hides future months & may change selectedMonth
+  setActiveMonthNav();            // now apply aria-current to the *final* selection
+
+  updateSummary();                // uses isNoDataPeriod()
+  tagChartTarget();
+
+  renderGraphBlock();
+}
+
+
+
+
+  // ----------------------------
+  // EVENTS
+  // ----------------------------
+  periodLinks.forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      const m = this.dataset.mode;
+      if (m === 'rolling') {
+        mode = 'rolling';
+        rollingPeriod = this.dataset.period || '24h';
+        // rolling has no month nav
+        refreshAll();
+        return;
+      }
+
+      if (m === 'year') {
+        mode = 'year';
+        selectedYear = this.dataset.year || selectedYear;
+        selectedMonth = 'all'; // reset month when switching year
+        refreshAll();
+      }
+    });
+  });
+
+  monthLinks.forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (mode !== 'year') return;
+
+      selectedMonth = String(this.dataset.month || 'all');
+      refreshAll();
+    });
+  });
+
+  pollutantLinks.forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      currentPollutant = this.dataset.pollutant || currentPollutant;
+      refreshAll();
+    });
+  });
+
+  // ----------------------------
+  // INIT (default: rolling mode, last 24 hours)
+  // ----------------------------
+  mode = 'rolling';
+  rollingPeriod = '24h';
+  selectedYear = '2026';
+  selectedMonth = 'all';
+
+  // Ensure last 7 days label is correct in data on load
+  if (data.pm10 && data.pm10.rolling && data.pm10.rolling['7d']) {
+    data.pm10.rolling['7d'].range = last7DaysLabel();
+  }
+
+  // init
+  applySelectionFromQueryString();
+  refreshAll();
+
+});
+</script>
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "layouts/v17.html" %}
+
+{% set pageName="Smoke control areas - Birmingham City Council - GOV.UK" %}
+
+{% block beforeContent %}
+<a href="#" class="govuk-back-link" onclick="if (document.referrer) { window.history.back(); } else { window.location.href='../birmingham-la.html'; } return false;">Back to Birmingham City Council</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">Smoke control areas</h1>
+    <p class="govuk-body">Smoke control areas are areas where the burning of certain fuels in open fires and stoves is prohibited.</p>
+    <p class="govuk-body"><a href="https://www.gov.uk/smoke-control-area-rules" class="govuk-link">Smoke control areas: the rules</a></p>
+
+    <div class="govuk-!-margin-top-6 govuk-!-margin-bottom-6">
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Area name</th>
+            <th scope="col" class="govuk-table__header">Description</th>
+            <th scope="col" class="govuk-table__header">Status</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a href="birmingham-city-centre.html" class="govuk-link">Birmingham City Centre</a>
+            </td>
+            <td class="govuk-table__cell">Central Birmingham</td>
+            <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--green">Active</strong></td>
+          </tr>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a href="edgbaston-ward.html" class="govuk-link">Edgbaston Ward</a>
+            </td>
+            <td class="govuk-table__cell">Edgbaston residential area</td>
+            <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--green">Active</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <a href="../../management-areas-map.html" role="button" id="map-btn" class="aq-button-secondary aq-button-secondary--icon" onclick="sessionStorage.setItem('mapFlyTo', JSON.stringify({lat:52.48,lng:-1.90,zoom:12})); sessionStorage.setItem('mapLayer', 'sca')">
+      <span class="aq-button-secondary__icon">
+        <svg focusable="false" width="15" height="20" viewBox="0 0 15 20">
+          <path d="M15,7.5c0.009,3.778 -4.229,9.665 -7.5,12.5c-3.271,-2.835 -7.509,-8.722 -7.5,-12.5c0,-4.142 3.358,-7.5 7.5,-7.5c4.142,0 7.5,3.358 7.5,7.5Zm-7.5,5.461c3.016,0 5.461,-2.445 5.461,-5.461c0,-3.016 -2.445,-5.461 -5.461,-5.461c-3.016,0 -5.461,2.445 -5.461,5.461c0,3.016 2.445,5.461 5.461,5.461Z" fill="currentColor"></path>
+        </svg>
+      </span>
+      <span class="aq-button-secondary__text">View map of smoke control areas</span>
+      <span class="govuk-visually-hidden">(Visual only)</span>
+    </a>
+  </div>
+</div>
+
+{% endblock %}

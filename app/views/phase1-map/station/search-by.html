@@ -1,0 +1,52 @@
+{% extends "layouts/phase1-map.html" %}
+
+{% set pageName="Search by location" %}
+
+{% block beforeContent %}
+<a href="../hub.html" class="govuk-back-link">
+  Back
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-l">Search by town or postcode</h1>
+
+    <p class="govuk-hint">For locations in Northern Ireland, you can only search by postcode.</p>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="location-input">
+        Enter a town or postcode
+      </label>
+      <input class="govuk-input" id="location-input" name="location" type="text" spellcheck="false" autocomplete="off">
+    </div>
+
+
+    <p class="govuk-body govuk-!-margin-bottom-6"><a href="../map.html" class="govuk-link">Skip to map</a></p>
+
+    {{ govukButton({
+      text: "Continue",
+      classes: "govuk-button",
+      attributes: { id: "continue-button", type: "button" }
+    }) }}
+
+  </div>
+</div>
+
+<script>
+  document.getElementById("continue-button").addEventListener("click", function () {
+    const locationInput = document.getElementById("location-input").value.trim();
+
+    if (!locationInput) {
+      alert("Enter a town or postcode before continuing");
+      return;
+    }
+
+    window.location.href = "results-b2-4qa.html";
+  });
+</script>
+
+
+{% endblock %}

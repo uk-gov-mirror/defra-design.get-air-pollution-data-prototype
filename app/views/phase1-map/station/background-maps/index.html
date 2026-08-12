@@ -1,0 +1,60 @@
+{% extends "layouts/phase1-map.html" %}
+
+{% set pageName="Background Maps - Birmingham City Council - GOV.UK" %}
+
+{% block beforeContent %}
+<a href="#" class="govuk-back-link" onclick="if (document.referrer) { window.history.back(); } else { window.location.href='../birmingham-la.html'; } return false;">Back to Birmingham City Council</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">Background Maps</h1>
+    <p class="govuk-body">Download modelled air pollution background maps for Birmingham.</p>
+
+    <div class="govuk-!-margin-top-6 govuk-!-margin-bottom-6">
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Year</th>
+            <th scope="col" class="govuk-table__header">Pollutant</th>
+            <th scope="col" class="govuk-table__header">Action</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">2023</td>
+            <td class="govuk-table__cell">NO2, PM2.5, PM10, O3</td>
+            <td class="govuk-table__cell">
+              <a href="#" class="govuk-link">Download</a>
+            </td>
+          </tr>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">2022</td>
+            <td class="govuk-table__cell">NO2, PM2.5, PM10, O3</td>
+            <td class="govuk-table__cell">
+              <a href="#" class="govuk-link">Download</a>
+            </td>
+          </tr>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">2021</td>
+            <td class="govuk-table__cell">NO2, PM2.5, PM10, O3</td>
+            <td class="govuk-table__cell">
+              <a href="#" class="govuk-link">Download</a>
+            </td>
+          </tr>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">2020</td>
+            <td class="govuk-table__cell">NO2, PM2.5, PM10, O3</td>
+            <td class="govuk-table__cell">
+              <a href="#" class="govuk-link">Download</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

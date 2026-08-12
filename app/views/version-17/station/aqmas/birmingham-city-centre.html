@@ -1,0 +1,69 @@
+{% extends "layouts/v17.html" %}
+
+{% set pageName="Birmingham AQMA - GOV.UK" %}
+
+{% block beforeContent %}
+<a href="#" class="govuk-back-link" onclick="if (document.referrer) { window.history.back(); } else { window.location.href='index.html'; } return false;">Back to AQMAs</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">Birmingham AQMA</h1>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Start date</dt>
+        <dd class="govuk-summary-list__value">10 January 2003</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Status</dt>
+        <dd class="govuk-summary-list__value"><strong class="govuk-tag govuk-tag--green">Active</strong></dd>
+      </div>
+    </dl>
+
+    <h2 class="govuk-heading-m govuk-!-margin-top-6">Amendment history</h2>
+
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Date</th>
+          <th scope="col" class="govuk-table__header">Action</th>
+          <th scope="col" class="govuk-table__header">Pollutant</th>
+          <th scope="col" class="govuk-table__header">Objective</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell" rowspan="2">10 January 2003</td>
+          <td class="govuk-table__cell" rowspan="2">Declared</td>
+          <td class="govuk-table__cell">Nitrogen dioxide (NO2)</td>
+          <td class="govuk-table__cell">Annual mean</td>
+        </tr>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">Particulate matter (PM10)</td>
+          <td class="govuk-table__cell">24-hour mean</td>
+        </tr>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">1 December 2010</td>
+          <td class="govuk-table__cell">Amended</td>
+          <td class="govuk-table__cell">Nitrogen dioxide (NO2)</td>
+          <td class="govuk-table__cell">Annual mean</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <a href="../../management-areas-map.html" role="button" id="map-btn" class="aq-button-secondary aq-button-secondary--icon" onclick="sessionStorage.setItem('mapFlyTo', JSON.stringify({lat:52.48,lng:-1.90,zoom:12})); sessionStorage.setItem('mapLayer', 'aqma')">
+      <span class="aq-button-secondary__icon">
+        <svg focusable="false" width="15" height="20" viewBox="0 0 15 20">
+          <path d="M15,7.5c0.009,3.778 -4.229,9.665 -7.5,12.5c-3.271,-2.835 -7.509,-8.722 -7.5,-12.5c0,-4.142 3.358,-7.5 7.5,-7.5c4.142,0 7.5,3.358 7.5,7.5Zm-7.5,5.461c3.016,0 5.461,-2.445 5.461,-5.461c0,-3.016 -2.445,-5.461 -5.461,-5.461c-3.016,0 -5.461,2.445 -5.461,5.461c0,3.016 2.445,5.461 5.461,5.461Z" fill="currentColor"></path>
+        </svg>
+      </span>
+      <span class="aq-button-secondary__text">View map of air quality management areas</span>
+      <span class="govuk-visually-hidden">(Visual only)</span>
+    </a>
+  </div>
+</div>
+
+{% endblock %}

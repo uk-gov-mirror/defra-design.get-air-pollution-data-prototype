@@ -1,0 +1,804 @@
+{% extends "layouts/v17.html" %}
+
+{% block beforeContent %}
+
+<a href="create-pollutant.html" class="govuk-back-link">Back</a>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <!-- duplicate error (specific pollutants flow) -->
+  <!--   <div id="duplicate-error" class="govuk-error-summary" data-module="govuk-error-summary" hidden>
+      <div role="alert">
+        <h2 class="govuk-error-summary__title">There is a problem</h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            <li><a href="#my-autocomplete">This pollutant has already been added</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+ -->
+    <h1 class="govuk-heading-l">Add pollutant(s)</h1>
+
+    <div class="govuk-form-group">
+      <fieldset class="govuk-fieldset" aria-describedby="mode-hint">
+
+        <div id="mode-hint" class="govuk-hint">Select one option</div>
+
+        <div class="govuk-radios" data-module="govuk-radios">
+          <!-- MODE: specific -->
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input"
+                   id="mode-specific"
+                   name="pollutant-mode"
+                   type="radio"
+                   value="specific"
+                   data-aria-controls="conditional-specific">
+            <label class="govuk-label govuk-radios__label" for="mode-specific">
+              Add pollutant(s)
+            </label>
+          </div>
+                  <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-specific">
+            <div class="govuk-form-group" id="pollutant-form-group">
+             <!--  <div class="govuk-hint">Add up to 10 pollutants</div> -->
+
+              <!-- Autocomplete target + input -->
+              <div id="autocomplete-container-p" class="govuk-body"></div>
+
+              <div class="govuk-button-group govuk-!-margin-top-3">
+                {{ govukButton({
+                  text: "Add pollutant",
+                  classes: "govuk-button--secondary",
+                  attributes: { id: "add-pollutant-button" }
+                }) }}
+              </div>
+
+              <table class="govuk-table govuk-!-margin-top-4" id="pollutant-table" hidden>
+                <caption class="govuk-table__caption govuk-table__caption--m">Added pollutants</caption>
+                <tbody class="govuk-table__body"></tbody>
+              </table>
+            </div>
+          </div>
+
+
+        <!-- MODE: groups -->
+<div class="govuk-radios__item">
+  <input class="govuk-radios__input"
+         id="mode-group"
+         name="pollutant-mode"
+         type="radio"
+         value="group"
+         data-aria-controls="conditional-groups">
+  <label class="govuk-label govuk-radios__label" for="mode-group">
+    Add a group of pollutants
+  </label>
+</div>
+
+<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-groups">
+  <div class="govuk-form-group" id="pollutant-group-form-group">
+    <fieldset class="govuk-fieldset" aria-describedby="pollutant-group-hint">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
+      <div id="pollutant-group-hint" class="govuk-hint">Select one option</div>
+
+      <div class="govuk-radios govuk-!-margin-top-3" data-module="govuk-radios">
+       
+
+        <!-- Core / DAQI -->
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="pg-core" name="pollutant-group" type="radio" value="core" aria-describedby="pg-core-hint">
+          <label class="govuk-label govuk-radios__label" for="pg-core">Daily Air Quality Index (DAQI) pollutants</label>
+          <div id="pg-core-hint" class="govuk-hint govuk-radios__hint">
+            fine particulate matter (PM2.5), particulate matter (PM10), nitrogen dioxide (NO2), ozone (O3), sulphur dioxide (SO2)
+          </div>
+        </div>
+
+         <!-- Compliance (new) -->
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="pg-compliance" name="pollutant-group" type="radio" value="compliance" aria-describedby="pg-compliance-hint">
+          <label class="govuk-label govuk-radios__label" for="pg-compliance">Pollutants in the Air Quality Standards Regulations 2010</label>
+          <div id="pg-compliance-hint" class="govuk-hint govuk-radios__hint">
+           fine particulate matter (PM2.5), particulate matter (PM10), nitrogen dioxide (NO2), ozone (O3), sulphur dioxide (SO2), nitric oxide (NO), nitrogen oxides as nitrogen dioxide (NOx as NO2), carbon monoxide (CO)
+          </div>
+        </div>
+
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="pg-black-carbon" name="pollutant-group" type="radio" value="black-carbon" aria-describedby="pg-black-carbon-hint">
+          <label class="govuk-label govuk-radios__label" for="pg-black-carbon">Black carbon</label>
+          <div id="pg-black-carbon-hint" class="govuk-hint govuk-radios__hint">
+            black carbon (BC)
+          </div>
+        </div>
+
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="pg-tomps" name="pollutant-group" type="radio" value="tomps" aria-describedby="pg-tomps-hint">
+          <label class="govuk-label govuk-radios__label" for="pg-tomps">Toxic organic micro-pollutants (TOMPs)</label>
+          <div id="pg-tomps-hint" class="govuk-hint govuk-radios__hint">
+            PCBs, co-planar PCBs, PCDDs (dioxins), PCDFs (furans), PBDEs, decaBDE, HBCDD
+          </div>
+        </div>
+
+        <!-- VOCs -->
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="pg-hydrocarbon" name="pollutant-group" type="radio" value="hydrocarbon" aria-describedby="pg-hydrocarbon-hint">
+          <label class="govuk-label govuk-radios__label" for="pg-hydrocarbon">Volatile organic compounds (VOCs)</label>
+          <div id="pg-hydrocarbon-hint" class="govuk-hint govuk-radios__hint">
+  benzene, toluene, ethylbenzene, m+p-xylene, o-xylene, 1,3-butadiene, propane, propene, isoprene, iso-butane, n-butane, 1-butene, iso-pentane, n-pentane, 1-pentene, trans-2-pentene, 2-methylpentane, n-hexane, n-heptane, iso-octane, n-octane, ethane, ethene, ethyne, 1,2,3-trimethylbenzene, 1,2,4-trimethylbenzene, 1,3,5-trimethylbenzene
+</div>
+        </div>
+
+        <!-- Heavy metals -->
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="pg-heavy-metals" name="pollutant-group" type="radio" value="heavy-metals" aria-describedby="pg-heavy-metals-hint">
+          <label class="govuk-label govuk-radios__label" for="pg-heavy-metals">Heavy metals in air</label>
+          <div id="pg-heavy-metals-hint" class="govuk-hint govuk-radios__hint">
+  arsenic (As), cadmium (Cd), chromium (Cr), cobalt (Co), copper (Cu), iron (Fe), lead (Pb), manganese (Mn), nickel (Ni), selenium (Se), vanadium (V), zinc (Zn)
+</div>
+        </div>
+
+        <!-- PAHs -->
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="pg-pah" name="pollutant-group" type="radio" value="pah" aria-describedby="pg-pah-hint">
+          <label class="govuk-label govuk-radios__label" for="pg-pah">Polycyclic aromatic hydrocarbons (PAHs)</label>
+          <div id="pg-pah-hint" class="govuk-hint govuk-radios__hint">
+  benzo(a)pyrene, benzo(a)anthracene, benzo(b)-/benzo(j)-/benzo(k)fluoranthene, indeno(1,2,3-cd)pyrene, dibenzo(ah)-/dibenzo(ac)anthracene, benzo(b+j)fluoranthene, 1-/2-methyl naphthalene, 1-/2-methyl anthracene, 1-methyl phenanthrene, 2-methyl phenanthrene, 4,5-methylene phenanthrene, 5-methyl chrysene, 9-methyl anthracene
+</div>
+        </div>
+
+        <!-- Ammonia -->
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="pg-namn" name="pollutant-group" type="radio" value="namn" aria-describedby="pg-namn-hint">
+          <label class="govuk-label govuk-radios__label" for="pg-namn">Ammonia</label>
+          <div id="pg-namn-hint" class="govuk-hint govuk-radios__hint">
+  gaseous ammonia (NH3), gaseous ammonia (active) (NH3), gaseous ammonia (passive) (NH3), gaseous ammonia (diffusion tube) (NH3), particulate ammonium (NH4)
+</div>
+        </div>
+
+        <!-- AGANet -->
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="pg-aganet" name="pollutant-group" type="radio" value="aganet" aria-describedby="pg-aganet-hint">
+          <label class="govuk-label govuk-radios__label" for="pg-aganet">Particulate ions and acid gases</label>
+          <div id="pg-aganet-hint" class="govuk-hint govuk-radios__hint">
+  particulate nitrate (NO3), particulate nitrite (NO2), particulate sulphate (SO4), particulate chloride (Cl), particulate ammonium (NH4), particulate sodium (Na), particulate potassium (K), particulate calcium (Ca), particulate magnesium (Mg), gaseous nitric acid (HNO3), gaseous nitrous acid (HNO2), gaseous hydrochloric acid (HCl)
+</div>
+        </div>
+
+        <!-- PrecipNet -->
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="pg-precipnet" name="pollutant-group" type="radio" value="precipnet" aria-describedby="pg-precipnet-hint">
+          <label class="govuk-label govuk-radios__label" for="pg-precipnet">Precipitation chemistry</label>
+          <div id="pg-precipnet-hint" class="govuk-hint govuk-radios__hint">
+  aluminium (Al), antinomy (Sb), arsenic (As), barium (Ba), beryllium (Be), cadmium (Cd), caesium (Cs), chromium (Cr), cobalt (Co), copper (Cu), iron (Fe), lead (Pb), lithium (Li), manganese (Mn), mercury (Hg), molybdenum (Mo), nickel (Ni), rubidium (Rb), selenium (Se), strontium (Sr), tin (Sn), titanium (Ti), tungsten (W), uranium (U), vanadium (V), zinc (Zn) — measured in precipitation
+</div>
+        </div>
+
+        <!-- Rural mercury -->
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="pg-ruralmercury" name="pollutant-group" type="radio" value="ruralmercury" aria-describedby="pg-ruralmercury-hint">
+          <label class="govuk-label govuk-radios__label" for="pg-ruralmercury">Mercury</label>
+          <div id="pg-ruralmercury-hint" class="govuk-hint govuk-radios__hint">
+            elemental mercury (Hg), reactive mercury (Hg), mercury in PM2.5 (Hg)
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</div>
+
+
+
+    {{ govukButton({
+      text: "Continue",
+      classes: "govuk-!-margin-top-3",
+      attributes: { id: "continue-button" }
+    }) }}
+
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // ---- storage helpers + keys
+  const KEY_SELECTED = 'selectedPollutants';
+  const KEY_GROUP    = 'selectedPollutantGroup';
+  const KEY_SPECIFIC = 'selectedPollutantsSpecific';
+
+  const readJSON = (k, fb = null) => {
+    try { return JSON.parse(sessionStorage.getItem(k) || JSON.stringify(fb)); } catch { return fb; }
+  };
+  const writeJSON = (k, v) => sessionStorage.setItem(k, JSON.stringify(v || []));
+
+  // ===== Error summary helpers (new) =====
+  function ensureErrorSummaryRoot() {
+  let root = document.getElementById('page-error-summary');
+  if (!root) {
+    root = document.createElement('div');
+    root.id = 'page-error-summary';
+    const h1 = document.querySelector('.govuk-heading-l');
+    if (h1 && h1.parentNode) {
+      h1.parentNode.insertBefore(root, h1); // insert ABOVE the H1
+    } else {
+      document.body.insertBefore(root, document.body.firstChild);
+    }
+  }
+  return root;
+}
+
+
+  function showErrorSummary(items) {
+    // items: [{ text: 'message', href: '#fieldId' }]
+    const root = ensureErrorSummaryRoot();
+    root.innerHTML = `
+      <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary" tabindex="-1">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            ${items.map(i => `<li><a href="${i.href}">${i.text}</a></li>`).join('')}
+          </ul>
+        </div>
+      </div>`;
+    const summary = root.querySelector('.govuk-error-summary');
+    summary?.focus?.();
+  }
+
+  function clearErrorSummary() {
+    const root = document.getElementById('page-error-summary');
+    if (root) root.innerHTML = '';
+  }
+
+  // Utility to add/remove “aria-invalid” and describedby (new)
+  function markInvalid(input, errId) {
+    if (!input) return;
+    input.setAttribute('aria-invalid', 'true');
+    const described = (input.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+    if (!described.includes(errId)) input.setAttribute('aria-describedby', [...described, errId].join(' '));
+  }
+  function clearInvalid(input, errId) {
+    if (!input) return;
+    input.removeAttribute('aria-invalid');
+    const described = (input.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+    const pruned = described.filter(x => x !== errId);
+    if (pruned.length) input.setAttribute('aria-describedby', pruned.join(' '));
+    else input.removeAttribute('aria-describedby');
+  }
+
+  const GROUPS = {
+    // DAQI / Core
+    core: [
+      'Fine particulate matter (PM2.5)',
+      'Particulate matter (PM10)',
+      'Nitrogen dioxide (NO2)',
+      'Ozone (O3)',
+      'Sulphur dioxide (SO2)'
+    ],
+
+    // Compliance (we’ll fill below)
+    compliance: [],
+
+    'black-carbon': [
+      'Black carbon (BC)'
+    ],
+
+    tomps: [
+      'PCBs',
+      'Co-planar PCBs',
+      'PCDDs (dioxins)',
+      'PCDFs (furans)',
+      'PBDEs',
+      'decaBDE',
+      'HBCDD'
+    ],
+
+    // VOCs (names only)
+    hydrocarbon: [
+      'Benzene','Toluene','Ethylbenzene','M+p-xylene','O-xylene',
+      '1,3-Butadiene','Propane','Propene','Isoprene',
+      'Iso-butane','N-butane','1-Butene',
+      'Iso-pentane','N-pentane','1-Pentene','Trans-2-pentene',
+      '2-Methylpentane','N-Hexane','N-Heptane','Iso-octane','N-Octane',
+      'Ethane','Ethene','Ethyne',
+      '1,2,3-Trimethylbenzene','1,2,4-Trimethylbenzene','1,3,5-Trimethylbenzene'
+    ],
+
+    // Heavy metals in air (with symbols)
+    'heavy-metals': [
+      'Arsenic (As)','Cadmium (Cd)','Chromium (Cr)','Cobalt (Co)','Copper (Cu)','Iron (Fe)','Lead (Pb)','Manganese (Mn)',
+      'Nickel (Ni)','Selenium (Se)','Vanadium (V)','Zinc (Zn)'
+    ],
+
+    // PAHs (names only)
+    pah: [
+      'Benzo(a)pyrene','Benzo(a)anthracene','Benzo(b)fluoranthene','Benzo(j)fluoranthene','Benzo(b+j)fluoranthene',
+      'Benzo(k)fluoranthene','Indeno(1,2,3-cd)pyrene','Dibenzo(ac)anthracene','Dibenzo(ah)anthracene','Dibenzo(ah+ac)anthracene',
+      '1-Methyl anthracene','1-Methyl Naphthalene','1-Methyl phenanthrene','2-Methyl anthracene','2-Methyl Naphthalene',
+      '2-Methyl phenanthrene','4,5-Methylene phenanthrene','5-Methyl Chrysene','9-Methyl anthracene'
+    ],
+
+    // Ammonia (with symbols)
+    namn: [
+      'Gaseous ammonia (NH3)',
+      'Gaseous ammonia (active) (NH3)',
+      'Gaseous ammonia (passive) (NH3)',
+      'Gaseous ammonia (diffusion tube) (NH3)',
+      'Particulate ammonium (NH4)'
+    ],
+
+    // Particulate ions & acid gases (with symbols, matching autocomplete)
+    aganet: [
+      'Particulate nitrate (NO3)','Particulate nitrite (NO2)','Particulate sulphate (SO4)','Particulate chloride (Cl)',
+      'Particulate ammonium (NH4)','Particulate sodium (Na)','Particulate potassium (K)','Particulate calcium (Ca)','Particulate magnesium (Mg)',
+      'Gaseous nitric acid (HNO3)','Gaseous nitrous acid (HNO2)','Gaseous hydrochloric acid (HCl)'
+    ],
+
+    // Precipitation chemistry (metals with symbols, matching autocomplete)
+    precipnet: [
+      'Aluminium in precipitation (Al)','Antinomy in precipitation (Sb)','Arsenic in precipitation (As)','Barium in precipitation (Ba)',
+      'Beryllium in precipitation (Be)','Cadmium in precipitation (Cd)','Caesium in precipitation (Cs)','Chromium in precipitation (Cr)',
+      'Cobalt in precipitation (Co)','Copper in precipitation (Cu)','Iron in precipitation (Fe)','Lead in precipitation (Pb)',
+      'Lithium in precipitation (Li)','Manganese in precipitation (Mn)','Mercury in precipitation (Hg)','Molybdenum in precipitation (Mo)',
+      'Nickel in precipitation (Ni)','Rubidium in precipitation (Rb)','Selenium in precipitation (Se)','Strontium in precipitation (Sr)',
+      'Tin in precipitation (Sn)','Titanium in precipitation (Ti)','Tungsten in precipitation (W)','Uranium in precipitation (U)',
+      'Vanadium in precipitation (V)','Zinc in precipitation (Zn)'
+    ],
+
+    // Rural mercury (with symbols)
+    ruralmercury: [
+      'Elemental mercury (Hg)','Reactive mercury (Hg)','Mercury in PM2.5 (Hg)'
+    ]
+  };
+
+  // Compliance = core + three extras
+  GROUPS.compliance = Array.from(new Set([
+    ...GROUPS.core,
+    'Nitric oxide (NO)',
+    'Nitrogen oxides as nitrogen dioxide (NOx as NO2)',
+    'Carbon monoxide (CO)'
+  ]));
+
+  // ===== Inline error helpers (parameterised)
+  function showInlineError(message, opts = {}) {
+    const container =
+      (opts.containerSelector && document.querySelector(opts.containerSelector)) ||
+      (document.getElementById('pollutant-form-group') ||
+       document.querySelector('#conditional-specific .govuk-form-group'));
+    if (!container) return;
+
+    container.classList.add('govuk-form-group--error');
+
+    let err = container.querySelector('.govuk-error-message[data-for="dynamic"]');
+    if (!err) {
+      err = document.createElement('p');
+      err.className = 'govuk-error-message';
+      err.setAttribute('data-for', 'dynamic');
+      err.id = (opts.errorId || 'pollutant-error');
+      const before = container.querySelector('#autocomplete-container-p') || container.firstChild;
+      container.insertBefore(err, before);
+    }
+    err.innerHTML = `<span class="govuk-visually-hidden">Error:</span> ${message}`;
+
+    if (opts.inputSelector) {
+      markInvalid(document.querySelector(opts.inputSelector), err.id);
+    }
+  }
+
+  function clearInlineError(opts = {}) {
+    const containers = [];
+    if (opts.containerSelector) containers.push(document.querySelector(opts.containerSelector));
+    else containers.push(
+      document.getElementById('pollutant-form-group') ||
+      document.querySelector('#conditional-specific .govuk-form-group')
+    );
+
+    containers.filter(Boolean).forEach(container => {
+      container.classList.remove('govuk-form-group--error');
+      const err = container.querySelector('.govuk-error-message[data-for="dynamic"]');
+      const errId = err?.id;
+      if (err) err.remove();
+
+      if (opts.inputSelector && errId) {
+        clearInvalid(document.querySelector(opts.inputSelector), errId);
+      }
+    });
+  }
+
+  // ====== ALLOWED LIST + tolerant matching (updated for particulates)
+  const SPACES = /\s+/g;
+  const TRAILING_PAREN = /\s*\([^)]*\)\s*$/i;
+
+  function canon(s) {
+    let t = String(s || '').toLowerCase().trim().replace(SPACES, ' ');
+    t = t.replace(TRAILING_PAREN, '');
+    t = t.replace(/^fine particulate matter\b/, 'particulate matter');
+    t = t.replace(/\b(.+)\s+in\s+pm\s*10\b/i, (_, name) => `particulate ${name.trim()}`);
+    t = t.replace(/\b(.+)\s+in\s+pm\s*2\.?5\b/i, (_, name) => `particulate ${name.trim()}`);
+    t = t.replace(SPACES, ' ').trim();
+    return t;
+  }
+
+  function getAllowedPollutantsRaw() {
+    try {
+      const raw = sessionStorage.getItem('allPollutants');
+      if (raw) {
+        const arr = JSON.parse(raw);
+        if (Array.isArray(arr) && arr.length) return arr;
+      }
+    } catch {}
+
+    if (Array.isArray(window.ALL_POLLUTANTS) && window.ALL_POLLUTANTS.length) {
+      return window.ALL_POLLUTANTS.slice();
+    }
+
+    const union = new Set();
+    Object.values(GROUPS).forEach(list => {
+      if (Array.isArray(list)) list.forEach(x => union.add(String(x)));
+    });
+
+    [
+      'Particulate calcium','Particulate chloride','Particulate magnesium','Particulate sodium',
+      'Particulate nitrite','Particulate nitrate','Particulate sulphate',
+      'Calcium in PM10','Chloride in PM10','Potassium in PM10','Magnesium in PM10',
+      'Sodium in PM10','Ammonium in PM10','Nitrate in PM10','Sulphate in PM10',
+      'Calcium in PM2.5','Chloride in PM2.5','Potassium in PM2.5','Magnesium in PM2.5',
+      'Sodium in PM2.5','Ammonium in PM2.5','Nitrate in PM2.5','Sulphate in PM2.5'
+    ].forEach(x => union.add(x));
+
+    return Array.from(union);
+  }
+
+  const allowedRaw = getAllowedPollutantsRaw();
+  const allowedExact = new Set(allowedRaw.map(s => String(s).toLowerCase()));
+  const allowedCanon = new Set();
+
+  function addWithAliases(label) {
+    const l = String(label);
+    const c = canon(l);
+    allowedCanon.add(c);
+
+    const ll = l.toLowerCase();
+
+    let m = ll.match(/^(.+)\s+in\s+pm\s*10$/i);
+    if (m) allowedCanon.add(canon(`Particulate ${m[1]}`));
+
+    m = ll.match(/^(.+)\s+in\s+pm\s*2\.?5$/i);
+    if (m) allowedCanon.add(canon(`Particulate ${m[1]}`));
+
+    m = ll.match(/^particulate\s+(.+)$/i);
+    if (m) {
+      const base = m[1];
+      allowedCanon.add(canon(`${base} in PM10`));
+      allowedCanon.add(canon(`${base} in PM2.5`));
+    }
+  }
+
+  allowedRaw.forEach(addWithAliases);
+
+  function isAllowed(value) {
+    const lv = String(value || '').toLowerCase().trim();
+    const cv = canon(value);
+    return allowedExact.has(lv) || allowedCanon.has(cv);
+  }
+
+  // ----- Cache key elements
+  const addButton = document.getElementById('add-pollutant-button');
+  const continueButton = document.getElementById('continue-button');
+  const table = document.getElementById('pollutant-table');
+  const tableBody = table ? table.querySelector('tbody') : null;
+
+  // ----- State for specific mode
+  let count = 0;
+  const addedPollutants = new Set();
+
+  function updateAddButtonText() {
+    if (!addButton || !tableBody) return;
+    addButton.textContent = tableBody.children.length > 0 ? 'Add another pollutant' : 'Add pollutant';
+  }
+
+  function persistSpecificFromTable() {
+    if (!tableBody) return;
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+    const list = rows.map(r => r.querySelector('td')?.textContent?.trim()).filter(Boolean);
+    writeJSON(KEY_SPECIFIC, list);
+  }
+
+  // Restore any previously stored pollutants (specific mode)
+  (function restoreFromSession() {
+    if (!tableBody || !table) { updateAddButtonText(); return; }
+
+    const hasGroup = !!sessionStorage.getItem(KEY_GROUP);
+    let pollutants = hasGroup ? readJSON(KEY_SPECIFIC, []) : readJSON(KEY_SELECTED, []);
+
+    if (!Array.isArray(pollutants) || pollutants.length === 0) { updateAddButtonText(); return; }
+
+    pollutants.forEach((value) => {
+      count++;
+      addedPollutants.add((value || '').toLowerCase());
+
+      const row = document.createElement('tr');
+      row.className = 'govuk-table__row';
+
+      const headerCell = document.createElement('th');
+      headerCell.scope = 'row';
+      headerCell.className = 'govuk-table__header';
+      headerCell.textContent = `Pollutant ${count}`;
+
+      const valueCell = document.createElement('td');
+      valueCell.className = 'govuk-table__cell';
+      valueCell.textContent = value;
+
+      const actionCell = document.createElement('td');
+      actionCell.className = 'govuk-table__cell';
+
+      const removeLink = document.createElement('a');
+      removeLink.href = '#';
+      removeLink.className = 'govuk-link';
+      removeLink.textContent = 'Remove';
+
+      removeLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        row.remove();
+        addedPollutants.delete((value || '').toLowerCase());
+
+        persistSpecificFromTable();
+
+        if (tableBody.children.length === 0) {
+          table.hidden = true;
+          count = 0;
+        }
+        updateAddButtonText();
+        clearInlineError();
+        clearErrorSummary(); // NEW: also clear summary on fix
+      });
+
+      actionCell.appendChild(removeLink);
+      row.appendChild(headerCell);
+      row.appendChild(valueCell);
+      row.appendChild(actionCell);
+      tableBody.appendChild(row);
+
+      table.hidden = false;
+    });
+
+    updateAddButtonText();
+  })();
+
+  // Add new pollutant (with tolerant validation)
+  if (addButton) {
+    addButton.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      const input = document.querySelector('#my-autocomplete');
+      if (!input || !tableBody || !table) return;
+
+      const value = (input.value || '').trim();
+      const lowerValue = value.toLowerCase();
+
+      if (!value) {
+        showInlineError('Enter a pollutant', { errorId: 'pollutant-error', inputSelector: '#my-autocomplete' });
+        showErrorSummary([{ text: 'Enter a pollutant', href: '#my-autocomplete' }]); // NEW
+        return;
+      }
+
+      if (!isAllowed(value)) {
+        showInlineError('Select a pollutant from the list', { errorId: 'pollutant-error', inputSelector: '#my-autocomplete' });
+        showErrorSummary([{ text: 'Select a pollutant from the list', href: '#my-autocomplete' }]); // NEW
+        return;
+      }
+
+      if (addedPollutants.has(lowerValue)) {
+        showInlineError('This pollutant has already been added', { errorId: 'pollutant-error', inputSelector: '#my-autocomplete' });
+        showErrorSummary([{ text: 'This pollutant has already been added', href: '#my-autocomplete' }]); // NEW
+        return;
+      }
+
+      clearInlineError({ inputSelector: '#my-autocomplete' });
+      clearErrorSummary(); // NEW
+
+      count++;
+      addedPollutants.add(lowerValue);
+
+      if (table.hidden) table.hidden = false;
+
+      const row = document.createElement('tr');
+      row.className = 'govuk-table__row';
+
+      const headerCell = document.createElement('th');
+      headerCell.scope = 'row';
+      headerCell.className = 'govuk-table__header';
+      headerCell.textContent = `Pollutant ${count}`;
+
+      const valueCell = document.createElement('td');
+      valueCell.className = 'govuk-table__cell';
+      valueCell.textContent = value;
+
+      const actionCell = document.createElement('td');
+      actionCell.className = 'govuk-table__cell';
+
+      const removeLink = document.createElement('a');
+      removeLink.href = '#';
+      removeLink.className = 'govuk-link';
+      removeLink.textContent = 'Remove';
+
+      removeLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        row.remove();
+        addedPollutants.delete(lowerValue);
+
+        persistSpecificFromTable();
+
+        if (tableBody.children.length === 0) {
+          table.hidden = true;
+          count = 0;
+        }
+        updateAddButtonText();
+        clearInlineError({ inputSelector: '#my-autocomplete' });
+        clearErrorSummary(); // NEW
+      });
+
+      actionCell.appendChild(removeLink);
+      row.appendChild(headerCell);
+      row.appendChild(valueCell);
+      row.appendChild(actionCell);
+      tableBody.appendChild(row);
+
+      input.value = '';
+
+      persistSpecificFromTable();
+      updateAddButtonText();
+    });
+  }
+
+  // Radios initial state
+  (function setInitialModeFromSession() {
+    document.querySelectorAll('input[name="pollutant-mode"]').forEach(r => (r.checked = false));
+    document.querySelectorAll('input[name="pollutant-group"]').forEach(r => (r.checked = false));
+
+    const hasGroup = !!sessionStorage.getItem(KEY_GROUP);
+    const specificList = readJSON(KEY_SPECIFIC, []);
+    const selectedList = readJSON(KEY_SELECTED, []);
+    const hasSpecific = Array.isArray(specificList) && specificList.length > 0;
+    const hasAnySelected = Array.isArray(selectedList) && selectedList.length > 0;
+
+    if (!hasGroup && !hasSpecific && !hasAnySelected) return;
+
+    const modeId = hasGroup ? 'mode-group' : 'mode-specific';
+    const modeEl = document.getElementById(modeId);
+    if (modeEl) {
+      modeEl.checked = true;
+      modeEl.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    if (hasGroup) {
+      const key = sessionStorage.getItem(KEY_GROUP);
+      const groupEl = document.querySelector(`input[name="pollutant-group"][value="${key}"]`);
+      if (groupEl) {
+        groupEl.checked = true;
+        groupEl.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+  })();
+
+  // Clear inline error & summary when typing in the autocomplete
+  (function attachInlineErrorFieldListeners() {
+    const input = document.querySelector('#my-autocomplete');
+    if (!input) return;
+    input.addEventListener('input', () => { clearInlineError({ inputSelector: '#my-autocomplete' }); clearErrorSummary(); });
+    input.addEventListener('change', () => { clearInlineError({ inputSelector: '#my-autocomplete' }); clearErrorSummary(); });
+    input.addEventListener('blur', (e) => {
+      if (!(e.target.value || '').trim()) { clearInlineError({ inputSelector: '#my-autocomplete' }); clearErrorSummary(); }
+    });
+  })();
+
+  // Continue (with added validations + summaries)
+  if (continueButton) {
+    continueButton.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      const selectedMode = document.querySelector('input[name="pollutant-mode"]:checked')?.value;
+
+     // NEW: if no top-level mode selected, show ONLY the summary (no inline error)
+      if (!selectedMode) {
+        // ensure any previous inline on the fieldset is removed, just in case
+        clearInlineError({ containerSelector: '#mode-fieldset', inputSelector: '#mode-specific' });
+        showErrorSummary([{ text: 'Select an option before continuing', href: '#mode-specific' }]);
+        return;
+      } else {
+        clearErrorSummary();
+      }
+
+
+      if (selectedMode === 'group') {
+        const chosen = document.querySelector('input[name="pollutant-group"]:checked');
+        if (!chosen) {
+          // NEW: inline error targeted to the group conditional, plus summary
+          showInlineError('Select a pollutant group', {
+            containerSelector: '#pollutant-group-form-group',
+            inputSelector: '#pg-core',
+            errorId: 'pollutant-group-error'
+          });
+          showErrorSummary([{ text: 'Select a pollutant group', href: '#pg-core' }]);
+          return;
+        } else {
+          clearInlineError({ containerSelector: '#pollutant-group-form-group', inputSelector: '#pg-core' });
+          clearErrorSummary();
+        }
+
+        const key = chosen.value;
+        const list = GROUPS[key] || [];
+
+        writeJSON(KEY_SELECTED, list);
+        sessionStorage.setItem(KEY_GROUP, key);
+        writeJSON(KEY_SPECIFIC, []);
+
+        sessionStorage.removeItem('selectedDataSources');
+        const hash = JSON.stringify(list.map(s => (s || '').toLowerCase().trim()).sort());
+        sessionStorage.setItem('dsPollutantHash', hash);
+
+        window.location.href = 'create-pollutant.html';
+        return;
+      }
+
+      // specific mode
+let pollutants = [];
+
+if (table && !table.hidden && tableBody && tableBody.children.length > 0) {
+  const rows = tableBody.querySelectorAll('tr');
+  rows.forEach(row => {
+    const name = row.querySelector('td')?.textContent?.trim();
+    if (name) pollutants.push(name);
+  });
+} else {
+  const input = document.querySelector('#my-autocomplete');
+  const value = (input && input.value.trim()) || '';
+  if (value) {
+    if (!isAllowed(value)) {
+      showInlineError('Select a pollutant from the list', { errorId: 'pollutant-error', inputSelector: '#my-autocomplete' });
+      showErrorSummary([{ text: 'Select a pollutant from the list', href: '#my-autocomplete' }]);
+      return;
+    }
+    pollutants.push(value);
+  }
+}
+
+/* NEW: block continue when mode=specific and no pollutants provided at all */
+if (!pollutants.length) {
+  showInlineError('Enter a pollutant', {
+    containerSelector: '#pollutant-form-group',
+    inputSelector: '#my-autocomplete',
+    errorId: 'pollutant-error'
+  });
+  showErrorSummary([{ text: 'Enter a pollutant', href: '#my-autocomplete' }]);
+  return;
+}
+
+/* (unchanged) persist + navigate */
+writeJSON(KEY_SELECTED, pollutants);
+writeJSON(KEY_SPECIFIC, pollutants);
+sessionStorage.removeItem(KEY_GROUP);
+
+sessionStorage.removeItem('selectedDataSources');
+const hash = JSON.stringify(pollutants.map(s => (s || '').toLowerCase().trim()).sort());
+sessionStorage.setItem('dsPollutantHash', hash);
+
+window.location.href = 'create-pollutant.html';
+
+    });
+  }
+ // Clear both inline + summary errors when user changes any top-level mode radio
+document.querySelectorAll('input[name="pollutant-mode"]').forEach(r => {
+  r.addEventListener('change', () => {
+    clearInlineError({
+      containerSelector: '#mode-fieldset',
+      inputSelector: '#mode-specific'
+    });
+    clearErrorSummary();
+  });
+});
+
+});
+</script>
+
+
+
+
+{% endblock %}

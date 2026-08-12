@@ -1,0 +1,50 @@
+{% extends "layouts/v17.html" %}
+
+{% set pageName="Air Quality Management Areas - Birmingham City Council - GOV.UK" %}
+
+{% block beforeContent %}
+<a href="#" class="govuk-back-link" onclick="if (document.referrer) { window.history.back(); } else { window.location.href='../birmingham-la.html'; } return false;">Back to Birmingham City Council</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">Air Quality Management Areas (AQMAs)</h1>
+    <p class="govuk-body">Air Quality Management Areas (AQMAs) are areas where air quality objectives are not being met or are at risk of not being met.</p>
+    <p class="govuk-body"><a href="https://draft-origin.publishing.service.gov.uk/guidance/air-quality-management-areas-aqmas?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2ZDUzNWIxYy1hMThlLTQ0NzYtYTk2Yy0wYmVlOTIyNzRlYWQiLCJjb250ZW50X2lkIjoiNDczNzYwNTgtOTVjNC00OTFhLWE0ZDMtYTA4NDdiNzc5MTc4IiwiaWF0IjoxNzgzOTUyNjkwLCJleHAiOjE3ODY2MzEwOTB9.ahWf8OTBi5Cwa-T8ptQvy1-SzGO2-PrvSxC73u8FGn8&utm_campaign=govuk_publishing&utm_medium=preview&utm_source=share#check-if-youre-in-an-aqma" class="govuk-link">More information about Air Quality Management Areas (AQMAs)</a></p>
+
+    <div class="govuk-!-margin-top-6 govuk-!-margin-bottom-6">
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Area name</th>
+            <th scope="col" class="govuk-table__header">Pollutant</th>
+            <th scope="col" class="govuk-table__header">Status</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a href="birmingham-city-centre.html" class="govuk-link">Birmingham AQMA</a>
+            </td>
+            <td class="govuk-table__cell">Nitrogen dioxide (NO2)</td>
+            <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--green">Active</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <a href="../../management-areas-map.html" role="button" id="map-btn" class="aq-button-secondary aq-button-secondary--icon" onclick="sessionStorage.setItem('mapFlyTo', JSON.stringify({lat:52.48,lng:-1.90,zoom:12})); sessionStorage.setItem('mapLayer', 'aqma')">
+      <span class="aq-button-secondary__icon">
+        <svg focusable="false" width="15" height="20" viewBox="0 0 15 20">
+          <path d="M15,7.5c0.009,3.778 -4.229,9.665 -7.5,12.5c-3.271,-2.835 -7.509,-8.722 -7.5,-12.5c0,-4.142 3.358,-7.5 7.5,-7.5c4.142,0 7.5,3.358 7.5,7.5Zm-7.5,5.461c3.016,0 5.461,-2.445 5.461,-5.461c0,-3.016 -2.445,-5.461 -5.461,-5.461c-3.016,0 -5.461,2.445 -5.461,5.461c0,3.016 2.445,5.461 5.461,5.461Z" fill="currentColor"></path>
+        </svg>
+      </span>
+      <span class="aq-button-secondary__text">View map of air quality management areas</span>
+      <span class="govuk-visually-hidden">(Visual only)</span>
+    </a>
+  </div>
+</div>
+
+{% endblock %}

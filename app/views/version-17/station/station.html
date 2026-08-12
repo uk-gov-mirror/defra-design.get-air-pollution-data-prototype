@@ -1,0 +1,1681 @@
+{% extends "layouts/v17.html" %}
+
+{% set pageName="Birmingham A4540 Roadside monitoring station - Get air pollution data - GOV.UK" %}
+
+{% block beforeContent %}
+<a href="#"
+   class="govuk-back-link"
+   onclick="
+     const ref = document.referrer || '';
+     if (ref.includes('pm10-graph.html')) {
+       history.go(-2);
+     } else {
+       history.back();
+     }
+     return false;
+   ">
+  Back
+</a>
+{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <meta property="og:title" content="Birmingham A4540 Roadside monitoring station - Get air pollution data - GOV.UK">
+  <meta name="description" content="Monitoring station information for Birmingham A4540 Roadside.">
+  <meta name="og:description" content="Monitoring station information for Birmingham A4540 Roadside.">
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-1">Birmingham A4540 Roadside</h1>
+    <strong class="govuk-tag status-tag govuk-tag--blue">Active</strong>
+    <p class="govuk-body status-description govuk-!-margin-top-3" id="status">Latest at 11:00am on 25 November 2024</p>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <a href="../map.html" role="button" id="map-btn" class="aq-button-secondary aq-button-secondary--icon govuk-!-margin-top-2" onclick="sessionStorage.setItem('mapFlyTo', JSON.stringify({lat:52.48,lng:-1.90,zoom:12}))">
+      <span class="aq-button-secondary__icon">
+        <svg focusable="false" width="15" height="20" viewBox="0 0 15 20">
+          <path d="M15,7.5c0.009,3.778 -4.229,9.665 -7.5,12.5c-3.271,-2.835 -7.509,-8.722 -7.5,-12.5c0,-4.142 3.358,-7.5 7.5,-7.5c4.142,0 7.5,3.358 7.5,7.5Zm-7.5,5.461c3.016,0 5.461,-2.445 5.461,-5.461c0,-3.016 -2.445,-5.461 -5.461,-5.461c-3.016,0 -5.461,2.445 -5.461,5.461c0,3.016 2.445,5.461 5.461,5.461Z" fill="currentColor"></path>
+        </svg>
+      </span>
+      <span class="aq-button-secondary__text">View map of nearby monitoring stations</span>
+      <span class="govuk-visually-hidden">(Visual only)</span>
+    </a>
+
+    <div class="div govuk-divider"></div>
+
+    <dl class="defra-aq-features__list govuk-!-margin-top-3">
+      <div class="defra-aq-features__item">
+        <dt class="defra-aq-features__key govuk-caption-m">Data source</dt>
+        <dd class="defra-aq-features__value govuk-body">Automatic Urban and Rural Network (AURN)
+          <details class="govuk-details">
+            <summary class="govuk-details__summary govuk-!-margin-top-3">
+              <span class="govuk-details__summary-text">3 other data sources available</span>
+            </summary>
+            <div class="govuk-details__text">
+              <p class="govuk-body"><a href="" class="govuk-link">UK Urban NO2 Network</a></p>
+              <p class="govuk-body"><a href="" class="govuk-link">Black Carbon Network</a></p>
+              <p class="govuk-body"><a href="" class="govuk-link">Non-Automatic Hydrocarbon Network</a></p>
+            </div>
+          </details>
+        </dd>
+      </div>
+
+      <div class="defra-aq-features__item">
+        <dt class="defra-aq-features__key govuk-caption-m">Local authority</dt>
+        <dd class="defra-aq-features__value govuk-body">Birmingham City Council</dd>
+        <p class="defra-aq-features__link govuk-body govuk-!-margin-top-1"><a href="birmingham-la.html" class="govuk-link">View local authority data</a></p>
+      </div>
+
+      <div class="defra-aq-features__item">
+        <dt class="defra-aq-features__key govuk-caption-m">Site type</dt>
+        <dd class="defra-aq-features__value govuk-body">
+          <div class="defra-toggletip" data-toggletip="" data-toggletip-label="More information about urban traffic" data-toggletip-content="This monitoring site is in a city or town close to roads, motorways or highways.">
+            Urban traffic
+          </div>
+          <p class="defra-aq-features__link govuk-body govuk-!-margin-top-1"><a href="https://www.google.co.uk/maps?q=52.476145,-1.874978" class="govuk-link">View on Google Maps</a></p>
+        </dd>
+      </div>
+    </dl>
+
+    <!-- Metadata -->
+    <details class="govuk-details govuk-!-margin-top-5">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">Coordinates, grid reference and photos</span>
+      </summary>
+      <div class="govuk-details__text">
+        <strong>Coordinates</strong>
+        <p class="govuk-body">52.476145, -1.874978</p>
+        <strong>Grid reference</strong>
+        <p class="govuk-body">SP085864</p>
+        <strong>Photos</strong>
+        <p class="govuk-body"><a href="" class="govuk-link">View on data.gov</a></p>
+      </div>
+    </details>
+
+    <details class="govuk-details govuk-!-margin-top-6">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">Pollutant start dates, end dates, instruments and inlet heights</span>
+      </summary>
+      <div class="govuk-details__text">
+        <table class="govuk-table">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Pollutant</th>
+              <th scope="col" class="govuk-table__header">Start date</th>
+              <th scope="col" class="govuk-table__header">End date</th>
+              <th scope="col" class="govuk-table__header">Inlet height (m)</th>
+              <th scope="col" class="govuk-table__header">Instrument</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">Fine particulate matter (PM2.5)</th>
+              <td class="govuk-table__cell">09/09/2016</td>
+              <td class="govuk-table__cell">–</td>
+              <td class="govuk-table__cell">3.0</td>
+              <td class="govuk-table__cell">FIDAS</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">Particulate matter (PM10)</th>
+              <td class="govuk-table__cell">09/09/2016</td>
+              <td class="govuk-table__cell">–</td>
+              <td class="govuk-table__cell">3.0</td>
+              <td class="govuk-table__cell">FIDAS</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">Nitrogen dioxide</th>
+              <td class="govuk-table__cell">09/09/2016</td>
+              <td class="govuk-table__cell">–</td>
+              <td class="govuk-table__cell">3.0</td>
+              <td class="govuk-table__cell">–</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">Ozone</th>
+              <td class="govuk-table__cell">09/09/2016</td>
+              <td class="govuk-table__cell">–</td>
+              <td class="govuk-table__cell">3.0</td>
+              <td class="govuk-table__cell">–</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">Nitric oxide</th>
+              <td class="govuk-table__cell">09/09/2016</td>
+              <td class="govuk-table__cell">–</td>
+              <td class="govuk-table__cell">3.0</td>
+              <td class="govuk-table__cell">–</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">Nitrogen oxides as nitrogen dioxide</th>
+              <td class="govuk-table__cell">09/09/2016</td>
+              <td class="govuk-table__cell">–</td>
+              <td class="govuk-table__cell">3.0</td>
+              <td class="govuk-table__cell">–</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <div class="div govuk-divider"></div>
+
+    <h2 id="pollution-summary-heading" class="govuk-heading-l govuk-!-margin-top-6 govuk-!-margin-bottom-2">
+      last 24 hours
+    </h2>
+
+    <p id="pollution-period-description" class="govuk-body govuk-!-margin-bottom-3">
+      Add dynamic time
+    </p>
+
+    <nav class="moj-sub-navigation govuk-!-margin-bottom-6" aria-label="Time period navigation">
+      <ul class="moj-sub-navigation__list">
+        <li class="moj-sub-navigation__item">
+          <a class="moj-sub-navigation__link js-period-link" href="#period-24h" data-period="24h">Last 24 hours</a>
+        </li>
+        <li class="moj-sub-navigation__item">
+          <a class="moj-sub-navigation__link js-period-link" href="#period-7d" data-period="7d">Last 7 days</a>
+        </li>
+        <li class="moj-sub-navigation__item">
+          <a class="moj-sub-navigation__link js-period-link" href="#period-this-year" data-period="thisYear">Last 5 years</a>
+        </li>
+        <li class="moj-sub-navigation__item">
+         <a class="moj-sub-navigation__link js-period-link" href="#period-daqi" data-period="daqi">
+          Daily Air Quality Index
+        </a> </li>
+      </ul>
+    </nav>
+
+    {# ===========================
+       PERIOD PANEL: DAQI
+       =========================== #}
+    <div class="aq-period-panel" id="period-daqi" data-period="daqi" hidden>
+      <div class="govuk-inset-text not-verified">
+        Data has not been checked and verified
+      </div>
+
+      <table class="govuk-table defra-aq-levels-table govuk-!-margin-bottom-2">
+              <thead class="defra-aq-levels-table__head">
+                <tr class="defra-aq-levels-table__row">
+                  <th scope="col"
+                      class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant defra-aq-levels-table__cell--pollutant-title">
+                    Pollutant
+                  </th>
+                  <th scope="col"
+                      class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average defra-aq-levels-table__cell--average-title">
+                    Average
+                  </th>
+                  <th scope="col"
+                      class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily defra-aq-levels-table__cell--daily-title">
+                  <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about the Daily Air Quality Index (DAQI)"
+                         data-toggletip-content="The Daily Air Quality Index (DAQI) is a simple 10-point scale designed to help people understand the short term risk of air pollution.">
+                      DAQI
+                    </div>
+                  </th>
+                  <th scope="col"
+                      class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly defra-aq-levels-table__cell--hourly-title">
+                   Averaging period
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="defra-aq-levels-table__body">
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    PM2.5
+          
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    12 µg/m3
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
+                     <strong class="govuk-tag govuk-tag--green">2 (low)</strong>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                  24 hour average
+                  </td>
+                </tr>
+
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    PM10
+           
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    18 µg/m3
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
+                   <strong class="govuk-tag govuk-tag--green">2 (low)</strong>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                   24 hour average
+                  </td>
+                </tr>
+
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    Nitrogen dioxide
+               
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                     201 µg/m3
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
+                    
+                    <strong class="govuk-tag govuk-tag--yellow">4 (moderate)</strong>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                    Hourly average
+                  </td>
+                </tr>
+
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    Ozone
+                   
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    41 µg/m3
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                    
+                    <strong class="govuk-tag govuk-tag--green">2 (low)</strong>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
+                    8 hour rolling average
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+    </div>
+
+    {# ===========================
+       PERIOD PANEL: LAST 24 HOURS
+       =========================== #}
+    <div class="aq-period-panel" id="period-24h" data-period="24h">
+           <div class="govuk-inset-text not-verified">
+        Data has not been checked and verified
+      </div>
+         <table class="govuk-table defra-aq-levels-table govuk-!-margin-bottom-2">
+              <thead class="defra-aq-levels-table__head">
+                <tr class="defra-aq-levels-table__row">
+                  <th scope="col"
+                      class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant defra-aq-levels-table__cell--pollutant-title">
+                    Pollutant
+                  </th>
+                
+                  <th scope="col"
+                      class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average defra-aq-levels-table__cell--average-title">
+                    24 hour average
+                  </th>
+                  <th scope="col"
+                      class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly defra-aq-levels-table__cell--hourly-title">
+                    Hourly exceedances
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="defra-aq-levels-table__body">
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    PM2.5
+                    <span class="defra-aq-levels-table__cell--data">Data capture: 100%</span>
+                  </td>
+                  
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about the UK annual average limit value for PM2.5"
+                         data-toggletip-content="Annual average PM2.5 levels at any site must not go above 20 micrograms per cubic metre (µg/m³) in a calendar year (when rounded to a whole number).">
+                      12 µg/m3
+                    </div>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                    no legal limit
+                  </td>
+                </tr>
+
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    PM10
+                    <span class="defra-aq-levels-table__cell--data">Data capture: 100%</span>
+                  </td>
+                
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about the UK annual average limit value for PM10"
+                         data-toggletip-content="Annual average PM10 levels at any site must not go above 40 micrograms per cubic metre (µg/m³) in a calendar year (when rounded to a whole number).">
+                      18 µg/m3
+                    </div>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                    no legal limit
+                  </td>
+                </tr>
+
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    Nitrogen dioxide
+                    <span class="defra-aq-levels-table__cell--data">Data capture: 100%</span>
+                  </td>
+                 
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about the UK annual average limit value for nitrogen dioxide"
+                         data-toggletip-content="Annual average nitrogen dioxide levels at any site must not go above 40 micrograms per cubic metre (µg/m³) in a calendar year (when rounded to a whole number).">
+                      150 µg/m3
+                    </div>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about hourly exceedances for nitrogen dioxide"
+                         data-toggletip-content="Hourly nitrogen dioxide levels must not go above 200 micrograms per cubic metre (µg/m³) more than 18 times in a calendar year (when rounded to a whole number).">
+                      1
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    Ozone
+                    <span class="defra-aq-levels-table__cell--data">Data capture: 100%</span>
+                  </td>
+                 
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about the UK annual average limit value for ozone"
+                         data-toggletip-content="There is no annual average limit value for ozone.">
+                      35 µg/m3
+                    </div>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
+                    no legal limit
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+    </div>
+
+    {# ===========================
+       PERIOD PANEL: LAST 7 DAYS
+       =========================== #}
+    <div class="aq-period-panel" id="period-7d" data-period="7d" hidden>
+           <div class="govuk-inset-text not-verified">
+        Data has not been checked and verified
+      </div>
+     <table class="govuk-table defra-aq-levels-table govuk-!-margin-bottom-2">
+              <thead class="defra-aq-levels-table__head">
+                <tr class="defra-aq-levels-table__row">
+                  <th scope="col"
+                      class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant defra-aq-levels-table__cell--pollutant-title">
+                    Pollutant
+                  </th>
+                  <th scope="col"
+                      class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average defra-aq-levels-table__cell--average-title">
+                    Average
+                  </th>
+                  <th scope="col"
+                      class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily defra-aq-levels-table__cell--daily-title">
+                    Daily exceedances
+                  </th>
+                  <th scope="col"
+                      class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly defra-aq-levels-table__cell--hourly-title">
+                    Hourly exceedances
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="defra-aq-levels-table__body">
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    PM2.5
+                    <span class="defra-aq-levels-table__cell--data">Data capture: 100%</span>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about the UK annual average limit value for PM2.5"
+                         data-toggletip-content="Annual average PM2.5 levels at any site must not go above 20 micrograms per cubic metre (µg/m³) in a calendar year (when rounded to a whole number).">
+                      8 µg/m3
+                    </div>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
+                    no legal limit
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                    no legal limit
+                  </td>
+                </tr>
+
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    PM10
+                    <span class="defra-aq-levels-table__cell--data">Data capture: 100%</span>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about the UK annual average limit value for PM10"
+                         data-toggletip-content="Annual average PM10 levels at any site must not go above 40 micrograms per cubic metre (µg/m³) in a calendar year (when rounded to a whole number).">
+                      14 µg/m3
+                    </div>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about daily exceedances for PM10"
+                         data-toggletip-content="Daily average PM10 levels must not go above 50 micrograms per cubic metre (µg/m³) more than 35 times in a calendar year (when rounded to a whole number).">
+                      2
+                    </div>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                    no legal limit
+                  </td>
+                </tr>
+
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    Nitrogen dioxide
+                    <span class="defra-aq-levels-table__cell--data">Data capture: 100%</span>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about the UK annual average limit value for nitrogen dioxide"
+                         data-toggletip-content="Annual average nitrogen dioxide levels at any site must not go above 40 micrograms per cubic metre (µg/m³) in a calendar year (when rounded to a whole number).">
+                      52 µg/m3
+                    </div>
+                    
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
+                    no legal limit
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about hourly exceedances for nitrogen dioxide"
+                         data-toggletip-content="Hourly nitrogen dioxide levels must not go above 200 micrograms per cubic metre (µg/m³) more than 18 times in a calendar year (when rounded to a whole number).">
+                      1
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    Ozone
+                    <span class="defra-aq-levels-table__cell--data">Data capture: 100%</span>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about the UK annual average limit value for ozone"
+                         data-toggletip-content="There is no annual average limit value for ozone.">
+                      32 µg/m3
+                    </div>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
+                    no legal limit
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                    no legal limit
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+    </div>
+
+   {# ===========================
+   PERIOD PANEL: THIS YEAR (ANNUAL SUMMARY)
+   =========================== #}
+<div class="aq-period-panel" id="period-this-year" data-period="thisYear" hidden>
+
+  <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Select year</h3>
+  <nav class="moj-side-navigation govuk-!-margin-bottom-4 govuk-!-margin-top-0"
+       aria-label="Select year for annual summary">
+    <ul class="moj-side-navigation__list" id="annual-year-nav">
+      <li class="moj-side-navigation__item moj-side-navigation__item--active">
+        <a href="#year-2026" class="js-annual-year-link" data-year="2026" aria-current="location">2026</a>
+      </li>
+      <li class="moj-side-navigation__item">
+        <a href="#year-2025" class="js-annual-year-link" data-year="2025">2025</a>
+      </li>
+      <li class="moj-side-navigation__item">
+        <a href="#year-2024" class="js-annual-year-link" data-year="2024">2024</a>
+      </li>
+      <li class="moj-side-navigation__item">
+        <a href="#year-2023" class="js-annual-year-link" data-year="2023">2023</a>
+      </li>
+      <li class="moj-side-navigation__item">
+        <a href="#year-2022" class="js-annual-year-link" data-year="2022">2022</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div id="verification-banner-annual" class="govuk-inset-text not-verified">
+    Data has not been checked and verified
+  </div>
+
+  <table class="govuk-table defra-aq-levels-table govuk-!-margin-bottom-2">
+    <thead class="defra-aq-levels-table__head">
+      <tr class="defra-aq-levels-table__row">
+        <th scope="col" class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant defra-aq-levels-table__cell--pollutant-title">
+          Pollutant
+        </th>
+        <th scope="col" class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average defra-aq-levels-table__cell--average-title">
+          Annual average
+        </th>
+        <th scope="col" class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily defra-aq-levels-table__cell--daily-title">
+          Daily exceedances
+        </th>
+        <th scope="col" class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly defra-aq-levels-table__cell--hourly-title">
+          Hourly exceedances
+        </th>
+      </tr>
+    </thead>
+
+    <tbody class="defra-aq-levels-table__body">
+      <!-- PM2.5 -->
+      <tr class="defra-aq-levels-table__row">
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+          PM2.5
+          <span class="defra-aq-levels-table__cell--data">Data capture: <span id="annual-pm25-capture">100%</span></span>
+        </td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+          <div class="defra-toggletip"
+               data-toggletip
+               data-toggletip-label="More information about the UK annual average limit value for PM2.5"
+               data-toggletip-content="Annual average PM2.5 levels at any site must not go above 20 micrograms per cubic metre (µg/m³) in a calendar year (when rounded to a whole number).">
+            <span id="annual-pm25-avg">8 µg/m3</span>
+          </div>
+      
+        </td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily" id="annual-pm25-daily">no legal limit</td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly" id="annual-pm25-hourly">no legal limit</td>
+      </tr>
+
+      <!-- PM10 -->
+      <tr class="defra-aq-levels-table__row">
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+          PM10
+          <span class="defra-aq-levels-table__cell--data">Data capture: <span id="annual-pm10-capture">100%</span></span>
+        </td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+          <div class="defra-toggletip"
+               data-toggletip
+               data-toggletip-label="More information about the UK annual average limit value for PM10"
+               data-toggletip-content="Annual average PM10 levels at any site must not go above 40 micrograms per cubic metre (µg/m³) in a calendar year (when rounded to a whole number).">
+            <span id="annual-pm10-avg">14 µg/m3</span>
+          </div>
+        </td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
+          <div class="defra-toggletip"
+               data-toggletip
+               data-toggletip-label="More information about daily exceedances for PM10"
+               data-toggletip-content="Daily average PM10 levels must not go above 50 micrograms per cubic metre (µg/m³) more than 35 times in a calendar year (when rounded to a whole number).">
+            <span id="annual-pm10-daily">2</span>
+          </div>
+         
+
+        </td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly" id="annual-pm10-hourly">no legal limit</td>
+      </tr>
+
+      <!-- NO2 -->
+      <tr class="defra-aq-levels-table__row">
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+          Nitrogen dioxide
+          <span class="defra-aq-levels-table__cell--data">Data capture: <span id="annual-no2-capture">100%</span></span>
+        </td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+          <div class="defra-toggletip"
+               data-toggletip
+               data-toggletip-label="More information about the UK annual average limit value for nitrogen dioxide"
+               data-toggletip-content="Annual average nitrogen dioxide levels at any site must not go above 40 micrograms per cubic metre (µg/m³) in a calendar year (when rounded to a whole number).">
+            <span id="annual-no2-avg">52 µg/m3</span>
+          </div>
+           <strong id="annual-no2-above" class="govuk-tag govuk-tag--red govuk-!-font-size-16 govuk-!-margin-top-1" hidden>
+          Above limit
+        </strong>
+        </td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily" id="annual-no2-daily">no legal limit</td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+          <div class="defra-toggletip"
+               data-toggletip
+               data-toggletip-label="More information about hourly exceedances for nitrogen dioxide"
+               data-toggletip-content="Hourly nitrogen dioxide levels must not go above 200 micrograms per cubic metre (µg/m³) more than 18 times in a calendar year (when rounded to a whole number).">
+            <span id="annual-no2-hourly">1</span>
+          </div>
+         
+
+        </td>
+      </tr>
+
+      <!-- O3 -->
+      <tr class="defra-aq-levels-table__row">
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+          Ozone
+          <span class="defra-aq-levels-table__cell--data">Data capture: <span id="annual-o3-capture">100%</span></span>
+        </td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+          <div class="defra-toggletip"
+               data-toggletip
+               data-toggletip-label="More information about the UK annual average limit value for ozone"
+               data-toggletip-content="There is no annual average limit value for ozone.">
+            <span id="annual-o3-avg">32 µg/m3</span>
+          </div>
+         
+
+        </td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily" id="annual-o3-daily">no legal limit</td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly" id="annual-o3-hourly">no legal limit</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+
+
+<p id="post-table-hint" class="govuk-hint">
+  The pollution levels shown are measured against
+  <a href="https://draft-origin.publishing.service.gov.uk/guidance/air-pollution-uk-legal-limits?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmMjc3ZmU0My03OGIyLTRjYTAtOTFhMy0xODU5OTI0OWQzZGQiLCJjb250ZW50X2lkIjoiMjMyYzJiZTgtMzkxNi00Mjg0LTk4MjItMThkYzExZmQyNDdhIiwiaWF0IjoxNzg0MDQyNDk4LCJleHAiOjE3ODY3MjA4OTh9.C-ZSqWMjRJSkDpE_y_CIBu8SOTzJptHchqAoUQnR8EU&utm_campaign=govuk_publishing&utm_medium=preview&utm_source=share"
+     class="govuk-link">
+    UK legal limits</a>.</p>
+
+<div id="graph-section">
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">View graph and pollutant summary</h3>
+  <a href="pm10-graph.html" id="js-view-graph" role="button"
+   class="aq-button-secondary aq-button-secondary--icon govuk-!-margin-top-2">
+      <span class="aq-button-secondary__icon">
+        <svg focusable="false" width="20" height="20" viewBox="0 0 20 20">
+          <path d="M2.75 14.443v2.791H18v1.5H1.25V1.984h1.5v7.967L6.789 4.91l5.016 4.014 5.056-5.899 2.278 1.952-6.944 8.101L7.211 9.09 2.75 14.443z"></path>
+        </svg>
+      </span>
+      <span class="aq-button-secondary__text" style="padding-left: 5px;">View graph and pollutant summary</span>
+      <span class="govuk-visually-hidden">(Visual only)</span>
+    </a>
+  
+
+
+    <div class="div govuk-divider"></div>
+      </div>
+
+    {# ===========================
+       DOWNLOAD DATA (CHECKBOXES)
+       =========================== #}
+    <div class="govuk-form-group govuk-!-margin-bottom-3" id="download-section" hidden>
+      <fieldset class="govuk-fieldset" aria-describedby="download-hint">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <h2 id="download-heading" class="govuk-fieldset__heading">
+            Download data: last 24 hours
+          </h2>
+        </legend>
+
+       
+
+        <h3 class="govuk-heading-s govuk-!-margin-top-3">Select pollutants</h3>
+
+        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+          <div class="govuk-checkboxes__item">
+            <input class="govuk-checkboxes__input" id="pollutant-pm25" name="pollutants" type="checkbox" value="pm25" checked>
+            <label class="govuk-label govuk-checkboxes__label" for="pollutant-pm25">Fine particulate matter (PM2.5)</label>
+          </div>
+          <div class="govuk-checkboxes__item">
+            <input class="govuk-checkboxes__input" id="pollutant-pm10" name="pollutants" type="checkbox" value="pm10" checked>
+            <label class="govuk-label govuk-checkboxes__label" for="pollutant-pm10">Particulate matter (PM10)</label>
+          </div>
+          <div class="govuk-checkboxes__item">
+            <input class="govuk-checkboxes__input" id="pollutant-no2" name="pollutants" type="checkbox" value="no2" checked>
+            <label class="govuk-label govuk-checkboxes__label" for="pollutant-no2">Nitrogen dioxide (NO2)</label>
+          </div>
+          <div class="govuk-checkboxes__item">
+            <input class="govuk-checkboxes__input" id="pollutant-o3" name="pollutants" type="checkbox" value="o3" checked>
+            <label class="govuk-label govuk-checkboxes__label" for="pollutant-o3">Ozone (O3)</label>
+          </div>
+        </div>
+
+        <button type="submit" id="download-submit" class="govuk-button govuk-button--secondary govuk-!-margin-top-3" data-module="govuk-button">
+          Continue
+        </button>
+
+        <p id="selected-pollutants-summary" class="govuk-body govuk-!-margin-top-2"></p>
+        <div id="download-buttons-container" class="govuk-!-margin-top-3"></div>
+      </fieldset>
+    </div>
+
+    {# ===========================
+       PERIOD PANEL: CHOOSE DATE RANGE
+       =========================== #}
+    <div class="aq-period-panel" id="period-last-year" data-period="lastYear" hidden>
+      <h3 class="govuk-heading-m">Choose a date range</h3>
+      <p class="govuk-body">Placeholder: this tab will have a different layout (date picker and customised summary).</p>
+      <p id="cdr-selection-summary" class="govuk-body govuk-!-margin-top-2 govuk-!-margin-bottom-2" hidden></p>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const periodLinks = document.querySelectorAll('.js-period-link');
+    const periodPanels = document.querySelectorAll('.aq-period-panel');
+    const summaryHeading = document.getElementById('pollution-summary-heading');
+    const downloadHeading = document.getElementById('download-heading');
+    const periodDescription = document.getElementById('pollution-period-description');
+
+    const downloadSection = document.getElementById('download-section');
+    const downloadButton = document.getElementById('download-submit');
+    const downloadButtonsContainer = document.getElementById('download-buttons-container');
+    const pollutantCheckboxes = document.querySelectorAll('input[name="pollutants"]');
+    const pollutantsSummary = document.getElementById('selected-pollutants-summary');
+
+    const postTableHint = document.getElementById('post-table-hint');
+    const graphSection = document.getElementById('graph-section');
+
+    let currentPeriod = '24h';
+    let currentAnnualYear = '2026';
+
+    const DAQI_INFO_URL = 'https://www.gov.uk/government/publications/health-effects-of-air-pollution/using-the-daily-air-quality-index-daqi';
+
+    const periodConfig = {
+      daqi: { heading: 'Daily Air Quality Index (DAQI)', download: '' },
+      '24h': { heading: 'last 24 hours', download: 'last 24 hours' },
+      '7d': { heading: 'last 7 days', download: 'last 7 days' },
+      'thisYear': { heading: 'annual summary', download: 'annual summary' },
+      'lastYear': { heading: 'choose date range', download: 'choose date range' }
+    };
+
+    // ---------- Utilities ----------
+    function clearDownloadsUI() {
+      if (downloadButtonsContainer) downloadButtonsContainer.innerHTML = '';
+      if (pollutantsSummary) pollutantsSummary.textContent = '';
+    }
+
+    function formatDateLong(date) {
+      const day = date.getDate();
+      const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const month = monthNames[date.getMonth()];
+      const year = date.getFullYear();
+      return day + ' ' + month + ' ' + year;
+    }
+
+    function formatDayMonth(date) {
+      const day = date.getDate();
+      const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const month = monthNames[date.getMonth()];
+      return day + ' ' + month;
+    }
+
+    function formatDayMonthYear(date) {
+      const day = date.getDate();
+      const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const month = monthNames[date.getMonth()];
+      const year = date.getFullYear();
+      return day + ' ' + month + ' ' + year;
+    }
+
+    function setText(id, txt) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = txt;
+    }
+
+    function setAboveLimit(id, isAbove) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (isAbove) el.removeAttribute('hidden');
+      else el.setAttribute('hidden', '');
+    }
+
+    // Save original “legal limits” hint HTML so we can restore it cleanly
+    const originalPostTableHintHTML = postTableHint ? postTableHint.innerHTML : '';
+
+    const viewGraphBtn = document.getElementById('js-view-graph');
+
+function updateViewGraphLink() {
+  if (!viewGraphBtn) {
+    console.warn('[updateViewGraphLink] viewGraphBtn element not found');
+    return;
+  }
+
+  console.log('[updateViewGraphLink] Current period:', currentPeriod);
+
+  // No graph link on DAQI or Choose date range
+  if (currentPeriod === 'daqi' || currentPeriod === 'lastYear') {
+    viewGraphBtn.setAttribute('hidden', '');
+    console.log('[updateViewGraphLink] Hidden button for period:', currentPeriod);
+    return;
+  }
+
+  viewGraphBtn.removeAttribute('hidden');
+
+  const qs = new URLSearchParams();
+
+  if (currentPeriod === '24h') {
+    qs.append('mode', 'rolling');
+    qs.append('period', '24h');
+  } else if (currentPeriod === '7d') {
+    qs.append('mode', 'rolling');
+    qs.append('period', '7d');
+  } else if (currentPeriod === 'thisYear') {
+    qs.append('mode', 'year');
+    qs.append('year', String(currentAnnualYear || '2026'));
+  } else {
+    qs.append('mode', 'rolling');
+    qs.append('period', '24h');
+  }
+
+  const queryString = qs.toString();
+  const newHref = 'pm10-graph.html?' + queryString;
+  
+  viewGraphBtn.setAttribute('href', newHref);
+
+  console.log('[updateViewGraphLink] Set href to:', newHref);
+  console.log('[updateViewGraphLink] Actual href attribute:', viewGraphBtn.getAttribute('href'));
+}
+
+
+
+    // ---------- Annual data demo ----------
+    const annualDataByYear = {
+      "2026": {
+        verified: "none",
+        values: {
+          pm25: { avg: "8 µg/m3",  daily: "no legal limit", hourly: "no legal limit", capture: "100%" },
+          pm10: { avg: "14 µg/m3", daily: "2",             hourly: "no legal limit", capture: "100%" },
+          no2:  { avg: "52 µg/m3", daily: "no legal limit", hourly: "1",             capture: "100%" },
+          o3:   { avg: "32 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%" }
+        }
+      },
+      "2025": {
+        verified: "partial",
+        verifiedUntil: "30 September 2025",
+        values: {
+          pm25: { avg: "10 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "97%", aboveLimit: false },
+          pm10: { avg: "16 µg/m3", daily: "3",             hourly: "no legal limit", capture: "95%", aboveLimit: false },
+          no2:  { avg: "55 µg/m3", daily: "no legal limit", hourly: "2",             capture: "98%", aboveLimit: true  },
+          o3:   { avg: "34 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "96%", aboveLimit: false }
+        }
+      },
+      "2024": {
+        verified: "full",
+        values: {
+          pm25: { avg: "9 µg/m3",  daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false },
+          pm10: { avg: "15 µg/m3", daily: "2",             hourly: "no legal limit", capture: "100%", aboveLimit: false },
+          no2:  { avg: "50 µg/m3", daily: "no legal limit", hourly: "1",             capture: "100%", aboveLimit: true  },
+          o3:   { avg: "33 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false }
+        }
+      },
+      "2023": {
+        verified: "full",
+        values: {
+          pm25: { avg: "9 µg/m3",  daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false },
+          pm10: { avg: "15 µg/m3", daily: "2",             hourly: "no legal limit", capture: "100%", aboveLimit: false },
+          no2:  { avg: "48 µg/m3", daily: "no legal limit", hourly: "1",             capture: "100%", aboveLimit: true  },
+          o3:   { avg: "33 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false }
+        }
+      },
+      "2022": {
+        verified: "full",
+        values: {
+          pm25: { avg: "9 µg/m3",  daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false },
+          pm10: { avg: "15 µg/m3", daily: "2",             hourly: "no legal limit", capture: "100%", aboveLimit: false },
+          no2:  { avg: "46 µg/m3", daily: "no legal limit", hourly: "1",             capture: "100%", aboveLimit: true  },
+          o3:   { avg: "33 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false }
+        }
+      }
+    };
+
+    function setAnnualVerifiedBanner(state) {
+      const el = document.getElementById('verification-banner-annual');
+      if (!el) return;
+
+      el.classList.remove('not-verified', 'half-verified', 'verified');
+
+      if (state.verified === 'partial') {
+        el.textContent = 'Data has been checked and verified until ' + state.verifiedUntil;
+        el.classList.add('half-verified');
+      } else if (state.verified === 'full') {
+        el.textContent = 'Data has been checked and verified';
+        el.classList.add('verified');
+      } else {
+        el.textContent = 'Data has not been checked and verified';
+        el.classList.add('not-verified');
+      }
+    }
+
+    function updateAnnualTableForYear(year) {
+      const state = annualDataByYear[year];
+      if (!state) return;
+
+      currentAnnualYear = year;
+      setAnnualVerifiedBanner(state);
+
+      const v = state.values;
+
+      setText('annual-pm25-avg', v.pm25.avg);
+      setText('annual-pm25-daily', v.pm25.daily);
+      setText('annual-pm25-hourly', v.pm25.hourly);
+      setText('annual-pm25-capture', v.pm25.capture);
+      setAboveLimit('annual-pm25-above', !!v.pm25.aboveLimit);
+
+      setText('annual-pm10-avg', v.pm10.avg);
+      setText('annual-pm10-daily', v.pm10.daily);
+      setText('annual-pm10-hourly', v.pm10.hourly);
+      setText('annual-pm10-capture', v.pm10.capture);
+      setAboveLimit('annual-pm10-above', !!v.pm10.aboveLimit);
+
+      setText('annual-no2-avg', v.no2.avg);
+      setText('annual-no2-daily', v.no2.daily);
+      setText('annual-no2-hourly', v.no2.hourly);
+      setText('annual-no2-capture', v.no2.capture);
+      setAboveLimit('annual-no2-above', !!v.no2.aboveLimit);
+
+      setText('annual-o3-avg', v.o3.avg);
+      setText('annual-o3-daily', v.o3.daily);
+      setText('annual-o3-hourly', v.o3.hourly);
+      setText('annual-o3-capture', v.o3.capture);
+      setAboveLimit('annual-o3-above', !!v.o3.aboveLimit);
+
+      if (currentPeriod === 'thisYear') {
+        updateHeadingsForPeriod('thisYear');
+        updatePeriodDescription('thisYear');
+      }
+    }
+
+    function wireAnnualYearNav() {
+      const links = document.querySelectorAll('.js-annual-year-link');
+      links.forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const year = this.dataset.year;
+          if (!year) return;
+
+          links.forEach(function (l) {
+            l.removeAttribute('aria-current');
+            const li = l.closest('li');
+            if (li) li.classList.remove('moj-side-navigation__item--active');
+          });
+
+          this.setAttribute('aria-current', 'location');
+          const li = this.closest('li');
+          if (li) li.classList.add('moj-side-navigation__item--active');
+
+          updateAnnualTableForYear(year);
+          updateViewGraphLink(); // ✅ add this so graph link matches the selected year
+          clearDownloadsUI();
+
+        });
+      });
+    }
+
+    // ---------- Choose date range UI injection ----------
+    function ensureChooseDateRangeUI() {
+      const panel = document.getElementById('period-last-year');
+      if (!panel) return;
+      if (panel.querySelector('#cdr-form')) return;
+
+      panel.innerHTML = `
+
+        <form id="cdr-form" class="govuk-!-margin-top-7" novalidate>
+         
+            <h2 class="govuk-heading-l">
+                        Download data
+                      </h2>
+           <details class="govuk-details govuk-!-margin-top-3">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">File format and metadata</span>
+          </summary>
+          <div class="govuk-details__text">
+            <h3 class="govuk-heading-s">File format</h3>
+            <p class="govuk-body">This data will download in a wide format.</p>
+            <p class="govuk-body">Data in a wide format puts each variable in a separate column.</p>
+
+            <h3 class="govuk-heading-s">Metadata</h3>
+            <p class="govuk-body">These files could contain the following metadata:</p>
+            <ul class="govuk-body govuk-list--bullet">
+              <li>name of monitoring station</li>
+              <li>map coordinates</li>
+              <li>local authority</li>
+              <li>region</li>
+              <li>site ID</li>
+              <li>instrument type</li>
+              <li>inlet height</li>
+            </ul>
+          </div>
+        </details>
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="cdr-hint">
+             
+                  <h3 class="govuk-heading-s">Select a time period</h3>
+          
+
+              <div class="govuk-radios" data-module="govuk-radios">
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" id="cdr-24h" name="cdr-period" type="radio" value="24h">
+                  <label class="govuk-label govuk-radios__label" for="cdr-24h">Last 24 hours</label>
+                </div>
+
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" id="cdr-7d" name="cdr-period" type="radio" value="7d">
+                  <label class="govuk-label govuk-radios__label" for="cdr-7d">Last 7 days</label>
+                </div>
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" id="cdr-any-year" name="cdr-period" type="radio" value="anyYear" data-aria-controls="cdr-any-year-conditional">
+                  <label class="govuk-label govuk-radios__label" for="cdr-any-year">Any year</label>
+                  <div id="time-any-hint" class="govuk-hint govuk-radios__hint">Choose a single whole year</div>
+                </div>
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="cdr-any-year-conditional">
+                  <div class="govuk-form-group">
+                    <label class="govuk-label" for="cdr-year">Year</label>
+                    <div class="govuk-hint">For example, 2023</div>
+                    <input class="govuk-input govuk-input--width-4" id="cdr-year" name="cdr-year" type="text" inputmode="numeric">
+                  </div>
+                </div>
+
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" id="cdr-year-range" name="cdr-period" type="radio" value="yearRange" data-aria-controls="cdr-year-range-conditional">
+                  <label class="govuk-label govuk-radios__label" for="cdr-year-range">Range of years</label>
+                </div>
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="cdr-year-range-conditional">
+                  <div class="govuk-form-group">
+                    <label class="govuk-label" for="cdr-year-from">Enter start year</label>
+                    <div class="govuk-hint">For example, 2023</div>
+                    <input class="govuk-input govuk-input--width-4" id="cdr-year-from" name="cdr-year-from" type="text" inputmode="numeric">
+                  </div>
+                  <div class="govuk-form-group">
+                    <label class="govuk-label" for="cdr-year-to">Enter end year</label>
+                    <div class="govuk-hint">For example, 2024</div>
+                    <input class="govuk-input govuk-input--width-4" id="cdr-year-to" name="cdr-year-to" type="text" inputmode="numeric">
+                  </div>
+                </div>
+
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" id="cdr-date-range" name="cdr-period" type="radio" value="dateRange" data-aria-controls="cdr-date-range-conditional">
+                  <label class="govuk-label govuk-radios__label" for="cdr-date-range">Specific date range</label>
+                </div>
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="cdr-date-range-conditional">
+                  <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" role="group" aria-describedby="cdr-start-hint">
+                      <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Start date</legend>
+                      <div id="cdr-start-hint" class="govuk-hint">For example, 25 11 2024</div>
+                      <div class="govuk-date-input" id="cdr-start-date">
+                        <div class="govuk-date-input__item">
+                          <div class="govuk-form-group">
+                            <label class="govuk-label govuk-date-input__label" for="cdr-start-day">Day</label>
+                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="cdr-start-day" name="cdr-start-day" type="text" inputmode="numeric">
+                          </div>
+                        </div>
+                        <div class="govuk-date-input__item">
+                          <div class="govuk-form-group">
+                            <label class="govuk-label govuk-date-input__label" for="cdr-start-month">Month</label>
+                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="cdr-start-month" name="cdr-start-month" type="text" inputmode="numeric">
+                          </div>
+                        </div>
+                        <div class="govuk-date-input__item">
+                          <div class="govuk-form-group">
+                            <label class="govuk-label govuk-date-input__label" for="cdr-start-year">Year</label>
+                            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="cdr-start-year" name="cdr-start-year" type="text" inputmode="numeric">
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+
+                  <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" role="group" aria-describedby="cdr-end-hint">
+                      <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">End date</legend>
+                      <div id="cdr-end-hint" class="govuk-hint">For example, 30 11 2024</div>
+                      <div class="govuk-date-input" id="cdr-end-date">
+                        <div class="govuk-date-input__item">
+                          <div class="govuk-form-group">
+                            <label class="govuk-label govuk-date-input__label" for="cdr-end-day">Day</label>
+                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="cdr-end-day" name="cdr-end-day" type="text" inputmode="numeric">
+                          </div>
+                        </div>
+                        <div class="govuk-date-input__item">
+                          <div class="govuk-form-group">
+                            <label class="govuk-label govuk-date-input__label" for="cdr-end-month">Month</label>
+                            <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="cdr-end-month" name="cdr-end-month" type="text" inputmode="numeric">
+                          </div>
+                        </div>
+                        <div class="govuk-date-input__item">
+                          <div class="govuk-form-group">
+                            <label class="govuk-label govuk-date-input__label" for="cdr-end-year">Year</label>
+                            <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="cdr-end-year" name="cdr-end-year" type="text" inputmode="numeric">
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+
+              </div>
+            </fieldset>
+          </div>
+
+
+          <h3 class="govuk-heading-s">Select pollutants</h3>
+
+          <div class="govuk-checkboxes" data-module="govuk-checkboxes" id="cdr-pollutants">
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="cdr-pm25" name="cdr-pollutants" type="checkbox" value="pm25" checked>
+              <label class="govuk-label govuk-checkboxes__label" for="cdr-pm25">Fine particulate matter (PM2.5)</label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="cdr-pm10" name="cdr-pollutants" type="checkbox" value="pm10" checked>
+              <label class="govuk-label govuk-checkboxes__label" for="cdr-pm10">Particulate matter (PM10)</label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="cdr-no2" name="cdr-pollutants" type="checkbox" value="no2" checked>
+              <label class="govuk-label govuk-checkboxes__label" for="cdr-no2">Nitrogen dioxide (NO2)</label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="cdr-o3" name="cdr-pollutants" type="checkbox" value="o3" checked>
+              <label class="govuk-label govuk-checkboxes__label" for="cdr-o3">Ozone (O3)</label>
+            </div>
+          </div>
+
+          <button type="button" id="cdr-continue" class="govuk-button govuk-button--secondary govuk-!-margin-top-6" data-module="govuk-button">
+            Continue
+          </button>
+
+          <p id="cdr-selected-summary" class="govuk-body govuk-!-margin-top-2"></p>
+          <div id="cdr-download-buttons" class="govuk-!-margin-top-3"></div>
+
+        </form>
+      `;
+
+      if (window.GOVUKFrontend && GOVUKFrontend.initAll) {
+        GOVUKFrontend.initAll();
+      }
+
+      wireChooseDateRangeForm();
+    }
+
+    function getChooseDateRangeSelection() {
+      const form = document.getElementById('cdr-form');
+      if (!form) return null;
+
+      const periodRadio = form.querySelector('input[name="cdr-period"]:checked');
+      if (!periodRadio) return { error: 'Select a time period.' };
+
+      const mode = periodRadio.value;
+
+      function getInt(id) {
+        const el = document.getElementById(id);
+        if (!el) return null;
+        const v = (el.value || '').trim();
+        if (!v) return null;
+        const n = parseInt(v, 10);
+        return Number.isFinite(n) ? n : null;
+      }
+
+      let timeLabel = '';
+      let timeSpec = {};
+
+
+
+      const now = new Date();
+
+        function formatDate(d) {
+          const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+          return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+        }
+
+        function yearToText(year) {
+          if (year === now.getFullYear()) {
+            return '1 January to ' + formatDate(now); // year-to-date for 2026
+          }
+          return '1 January to 31 December ' + year;  // full year for <= 2025
+        }
+
+                    function formatDateRangeSmart(start, end) {
+              const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+              const sd = start.getDate();
+              const sm = months[start.getMonth()];
+              const sy = start.getFullYear();
+
+              const ed = end.getDate();
+              const em = months[end.getMonth()];
+              const ey = end.getFullYear();
+
+              // Same day
+              if (sd === ed && sm === em && sy === ey) {
+                return sd + ' ' + sm + ' ' + sy;
+              }
+
+              // Same month & year
+              if (sm === em && sy === ey) {
+                return sd + ' to ' + ed + ' ' + sm + ' ' + sy;
+              }
+
+              // Same year
+              if (sy === ey) {
+                return sd + ' ' + sm + ' to ' + ed + ' ' + em + ' ' + sy;
+              }
+
+              // Different years
+              return sd + ' ' + sm + ' ' + sy + ' to ' + ed + ' ' + em + ' ' + ey;
+            }
+                if (mode === '24h') {
+                  timeLabel = formatDate(now);
+                  timeSpec = { mode: '24h' };
+                }
+
+                if (mode === '7d') {
+                  const from = new Date(now);
+                  from.setDate(now.getDate() - 6);
+                  timeLabel = formatDateRangeSmart(from, now);
+                  timeSpec = { mode: '7d' };
+                }
+
+            if (mode === 'anyYear') {
+            const y = getInt('cdr-year');
+            if (!y) return { error: 'Enter a year.' };
+
+            timeLabel = yearToText(y);
+            timeSpec = { mode: 'anyYear', year: y, rangeText: yearToText(y) };
+          }
+
+
+          if (mode === 'yearRange') {
+            const fromY = getInt('cdr-year-from');
+            const toY = getInt('cdr-year-to');
+
+            if (!fromY || !toY || fromY > toY) {
+              return { error: 'Enter a valid year range (from year must be before to year).' };
+            }
+
+            timeLabel = yearToText(fromY) + ' to ' + yearToText(toY);
+
+            timeSpec = {
+              mode: 'yearRange',
+              fromYear: fromY,
+              toYear: toY,
+              fromText: yearToText(fromY),
+              toText: yearToText(toY)
+            };
+}
+
+
+
+              if (mode === 'dateRange') {
+          const sd = getInt('cdr-start-day');
+          const sm = getInt('cdr-start-month');
+          const sy = getInt('cdr-start-year');
+          const ed = getInt('cdr-end-day');
+          const em = getInt('cdr-end-month');
+          const ey = getInt('cdr-end-year');
+
+          if (!sd || !sm || !sy || !ed || !em || !ey) {
+            return { error: 'Enter a valid start and end date.' };
+          }
+
+          const start = new Date(sy, sm - 1, sd);
+          const end = new Date(ey, em - 1, ed);
+
+          if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+            return { error: 'Enter valid dates.' };
+          }
+          if (end < start) {
+            return { error: 'End date must be the same as or after the start date.' };
+          }
+
+          timeLabel = formatDateRangeSmart(start, end);
+
+          timeSpec = {
+            mode: 'dateRange',
+            start: { d: sd, m: sm, y: sy },
+            end: { d: ed, m: em, y: ey }
+          };
+        }
+
+
+      const checkedPollutants = Array.prototype.slice
+        .call(form.querySelectorAll('input[name="cdr-pollutants"]:checked'))
+        .map(cb => cb.value);
+
+      if (checkedPollutants.length === 0) return { error: 'Select at least one pollutant.' };
+
+      return { mode, timeLabel, timeSpec, pollutants: checkedPollutants };
+    }
+
+    function getFrequenciesForTimeSpec(timeSpec) {
+      if (!timeSpec) return [];
+      if (timeSpec.mode === 'anyYear' || timeSpec.mode === 'yearRange') return ['hourly', 'daily', 'monthly', 'annual'];
+      if (timeSpec.mode === '24h') return ['hourly'];
+      if (timeSpec.mode === '7d') return ['hourly', 'daily'];
+
+      if (timeSpec.mode === 'dateRange') {
+        const s = new Date(timeSpec.start.y, timeSpec.start.m - 1, timeSpec.start.d);
+        const e = new Date(timeSpec.end.y, timeSpec.end.m - 1, timeSpec.end.d);
+        const diffDays = Math.round((e - s) / (1000 * 60 * 60 * 24)) + 1;
+        if (diffDays >= 31) return ['hourly', 'daily', 'monthly'];
+        return ['hourly', 'daily'];
+      }
+      return [];
+    }
+
+    function createDownloadButton(freq, contextLabel) {
+      const labels = {
+        hourly: 'Download hourly data (CSV)',
+        daily: 'Download daily average data (CSV)',
+        monthly: 'Download monthly average data (CSV)',
+        annual: 'Download annual average data (CSV)'
+      };
+
+      const a = document.createElement('a');
+      a.href = '#';
+      a.setAttribute('role', 'button');
+      a.className = 'aq-button-secondary aq-button-secondary--icon govuk-!-margin-bottom-3';
+      a.innerHTML = `
+        <span class="aq-button-secondary__icon">
+          <svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20">
+            <path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"></path>
+          </svg>
+        </span>
+        <span class="aq-button-secondary__text">
+          ${labels[freq] || 'Download data (CSV)'}
+        </span>
+      `;
+      a.dataset.context = contextLabel || '';
+      return a;
+    }
+
+    function wireChooseDateRangeForm() {
+      const btn = document.getElementById('cdr-continue');
+      const out = document.getElementById('cdr-download-buttons');
+      const summary = document.getElementById('cdr-selected-summary');
+
+      if (!btn || !out || !summary) return;
+
+      btn.addEventListener('click', function () {
+        const selection = getChooseDateRangeSelection();
+
+        out.innerHTML = '';
+        summary.textContent = '';
+
+        if (!selection) return;
+        if (selection.error) {
+          alert(selection.error);
+          return;
+        }
+
+        const pollutantLabels = {
+          pm25: 'PM2.5',
+          pm10: 'PM10',
+          no2: 'Nitrogen dioxide (NO2)',
+          o3: 'Ozone (O3)'
+        };
+
+        const polText = selection.pollutants.map(p => pollutantLabels[p] || p).join(', ');
+                summary.innerHTML = `
+          <p class="govuk-body">
+            <strong>Time period:</strong> ${selection.timeLabel}
+          </p>
+          <p class="govuk-body">
+            <strong>Pollutants included:</strong> ${polText}
+          </p>
+        `;
+
+
+        const freqs = getFrequenciesForTimeSpec(selection.timeSpec);
+        freqs.forEach(function (freq) {
+          const b = createDownloadButton(freq, selection.timeLabel);
+          out.appendChild(b);
+          out.appendChild(document.createElement('br'));
+        });
+      });
+
+      const form = document.getElementById('cdr-form');
+      if (form) {
+        form.addEventListener('change', function () {
+          const out = document.getElementById('cdr-download-buttons');
+          const summary = document.getElementById('cdr-selected-summary');
+          if (out) out.innerHTML = '';
+          if (summary) summary.textContent = '';
+        });
+      }
+    }
+
+    // ---------- Headings / descriptions / footer behaviour ----------
+    function updatePeriodDescription(period) {
+      if (!periodDescription) return;
+
+      const now = new Date();
+
+      if (period === 'daqi') {
+        periodDescription.textContent = formatDateLong(now);
+        return;
+      }
+      if (period === '24h') {
+        periodDescription.textContent = formatDateLong(now);
+        return;
+      }
+      if (period === '7d') {
+        const to = now;
+        const from = new Date(now);
+        from.setDate(now.getDate() - 6);
+
+        if (from.getFullYear() === to.getFullYear()) {
+          periodDescription.textContent = formatDayMonth(from) + ' to ' + formatDayMonthYear(to);
+        } else {
+          periodDescription.textContent = formatDateLong(from) + ' to ' + formatDateLong(to);
+        }
+        return;
+      }
+      if (period === 'thisYear') {
+        const yearNum = parseInt(currentAnnualYear, 10);
+        const from = new Date(yearNum, 0, 1);
+
+        const nowYear = now.getFullYear();
+        if (yearNum === nowYear) {
+          periodDescription.textContent = formatDayMonth(from) + ' to ' + formatDayMonthYear(now);
+        } else {
+          const to = new Date(yearNum, 11, 31);
+          periodDescription.textContent = formatDayMonth(from) + ' to ' + formatDayMonthYear(to);
+        }
+        return;
+      }
+      if (period === 'lastYear') {
+        periodDescription.textContent = 'Select a time period to download data';
+      }
+    }
+
+    function updateHeadingsForPeriod(period) {
+      if (!summaryHeading || !downloadHeading) return;
+
+      if (period === 'thisYear') {
+        summaryHeading.textContent = 'Air pollution summary: ' + currentAnnualYear;
+        downloadHeading.textContent = 'Download data: ' + currentAnnualYear;
+        return;
+      }
+
+      const cfg = periodConfig[period];
+      if (cfg) {
+        summaryHeading.textContent = 'Air pollution summary: ' + cfg.heading;
+        downloadHeading.textContent = cfg.download ? ('Download data: ' + cfg.download) : 'Download data';
+      }
+    }
+
+    function updateFooterContentForPeriod(period) {
+      // CHOOSE DATE RANGE: no hint swap, no graph section
+      if (period === 'lastYear') {
+        if (graphSection) graphSection.setAttribute('hidden', '');
+        if (postTableHint) postTableHint.setAttribute('hidden', '');
+        return;
+      }
+
+      // DAQI: swap hint to “learn more”, hide graph
+      if (period === 'daqi') {
+        if (graphSection) graphSection.setAttribute('hidden', '');
+        if (postTableHint) {
+          postTableHint.removeAttribute('hidden');
+          postTableHint.innerHTML =
+            'Learn more about the ' +
+            '<a href="' + DAQI_INFO_URL + '" class="govuk-link">Daily Air Quality Index (DAQI)</a>.';
+        }
+        return;
+      }
+
+      // Everything else: show graph + restore legal limits hint
+      if (graphSection) graphSection.removeAttribute('hidden');
+      if (postTableHint) {
+        postTableHint.removeAttribute('hidden');
+        postTableHint.innerHTML = originalPostTableHintHTML;
+      }
+    }
+
+   function showOnlyActivePanel(period) {
+  periodPanels.forEach(function (panel) {
+    if (panel.dataset.period === 'lastYear') return; // skip CDR — handled separately
+    const isActive = panel.dataset.period === period;
+    if (isActive) panel.removeAttribute('hidden');
+    else panel.setAttribute('hidden', '');
+  });
+
+  // CDR panel always visible, sits below whatever is active
+  const cdrPanel = document.getElementById('period-last-year');
+  if (cdrPanel) cdrPanel.removeAttribute('hidden');
+}
+
+    function activatePeriod(period) {
+      console.log('[activatePeriod] Activating period:', period);
+      currentPeriod = period;
+
+      if (period === 'thisYear') {
+        updateAnnualTableForYear(currentAnnualYear || '2026');
+      }
+      if (period === 'lastYear') {
+        ensureChooseDateRangeUI();
+      }
+
+      showOnlyActivePanel(period);
+
+      periodLinks.forEach(function (link) {
+        if (link.dataset.period === period) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+
+      updateHeadingsForPeriod(period);
+      updatePeriodDescription(period);
+      updateFooterContentForPeriod(period);
+      updateViewGraphLink();
+
+      // Hide global download section for DAQI and Choose date range (CDR has its own)
+      if (downloadSection) {
+        if (period === 'daqi' || period === 'lastYear' || period === 'thisYear' || period === '24h' || period === '7d') downloadSection.setAttribute('hidden', '');
+        else downloadSection.removeAttribute('hidden');
+      }
+
+      clearDownloadsUI();
+    }
+
+    // ---------- Global download buttons (existing) ----------
+    function getFrequenciesForPeriod(period) {
+      if (period === '24h') return ['hourly'];
+      if (period === '7d') return ['hourly', 'daily'];
+      if (period === 'thisYear') return ['hourly', 'daily', 'monthly', 'annual'];
+      return [];
+    }
+
+    function createGlobalDownloadButton(freq) {
+      const labels = {
+        hourly: 'Download hourly data (CSV)',
+        daily: 'Download daily average data (CSV)',
+        monthly: 'Download monthly average data (CSV)',
+        annual: 'Download annual average data (CSV)'
+      };
+
+      const a = document.createElement('a');
+      a.href = '#';
+      a.setAttribute('role', 'button');
+      a.className = 'aq-button-secondary aq-button-secondary--icon govuk-!-margin-bottom-3';
+      a.innerHTML = `
+        <span class="aq-button-secondary__icon">
+          <svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20">
+            <path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"></path>
+          </svg>
+        </span>
+        <span class="aq-button-secondary__text">
+          ${labels[freq] || 'Download data (CSV)'}
+        </span>
+      `;
+      return a;
+    }
+
+    if (downloadButton && downloadButtonsContainer) {
+      downloadButton.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        if (currentPeriod === 'daqi' || currentPeriod === 'lastYear') return;
+
+        const checked = Array.prototype.slice
+          .call(pollutantCheckboxes)
+          .filter(function (cb) { return cb.checked; });
+
+        if (checked.length === 0) {
+          alert('Select at least one pollutant to download.');
+          if (pollutantsSummary) pollutantsSummary.textContent = '';
+          return;
+        }
+
+        if (pollutantsSummary) {
+          const labels = checked.map(function (cb) {
+            const label = document.querySelector('label[for="' + cb.id + '"]');
+            return label ? label.textContent.trim() : cb.value;
+          });
+          pollutantsSummary.textContent = 'Pollutants included: ' + labels.join(', ');
+        }
+
+        downloadButtonsContainer.innerHTML = '';
+
+        const freqs = getFrequenciesForPeriod(currentPeriod);
+        freqs.forEach(function (freq) {
+          const btn = createGlobalDownloadButton(freq);
+          downloadButtonsContainer.appendChild(btn);
+          downloadButtonsContainer.appendChild(document.createElement('br'));
+        });
+      });
+    }
+
+    // ---------- Period nav wiring ----------
+    periodLinks.forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        console.log('[period link click] Clicked on:', this.dataset.period);
+        event.preventDefault();
+        const period = this.dataset.period;
+        if (period) {
+          console.log('[period link click] Calling activatePeriod with:', period);
+          activatePeriod(period);
+        }
+      });
+    });
+
+    // ---------- Init ----------
+    wireAnnualYearNav();
+    updateAnnualTableForYear(currentAnnualYear);
+    updateViewGraphLink();
+    ensureChooseDateRangeUI(); // add this
+    activatePeriod('24h');
+  });
+</script>
+
+
+
+
+{% endblock %}
