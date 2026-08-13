@@ -2192,8 +2192,8 @@ function clearSelectedMarker() {
       </div>` : ''}
   </dl>
 
-  <p class="govuk-!-margin-bottom-3 govuk-!-margin-top-3"><a href="/version-16/station/station.html" class="govuk-link">View station summary</a></p>
- <p class="govuk-!-margin-bottom-0">  <a href="/version-16/station/pm10-graph.html" role="button" id="map-btn" class="aq-button-secondary aq-button-secondary--icon">
+  <p class="govuk-!-margin-bottom-3 govuk-!-margin-top-3"><a href="/version-17/station/station.html" class="govuk-link">View station summary</a></p>
+ <p class="govuk-!-margin-bottom-0">  <a href="/version-17/station/pm10-graph.html" role="button" id="map-btn" class="aq-button-secondary aq-button-secondary--icon">
                 <span class="aq-button-secondary__icon">
                   <svg focusable="false" width="20" height="20" viewBox="0 0 20 20">
           <path d="M2.75 14.443v2.791H18v1.5H1.25V1.984h1.5v7.967L6.789 4.91l5.016 4.013 5.056-5.899 2.278 1.952-6.944 8.101L7.211 9.09 2.75 14.443z"></path>
