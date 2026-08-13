@@ -442,6 +442,7 @@ body:has(.defra-map) {
   left: 0;
   box-sizing: border-box;
   max-height: 80vh;
+  overflow: hidden;
   @include govuk-font($size: 16);
   pointer-events: auto;
   &:focus-visible {
@@ -449,25 +450,23 @@ body:has(.defra-map) {
     outline: 3px solid #ffdd00;
   }
 
-  // flex child fills remaining height; must have min-height: 0 to allow shrink+scroll
   .btn-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
+    margin: 0;
   }
 
-  // radio-mount fills remaining space inside btn-container and scrolls
+  // Explicit calc height so scroll works regardless of flex context
   .radio-mount {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
+    max-height: calc(80vh - 200px);
+    overflow-y: scroll;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     padding-right: 4px;
+    display: block;
+  }
+
+  // panel-scroll bounded to remaining panel space after fixed controls (~220px overhead)
+  .panel-scroll {
+    max-height: calc(80vh - 220px);
   }
 }
 
