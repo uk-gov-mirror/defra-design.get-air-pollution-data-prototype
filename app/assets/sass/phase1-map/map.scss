@@ -449,9 +449,31 @@ body:has(.defra-map) {
 }
 }
 
+// Key overlay full-width on mobile, matching the menu panel
+@media (max-width: 519px) {
+  #map-key-overlay {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+// Station info overlay full-width on mobile, matching the key overlay
+@media (max-width: 519px) {
+  #station-info {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
 // panel buttons
 .btn-container {
-    margin: 10px 0 15px;
+    margin: 0;
     display: flex;
     position: relative;
     box-sizing: border-box;
@@ -574,6 +596,11 @@ body:has(.defra-map) {
 /* hide text on small screens like Exit button */
 @include govuk-media-query($until: tablet) {
   .reopen-btn .reopen-text { @include govuk-visually-hidden; }
+}
+
+/* hide desktop key button on mobile — mobile has its own top-right Key button */
+@media (max-width: 519px) {
+  #key-button { display: none !important; }
 }
 
 

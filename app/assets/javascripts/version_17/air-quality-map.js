@@ -1666,19 +1666,28 @@ function setFilter(mode, value) {
 let colourByDaqi = true; // default = use status colours
 let aurnDaqiStateWhenSelected = true; // remember AURN's DAQI preference
 
+const DAQI_COLORS = {
+  1:  '#9cff9c',
+  2:  '#31ff00',
+  3:  '#31cf00',
+  4:  '#ffff00',
+  5:  '#ffcf00',
+  6:  '#ff9a00',
+  7:  '#ff9292',
+  8:  '#ff0000',
+  9:  '#990000',
+  10: '#ce30ff'
+};
+
 function getDaqiColor(daqi) {
-  if (daqi == null) return '#646464';             // fallback grey if unknown
-  if (daqi <= 3) return '#00703c';                // green: Low (1-3)
-  if (daqi <= 6) return '#ffdd00';                // yellow: Moderate (4-6)
-  if (daqi <= 9) return '#d4351c';                // red: High (7-9)
-  return '#0b0c0c';                               // black: Very High (10)
+  if (daqi == null) return '#646464';
+  return DAQI_COLORS[daqi] || '#646464';
 }
 
 function getTextColorForBg(bg) {
-  // Make text readable on the fill:
-  // yellow gets dark text, everything else gets white.
-  const hex = (bg || '').toLowerCase();
-  return (hex === '#ffdd00') ? '#0b0c0c' : '#ffffff';
+  // Levels 8-10 use dark/saturated colours that need white text
+  const darkBgs = ['#ff0000', '#990000', '#ce30ff'];
+  return darkBgs.includes((bg || '').toLowerCase()) ? '#ffffff' : '#0b0c0c';
 }
 
 // Update a single marker’s appearance
@@ -1781,11 +1790,16 @@ function ensureLegendStylesOnce() {
       line-height: 1;
     }
 
-    .aq-daqi-scale__band--green  { background-color: #00703c; }
-    .aq-daqi-scale__band--yellow { background-color: #ffdd00; color: #0b0c0c; }
-    .aq-daqi-scale__band--amber  { background-color: #f47738; }
-    .aq-daqi-scale__band--red    { background-color: #d4351c; }
-    .aq-daqi-scale__band--black  { background-color: #0b0c0c; }
+    .aq-daqi-scale__band--1  { background-color: #9cff9c; color: #0b0c0c; }
+    .aq-daqi-scale__band--2  { background-color: #31ff00; color: #0b0c0c; }
+    .aq-daqi-scale__band--3  { background-color: #31cf00; color: #0b0c0c; }
+    .aq-daqi-scale__band--4  { background-color: #ffff00; color: #0b0c0c; }
+    .aq-daqi-scale__band--5  { background-color: #ffcf00; color: #0b0c0c; }
+    .aq-daqi-scale__band--6  { background-color: #ff9a00; color: #0b0c0c; }
+    .aq-daqi-scale__band--7  { background-color: #ff9292; color: #0b0c0c; }
+    .aq-daqi-scale__band--8  { background-color: #ff0000; color: #ffffff; }
+    .aq-daqi-scale__band--9  { background-color: #990000; color: #ffffff; }
+    .aq-daqi-scale__band--10 { background-color: #ce30ff; color: #ffffff; }
 
     .aq-daqi-scale__labels {
       display: flex;
@@ -1874,9 +1888,9 @@ function createKeyOverlay() {
       <span class="govuk-visually-hidden">Close</span>
     </button>
     <div class="defra-map-info__container">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Key</h2>
-        <p class="govuk-body-m govuk-!-margin-bottom-2 govuk-!-margin-top-1" 
-          id="map-key-subtitle" style="color: #505a5f;"></p>
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Key</h2>
+      <p class="govuk-body-m govuk-!-margin-bottom-2 govuk-!-margin-top-1"
+         id="map-key-subtitle" style="color: #505a5f;">Daily Air Quality Index (DAQI)</p>
       <div class="aq-legend" id="aq-legend-body" role="list"></div>
     </div>
   `;
@@ -1893,56 +1907,44 @@ function createKeyOverlay() {
 
 
 
-  function renderKeyOverlay() {
+function renderKeyOverlay() {
   const body = document.getElementById('aq-legend-body');
-  const subtitle = document.getElementById('map-key-subtitle');
+  if (!body) return;
 
-  if (colourByDaqi) {
-    // Set subtitle when DAQI is active
-    if (subtitle) subtitle.textContent = 'Daily Air Quality Index (DAQI)';
-    body.innerHTML = `
-      <div class="aq-daqi-scale">
-        <div class="aq-daqi-scale__bands">
-          <div class="aq-daqi-scale__band aq-daqi-scale__band--green">1</div>
-          <div class="aq-daqi-scale__band aq-daqi-scale__band--green">2</div>
-          <div class="aq-daqi-scale__band aq-daqi-scale__band--green">3</div>
-          <div class="aq-daqi-scale__band aq-daqi-scale__band--yellow">4</div>
-          <div class="aq-daqi-scale__band aq-daqi-scale__band--yellow">5</div>
-          <div class="aq-daqi-scale__band aq-daqi-scale__band--yellow">6</div>
-          <div class="aq-daqi-scale__band aq-daqi-scale__band--red">7</div>
-          <div class="aq-daqi-scale__band aq-daqi-scale__band--red">8</div>
-          <div class="aq-daqi-scale__band aq-daqi-scale__band--red">9</div>
-          <div class="aq-daqi-scale__band aq-daqi-scale__band--black">10</div>
+  body.innerHTML = `
+    <div class="aq-daqi-scale">
+      <div class="aq-daqi-scale__bands">
+        <div class="aq-daqi-scale__band aq-daqi-scale__band--1">1</div>
+        <div class="aq-daqi-scale__band aq-daqi-scale__band--2">2</div>
+        <div class="aq-daqi-scale__band aq-daqi-scale__band--3">3</div>
+        <div class="aq-daqi-scale__band aq-daqi-scale__band--4">4</div>
+        <div class="aq-daqi-scale__band aq-daqi-scale__band--5">5</div>
+        <div class="aq-daqi-scale__band aq-daqi-scale__band--6">6</div>
+        <div class="aq-daqi-scale__band aq-daqi-scale__band--7">7</div>
+        <div class="aq-daqi-scale__band aq-daqi-scale__band--8">8</div>
+        <div class="aq-daqi-scale__band aq-daqi-scale__band--9">9</div>
+        <div class="aq-daqi-scale__band aq-daqi-scale__band--10">10</div>
+      </div>
+      <div class="aq-daqi-scale__labels">
+        <div class="aq-daqi-scale__label-group aq-daqi-scale__label-group--low">
+          <span class="aq-daqi-scale__level">Low</span>
+          <span class="aq-daqi-scale__range">1 to 3</span>
         </div>
-        <div class="aq-daqi-scale__labels">
-          <div class="aq-daqi-scale__label-group aq-daqi-scale__label-group--low">
-            <span class="aq-daqi-scale__level">Low</span>
-            <span class="aq-daqi-scale__range">1 to 3</span>
-          </div>
-          <div class="aq-daqi-scale__label-group aq-daqi-scale__label-group--moderate">
-            <span class="aq-daqi-scale__level">Moderate</span>
-            <span class="aq-daqi-scale__range">4 to 6</span>
-          </div>
-          <div class="aq-daqi-scale__label-group aq-daqi-scale__label-group--high">
-            <span class="aq-daqi-scale__level">High</span>
-            <span class="aq-daqi-scale__range">7 to 9</span>
-          </div>
-          <div class="aq-daqi-scale__label-group aq-daqi-scale__label-group--veryhigh">
-            <span class="aq-daqi-scale__level">Very high</span>
-            <span class="aq-daqi-scale__range">10</span>
-          </div>
+        <div class="aq-daqi-scale__label-group aq-daqi-scale__label-group--moderate">
+          <span class="aq-daqi-scale__level">Moderate</span>
+          <span class="aq-daqi-scale__range">4 to 6</span>
+        </div>
+        <div class="aq-daqi-scale__label-group aq-daqi-scale__label-group--high">
+          <span class="aq-daqi-scale__level">High</span>
+          <span class="aq-daqi-scale__range">7 to 9</span>
+        </div>
+        <div class="aq-daqi-scale__label-group aq-daqi-scale__label-group--veryhigh">
+          <span class="aq-daqi-scale__level">Very high</span>
+          <span class="aq-daqi-scale__range">10</span>
         </div>
       </div>
-    `;
-  } else {
-     // Clear subtitle when showing status colours
-    if (subtitle) subtitle.textContent = '';
-    body.innerHTML = [
-      legendItem('Active',   '#1D70B8'),
-      legendItem('Inactive', '#505A5F'),
-      legendItem('Closed',   '#0B0C0C'),
-    ].join('');
-  }
+    </div>
+  `;
 }
 
 
@@ -1950,9 +1952,9 @@ function createKeyOverlay() {
 function showKeyOverlay() {
   const panel = document.getElementById('map-key-overlay');
   if (!panel) return;
-  panel.classList.add('visible');       // same class your station overlay uses
-  document.getElementById('key-button')?.setAttribute('hidden', ''); // hide reopen btn
- 
+  panel.classList.add('visible');
+  document.getElementById('key-button')?.setAttribute('hidden', '');
+  document.getElementById('mobile-key-reopen')?.setAttribute('hidden', '');
 }
 
 function hideKeyOverlay({ byUser = false } = {}) {
@@ -1962,7 +1964,8 @@ function hideKeyOverlay({ byUser = false } = {}) {
 
   if (byUser) {
     keyClosedByUser = true;
-    document.getElementById('key-button')?.removeAttribute('hidden'); // show reopen btn
+    document.getElementById('key-button')?.removeAttribute('hidden');
+    if (isMobileView()) document.getElementById('mobile-key-reopen')?.removeAttribute('hidden');
   }
   
 }
@@ -1987,6 +1990,13 @@ document.addEventListener('DOMContentLoaded', () => {
   createKeyOverlay();
   renderKeyOverlay();
   showKeyOverlay();
+
+  // On mobile: hide the key overlay on load and show the Key button instead
+  if (isMobileView()) {
+    hideKeyOverlay({ byUser: false });
+    const mobileKeyReopen = document.getElementById('mobile-key-reopen');
+    if (mobileKeyReopen) mobileKeyReopen.removeAttribute('hidden');
+  }
 
   const mapViewport = document.getElementById('map-viewport');
   if (!mapViewport) return;
@@ -2092,14 +2102,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function daqiTag(daqi) {
   if (daqi == null) return '';
-  // green 1–3, yellow 4–6, red 7–9, black 10
-  let cls = 'govuk-tag--green';
-  if (daqi >= 4 && daqi <= 6) cls = 'govuk-tag--yellow';
-  else if (daqi >= 7 && daqi <= 9) cls = 'govuk-tag--red';
-  else if (daqi >= 10) cls = 'govuk-tag--black';
-
-  const word = getDaqiLabel(daqi).toLowerCase(); // "low", "moderate", etc
-  return `<strong class="govuk-tag ${cls}">${daqi} (${word})</strong>`;
+  const bg = getDaqiColor(daqi);
+  const color = getTextColorForBg(bg);
+  const word = getDaqiLabel(daqi).toLowerCase();
+  return `<strong class="govuk-tag" style="background-color:${bg}; color:${color};">${daqi} (${word})</strong>`;
 }
 
 
@@ -2126,7 +2132,18 @@ function clearSelectedMarker() {
 
 
   function showStationInfo(station) {
+  const keyOverlay = document.getElementById('map-key-overlay');
+  // Only capture key visibility on first open; switching stations keeps the original state
+  if (!stationInfo || !stationInfo.classList.contains('visible')) {
+    keyHiddenByOverlay = !!(keyOverlay && keyOverlay.classList.contains('visible'));
+  }
   hideKeyOverlay({ byUser: false });   // temporarily hide key
+  // Hide mobile menu panel if it's open, and remember to restore it
+  if (mobilePanel && mobilePanel.style.display === 'block') {
+    mobilePanel.style.display = 'none';
+    mobileMenuReopen?.removeAttribute('hidden');
+    mobilePanelHiddenByStation = true;
+  }
   if (!stationInfo) return;
 
   const infoContent = document.getElementById('station-info-content');
@@ -2204,8 +2221,15 @@ function clearSelectedMarker() {
   stationInfo.classList.remove('visible');
   clearSelectedMarker();
 
-  // If the user didn’t explicitly close the key, bring it back
-  if (!keyClosedByUser) showKeyOverlay();
+  // Restore key only if it was visible when the station was opened
+  if (keyHiddenByOverlay) showKeyOverlay();
+
+  // Restore mobile menu panel if it was hidden when station overlay opened
+  if (mobilePanelHiddenByStation && mobilePanel) {
+    mobilePanel.style.display = 'block';
+    if (mobileMenuReopen) mobileMenuReopen.hidden = true;
+    mobilePanelHiddenByStation = false;
+  }
   keyHiddenByOverlay = false;
 
   if (lastTrigger && typeof lastTrigger.focus === 'function') {
@@ -2442,6 +2466,56 @@ function closePanel() {
 
 panelCloseBtn?.addEventListener('click', (e) => { e.preventDefault(); closePanel(); });
 menuButton?.addEventListener('click',   (e) => { e.preventDefault(); openPanel();  });
+
+// Mobile bottom panel — shown at bottom of screen on narrow viewports
+const mobilePanel        = document.getElementById('mobile-key-panel-bottom');
+const mobilePanelClose   = document.getElementById('panel-close-mobile');
+const mobileMenuReopen   = document.getElementById('mobile-menu-reopen');
+const mobileKeyReopen    = document.getElementById('mobile-key-reopen');
+let mobilePanelHiddenByStation = false;
+
+function isMobileView() { return window.innerWidth < 520; }
+
+function dismissStationIfOpen() {
+  const si = document.getElementById('station-info');
+  if (!si || !si.classList.contains('visible')) return;
+  si.classList.remove('visible');
+  mobilePanelHiddenByStation = false;
+}
+
+function openMobilePanel() {
+  if (!mobilePanel || !mobileMenuReopen) return;
+  dismissStationIfOpen();
+  hideKeyOverlay({ byUser: false });
+  mobileKeyReopen?.removeAttribute('hidden');
+  mobilePanel.style.display = 'block';
+  mobileMenuReopen.hidden = true;
+  mobilePanel.focus();
+}
+function closeMobilePanel() {
+  if (!mobilePanel || !mobileMenuReopen) return;
+  mobilePanel.style.display = 'none';
+  mobileMenuReopen.hidden = false;
+  mobileMenuReopen.focus();
+}
+function openMobileKey() {
+  dismissStationIfOpen();
+  if (mobilePanel) mobilePanel.style.display = 'none';
+  mobileMenuReopen?.removeAttribute('hidden');
+  keyClosedByUser = false;
+  showKeyOverlay();
+}
+
+mobilePanelClose?.addEventListener('click',  (e) => { e.preventDefault(); closeMobilePanel(); });
+mobileMenuReopen?.addEventListener('click',  (e) => { e.preventDefault(); openMobilePanel();  });
+mobileKeyReopen?.addEventListener('click',   (e) => { e.preventDefault(); openMobileKey();    });
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (isMobileView() && mobilePanel) {
+    mobilePanel.style.display = 'block';
+    if (mobileMenuReopen) mobileMenuReopen.hidden = true;
+  }
+});
 
 
 // -----------------------------

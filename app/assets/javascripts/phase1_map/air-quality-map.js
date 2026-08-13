@@ -1666,19 +1666,28 @@ function setFilter(mode, value) {
 let colourByDaqi = true; // default = use status colours
 let aurnDaqiStateWhenSelected = true; // remember AURN's DAQI preference
 
+const DAQI_COLORS = {
+  1:  '#9cff9c',
+  2:  '#31ff00',
+  3:  '#31cf00',
+  4:  '#ffff00',
+  5:  '#ffcf00',
+  6:  '#ff9a00',
+  7:  '#ff9292',
+  8:  '#ff0000',
+  9:  '#990000',
+  10: '#ce30ff'
+};
+
 function getDaqiColor(daqi) {
-  if (daqi == null) return '#646464';             // fallback grey if unknown
-  if (daqi <= 3) return '#00703c';                // green: Low (1-3)
-  if (daqi <= 6) return '#ffdd00';                // yellow: Moderate (4-6)
-  if (daqi <= 9) return '#d4351c';                // red: High (7-9)
-  return '#0b0c0c';                               // black: Very High (10)
+  if (daqi == null) return '#646464';
+  return DAQI_COLORS[daqi] || '#646464';
 }
 
 function getTextColorForBg(bg) {
-  // Make text readable on the fill:
-  // yellow gets dark text, everything else gets white.
-  const hex = (bg || '').toLowerCase();
-  return (hex === '#ffdd00') ? '#0b0c0c' : '#ffffff';
+  // Levels 8-10 use dark/saturated colours that need white text
+  const darkBgs = ['#ff0000', '#990000', '#ce30ff'];
+  return darkBgs.includes((bg || '').toLowerCase()) ? '#ffffff' : '#0b0c0c';
 }
 
 // Update a single marker’s appearance
@@ -1739,6 +1748,13 @@ let keyClosedByUser = false;        // persists until user re-opens with the but
 let keyHiddenByOverlay = false;     // temporary hide while station overlay is shown
 
 function legendItem(label, fill) {
+
+  // Restore mobile menu panel if it was hidden when station overlay opened
+  if (mobilePanelHiddenByStation && mobilePanel) {
+    mobilePanel.style.display = 'block';
+    if (mobileMenuReopen) mobileMenuReopen.hidden = true;
+    mobilePanelHiddenByStation = false;
+  }
   return `
     <div class="aq-legend__item" role="listitem" aria-label="${label}">
       <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true" focusable="false">
@@ -1943,9 +1959,9 @@ function renderKeyOverlay() {
 function showKeyOverlay() {
   const panel = document.getElementById('map-key-overlay');
   if (!panel) return;
-  panel.classList.add('visible');       // same class your station overlay uses
-  document.getElementById('key-button')?.setAttribute('hidden', ''); // hide reopen btn
- 
+  panel.classList.add('visible');
+  document.getElementById('key-button')?.setAttribute('hidden', '');
+  document.getElementById('mobile-key-reopen')?.setAttribute('hidden', '');
 }
 
 function hideKeyOverlay({ byUser = false } = {}) {
@@ -1955,12 +1971,13 @@ function hideKeyOverlay({ byUser = false } = {}) {
 
   if (byUser) {
     keyClosedByUser = true;
-    document.getElementById('key-button')?.removeAttribute('hidden'); // show reopen btn
+    document.getElementById('key-button')?.removeAttribute('hidden');
+    if (isMobileView()) document.getElementById('mobile-key-reopen')?.removeAttribute('hidden');
   }
   
 }
 
-// Re-open from the small button next to the menu
+// Re-open key from the small button next to the menu
 document.addEventListener('DOMContentLoaded', () => {
   const keyBtn = document.getElementById('key-button');
   keyBtn?.addEventListener('click', (e) => {
@@ -1980,6 +1997,13 @@ document.addEventListener('DOMContentLoaded', () => {
   createKeyOverlay();
   renderKeyOverlay();
   showKeyOverlay();
+
+  // On mobile: hide the key overlay on load and show the Key button instead
+  if (isMobileView()) {
+    hideKeyOverlay({ byUser: false });
+    const mobileKeyReopen = document.getElementById('mobile-key-reopen');
+    if (mobileKeyReopen) mobileKeyReopen.removeAttribute('hidden');
+  }
 
   const mapViewport = document.getElementById('map-viewport');
   if (!mapViewport) return;
@@ -2085,14 +2109,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function daqiTag(daqi) {
   if (daqi == null) return '';
-  // green 1–3, yellow 4–6, red 7–9, black 10
-  let cls = 'govuk-tag--green';
-  if (daqi >= 4 && daqi <= 6) cls = 'govuk-tag--yellow';
-  else if (daqi >= 7 && daqi <= 9) cls = 'govuk-tag--red';
-  else if (daqi >= 10) cls = 'govuk-tag--black';
-
-  const word = getDaqiLabel(daqi).toLowerCase(); // "low", "moderate", etc
-  return `<strong class="govuk-tag ${cls}">${daqi} (${word})</strong>`;
+  const bg = getDaqiColor(daqi);
+  const color = getTextColorForBg(bg);
+  const word = getDaqiLabel(daqi).toLowerCase();
+  return `<strong class="govuk-tag" style="background-color:${bg}; color:${color};">${daqi} (${word})</strong>`;
 }
 
 
@@ -2119,7 +2139,18 @@ function clearSelectedMarker() {
 
 
   function showStationInfo(station) {
+  const keyOverlay = document.getElementById('map-key-overlay');
+  // Only capture key visibility on the first station open; switching stations keeps the original state
+  if (!stationInfo || !stationInfo.classList.contains('visible')) {
+    keyHiddenByOverlay = !!(keyOverlay && keyOverlay.classList.contains('visible'));
+  }
   hideKeyOverlay({ byUser: false });   // temporarily hide key
+  // Hide mobile menu panel if it's open, and remember to restore it
+  if (mobilePanel && mobilePanel.style.display === 'block') {
+    mobilePanel.style.display = 'none';
+    mobileMenuReopen?.removeAttribute('hidden');
+    mobilePanelHiddenByStation = true;
+  }
   if (!stationInfo) return;
 
   const infoContent = document.getElementById('station-info-content');
@@ -2180,6 +2211,12 @@ function clearSelectedMarker() {
   stationInfo.classList.add('visible');
   stationInfo.setAttribute('aria-label', `Information for ${station.name}`);
   lastTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : lastTrigger;
+  // Hide mobile menu panel if open, remember to restore it on close
+  if (mobilePanel && mobilePanel.style.display === 'block') {
+    mobilePanel.style.display = 'none';
+    mobileMenuReopen?.removeAttribute('hidden');
+    mobilePanelHiddenByStation = true;
+  }
   stationInfo.focus();
 }
 
@@ -2190,8 +2227,15 @@ function clearSelectedMarker() {
   clearSelectedMarker();
 
   // If the user didn’t explicitly close the key, bring it back
-  if (!keyClosedByUser) showKeyOverlay();
+  if (keyHiddenByOverlay) showKeyOverlay();
   keyHiddenByOverlay = false;
+
+  // Restore mobile menu panel if it was hidden when station overlay opened
+  if (mobilePanelHiddenByStation && mobilePanel) {
+    mobilePanel.style.display = 'block';
+    if (mobileMenuReopen) mobileMenuReopen.hidden = true;
+    mobilePanelHiddenByStation = false;
+  }
 
   if (lastTrigger && typeof lastTrigger.focus === 'function') {
     lastTrigger.focus();
@@ -2427,6 +2471,63 @@ function closePanel() {
 
 panelCloseBtn?.addEventListener('click', (e) => { e.preventDefault(); closePanel(); });
 menuButton?.addEventListener('click',   (e) => { e.preventDefault(); openPanel();  });
+
+// Mobile bottom panel — shown at bottom of screen on narrow viewports
+const mobilePanel        = document.getElementById('mobile-key-panel-bottom');
+const mobilePanelClose   = document.getElementById('panel-close-mobile');
+const mobileMenuReopen   = document.getElementById('mobile-menu-reopen');
+const mobileKeyReopen    = document.getElementById('mobile-key-reopen');
+let mobilePanelHiddenByStation = false; // tracks if panel was hidden due to station overlay
+
+function isMobileView() { return window.innerWidth < 520; }
+
+// Dismiss the station overlay without triggering any restore logic
+function dismissStationIfOpen() {
+  const si = document.getElementById('station-info');
+  if (!si || !si.classList.contains('visible')) return;
+  si.classList.remove('visible');
+  mobilePanelHiddenByStation = false; // cancel any pending restore
+}
+
+function openMobilePanel() {
+  if (!mobilePanel || !mobileMenuReopen) return;
+  dismissStationIfOpen();
+  // Close key overlay if open
+  hideKeyOverlay({ byUser: false });
+  mobileKeyReopen?.removeAttribute('hidden');
+  // Open menu panel
+  mobilePanel.style.display = 'block';
+  mobileMenuReopen.hidden = true;
+  mobilePanel.focus();
+}
+function closeMobilePanel() {
+  if (!mobilePanel || !mobileMenuReopen) return;
+  mobilePanel.style.display = 'none';
+  mobileMenuReopen.hidden = false;
+  mobileMenuReopen.focus();
+}
+
+function openMobileKey() {
+  dismissStationIfOpen();
+  // Close menu panel if open
+  if (mobilePanel) mobilePanel.style.display = 'none';
+  mobileMenuReopen?.removeAttribute('hidden');
+  // Open key overlay
+  keyClosedByUser = false;
+  showKeyOverlay();
+}
+
+mobilePanelClose?.addEventListener('click',  (e) => { e.preventDefault(); closeMobilePanel(); });
+mobileMenuReopen?.addEventListener('click',  (e) => { e.preventDefault(); openMobilePanel();  });
+mobileKeyReopen?.addEventListener('click',   (e) => { e.preventDefault(); openMobileKey();    });
+
+// Show mobile panel on load if on a narrow viewport
+document.addEventListener('DOMContentLoaded', () => {
+  if (isMobileView() && mobilePanel) {
+    mobilePanel.style.display = 'block';
+    if (mobileMenuReopen) mobileMenuReopen.hidden = true;
+  }
+});
 
 
 // -----------------------------
@@ -2823,7 +2924,7 @@ function renderDataSources(root, mount, uiId) {
   // Create data sources container
   const dataSourcesContainer = document.createElement('div');
   dataSourcesContainer.id = `${uiId}-data-sources`;
-  dataSourcesContainer.className = 'govuk-!-margin-bottom-4';
+  dataSourcesContainer.className = '';
 
   // Add header
   const header = document.createElement('h3');
