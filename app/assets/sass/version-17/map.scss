@@ -441,7 +441,7 @@ body:has(.defra-map) {
   bottom: 0;
   left: 0;
   box-sizing: border-box;
-  max-height: 65vh;
+  max-height: 80vh;
   @include govuk-font($size: 16);
   pointer-events: auto;
   &:focus-visible {
@@ -455,7 +455,9 @@ body:has(.defra-map) {
     flex-direction: column;
     flex: 1;
     min-height: 0;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   // radio-mount fills remaining space inside btn-container and scrolls

@@ -369,9 +369,6 @@ function generateNationalForecast(dateIndex) {
 // Update national forecast display
 function updateNationalForecastDisplay(dateIndex) {
   const forecast = generateNationalForecast(dateIndex);
-  const container = document.getElementById('national-forecast');
-
-  if (!container) return;
 
   const forecastHTML = `
     <div>
@@ -379,7 +376,10 @@ function updateNationalForecastDisplay(dateIndex) {
     </div>
   `;
 
-  container.innerHTML = forecastHTML;
+  ['national-forecast', 'national-forecast-mobile'].forEach(id => {
+    const container = document.getElementById(id);
+    if (container) container.innerHTML = forecastHTML;
+  });
 }
 
 // ---------------------------
@@ -539,6 +539,7 @@ function showKeyOverlay() {
   if (!panel) return;
   panel.classList.add('visible');
   document.getElementById('key-button')?.setAttribute('hidden', '');
+  document.getElementById('mobile-key-reopen')?.setAttribute('hidden', '');
 }
 
 function hideKeyOverlay({ byUser = false } = {}) {
@@ -547,6 +548,7 @@ function hideKeyOverlay({ byUser = false } = {}) {
   panel.classList.remove('visible');
   if (byUser) {
     document.getElementById('key-button')?.removeAttribute('hidden');
+    if (window.innerWidth < 520) document.getElementById('mobile-key-reopen')?.removeAttribute('hidden');
   }
 }
 
@@ -691,6 +693,11 @@ function initMap() {
       createKeyOverlay();
       renderKeyOverlay();
       showKeyOverlay();
+      // On mobile: hide key on load, show Key button
+      if (window.innerWidth < 520) {
+        hideKeyOverlay({ byUser: false });
+        document.getElementById('mobile-key-reopen')?.removeAttribute('hidden');
+      }
     });
 
     const flyToRaw = sessionStorage.getItem('mapFlyTo');
@@ -815,46 +822,85 @@ function updateForecastMap(dateIndex) {
 
 function createDateButtons() {
   const today = new Date();
-  const btnGroup = document.getElementById('forecast-btn-group');
+  const containers = [
+    document.getElementById('forecast-btn-group'),
+    document.getElementById('forecast-btn-group-mobile')
+  ].filter(Boolean);
 
-  if (!btnGroup) return;
+  if (!containers.length) return;
 
-  btnGroup.innerHTML = '';
+  containers.forEach(btnGroup => { btnGroup.innerHTML = ''; });
 
   for (let i = 0; i < FORECAST_DAYS; i++) {
     const date = new Date(today);
     date.setDate(date.getDate() + i);
 
-    const btn = document.createElement('button');
-    btn.className = 'panel-btn depth-btn';
-    btn.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
-    if (i === 0) btn.classList.add('is-active');
+    let dateLabel = i === 0 ? 'Today' : date.toLocaleDateString('en-GB', { weekday: 'short' });
 
-    let dateLabel;
-    if (i === 0) {
-      dateLabel = 'Today';
-    } else {
-      const dayName = date.toLocaleDateString('en-GB', { weekday: 'short' });
-      dateLabel = dayName;
-    }
-
-    btn.innerHTML = `<span>${dateLabel}</span>`;
-
-    btn.addEventListener('click', () => {
-      // Update button states
-      document.querySelectorAll('#forecast-btn-group .panel-btn').forEach(b => {
-        b.setAttribute('aria-pressed', 'false');
-        b.classList.remove('is-active');
+    containers.forEach(btnGroup => {
+      const btn = document.createElement('button');
+      btn.className = 'panel-btn depth-btn';
+      btn.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+      if (i === 0) btn.classList.add('is-active');
+      btn.innerHTML = `<span>${dateLabel}</span>`;
+      btn.addEventListener('click', () => {
+        // Update all date buttons in all panels
+        document.querySelectorAll('#forecast-btn-group .panel-btn, #forecast-btn-group-mobile .panel-btn').forEach(b => {
+          b.setAttribute('aria-pressed', 'false');
+          b.classList.remove('is-active');
+        });
+        // Mark matching buttons (same index) as active
+        [document.getElementById('forecast-btn-group'), document.getElementById('forecast-btn-group-mobile')].filter(Boolean).forEach(grp => {
+          const btns = grp.querySelectorAll('.panel-btn');
+          if (btns[i]) { btns[i].setAttribute('aria-pressed', 'true'); btns[i].classList.add('is-active'); }
+        });
+        currentDateIndex = i;
+        updateForecastMap(i);
       });
-      btn.setAttribute('aria-pressed', 'true');
-      btn.classList.add('is-active');
-
-      // Update map
-      currentDateIndex = i;
-      updateForecastMap(i);
+      btnGroup.appendChild(btn);
     });
+  }
+}
 
-    btnGroup.appendChild(btn);
+// ---------------------------
+// Mobile Panel Controls
+// ---------------------------
+
+function setupMobilePanelControls() {
+  const mobilePanel    = document.getElementById('mobile-key-panel-bottom');
+  const mobileClose    = document.getElementById('panel-close-mobile');
+  const mobileMenuBtn  = document.getElementById('mobile-menu-reopen');
+  const mobileKeyBtn   = document.getElementById('mobile-key-reopen');
+
+  function openMobilePanel() {
+    if (!mobilePanel || !mobileMenuBtn) return;
+    hideKeyOverlay({ byUser: false });
+    mobileKeyBtn?.removeAttribute('hidden');
+    mobilePanel.style.display = 'block';
+    mobileMenuBtn.hidden = true;
+  }
+  function closeMobilePanel() {
+    if (!mobilePanel || !mobileMenuBtn) return;
+    mobilePanel.style.display = 'none';
+    mobileMenuBtn.hidden = false;
+  }
+  function openMobileKey() {
+    if (mobilePanel) mobilePanel.style.display = 'none';
+    mobileMenuBtn?.removeAttribute('hidden');
+    showKeyOverlay();
+  }
+
+  mobileClose?.addEventListener('click',   (e) => { e.preventDefault(); closeMobilePanel(); });
+  mobileMenuBtn?.addEventListener('click', (e) => { e.preventDefault(); openMobilePanel();  });
+  mobileKeyBtn?.addEventListener('click',  (e) => { e.preventDefault(); openMobileKey();    });
+
+  // Show mobile panel on narrow viewport load
+  if (window.innerWidth < 520 && mobilePanel) {
+    mobilePanel.style.display = 'block';
+    if (mobileMenuBtn) mobileMenuBtn.hidden = true;
+    // Hide key on mobile load
+    hideKeyOverlay({ byUser: false });
+    if (mobileKeyBtn) mobileKeyBtn.removeAttribute('hidden');
   }
 }
 
@@ -887,17 +933,8 @@ function setupPanelControls() {
 // ---------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
-  // On mobile, close panel by default
-  if (window.innerWidth < 768) {
-    const floatingPanel = document.getElementById('floating-panel');
-    const menuButton = document.getElementById('menu-button');
-    if (floatingPanel && menuButton) {
-      floatingPanel.style.display = 'none';
-      menuButton.removeAttribute('hidden');
-    }
-  }
-
   createDateButtons();
   setupPanelControls();
+  setupMobilePanelControls();
   initMap();
 });
