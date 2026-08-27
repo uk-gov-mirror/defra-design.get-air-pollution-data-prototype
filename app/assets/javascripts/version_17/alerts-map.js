@@ -75,6 +75,103 @@ function isYorkshireAndHumberAuthority(area) {
   return YORKSHIRE_AND_HUMBER_LAD_CODES.has(String(area.id || '').toUpperCase());
 }
 
+// ---------------------------
+// Alert radius (interactive circle around a station)
+// ---------------------------
+
+// Reuses the Birmingham Ladywood station shown on the monitoring stations map.
+const ALERT_RADIUS_STATION = {
+  name: 'Birmingham Ladywood',
+  lat: 52.481346,
+  lng: -1.918235,
+  authority: 'Birmingham City Council',
+  radiusMiles: 25,
+  radiusKm: 25 * 1.60934,
+  daqi: 8,
+  pollutants: ['Ozone']
+};
+
+function createCirclePolygon(center, radiusKm, points = 64) {
+  const [lng, lat] = center;
+  const distanceX = radiusKm / (111.320 * Math.cos((lat * Math.PI) / 180));
+  const distanceY = radiusKm / 110.574;
+
+  const coords = [];
+  for (let i = 0; i <= points; i++) {
+    const theta = (i / points) * (2 * Math.PI);
+    coords.push([lng + distanceX * Math.cos(theta), lat + distanceY * Math.sin(theta)]);
+  }
+  return [coords];
+}
+
+function getTextColorForBg(hex) {
+  const c = String(hex || '').replace('#', '');
+  const r = parseInt(c.substring(0, 2), 16);
+  const g = parseInt(c.substring(2, 4), 16);
+  const b = parseInt(c.substring(4, 6), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.6 ? '#0b0c0c' : '#ffffff';
+}
+
+function showAlertRadiusInfo() {
+  const panel = document.getElementById('alert-radius-info');
+  const content = document.getElementById('alert-radius-info-content');
+  if (!panel || !content) return;
+
+  const { name, authority, radiusMiles, daqi, pollutants } = ALERT_RADIUS_STATION;
+  const band = QUALITY_LEVELS[daqi];
+
+  content.innerHTML = `
+    <h2 class="govuk-heading-m govuk-!-margin-bottom-0">${name}</h2>
+    <p class="govuk-body-s" style="color:#505a5f;">${radiusMiles} mile alert radius</p>
+    <p class="govuk-!-margin-bottom-3 govuk-!-margin-top-1"><a href="#" class="govuk-link">View alert information</a></p>
+
+    <dl class="govuk-body-s station-info-list">
+      <div class="station-info-row">
+        <dt>DAQI:</dt>
+        <dd><strong class="govuk-tag" style="background-color:${band.color}; color:${getTextColorForBg(band.color)};">${daqi} (${band.name.toLowerCase()})</strong></dd>
+      </div>
+      <div class="station-info-row">
+        <dt>Local authority:</dt>
+        <dd>${authority}</dd>
+      </div>
+      <div class="station-info-row">
+        <dt>Pollutants:</dt>
+        <dd>${pollutants.join(', ')}</dd>
+      </div>
+    </dl>
+
+    <p class="govuk-body-s govuk-!-margin-top-3">People within this radius are advised to follow the health advice for the current DAQI band.</p>
+
+    <p class="govuk-!-margin-bottom-0 govuk-!-margin-top-3"><a href="/version-17/station/birmingham-ladywood.html" class="govuk-link">View station summary</a></p>
+  `;
+
+  hideKeyOverlay({ byUser: false });
+  panel.classList.add('visible');
+  panel.setAttribute('aria-label', `Alert information for ${name}`);
+  panel.focus();
+
+  if (map.getLayer(ALERT_RADIUS_LINE_LAYER_ID)) {
+    map.setPaintProperty(ALERT_RADIUS_LINE_LAYER_ID, 'line-color', '#0b0c0c');
+    map.setPaintProperty(ALERT_RADIUS_LINE_LAYER_ID, 'line-width', 4);
+  }
+}
+
+function hideAlertRadiusInfo() {
+  const panel = document.getElementById('alert-radius-info');
+  if (!panel) return;
+  panel.classList.remove('visible');
+
+  if (map.getLayer(ALERT_RADIUS_LINE_LAYER_ID)) {
+    map.setPaintProperty(ALERT_RADIUS_LINE_LAYER_ID, 'line-color', ['get', 'fillColor']);
+    map.setPaintProperty(ALERT_RADIUS_LINE_LAYER_ID, 'line-width', 2);
+  }
+}
+
+function setupAlertRadiusInfoControls() {
+  document.getElementById('close-alert-radius-info')?.addEventListener('click', hideAlertRadiusInfo);
+}
+
 let alertAreas = [];
 
 async function loadAlertAreas() {
@@ -232,6 +329,9 @@ function hideKeyOverlay({ byUser = false } = {}) {
 let map;
 const ALERT_POLYGONS_SOURCE_ID = 'alert-polygons';
 const ALERT_POLYGONS_FILL_LAYER_ID = 'alert-polygons-fill';
+const ALERT_RADIUS_SOURCE_ID = 'alert-radius';
+const ALERT_RADIUS_FILL_LAYER_ID = 'alert-radius-fill';
+const ALERT_RADIUS_LINE_LAYER_ID = 'alert-radius-line';
 
 function buildAlertPolygonFeatureCollection() {
   return {
@@ -273,6 +373,43 @@ function setupAlertLayers() {
   map.on('mouseleave', ALERT_POLYGONS_FILL_LAYER_ID, () => { map.getCanvas().style.cursor = ''; });
 }
 
+function setupAlertRadiusLayer() {
+  const { lng, lat, radiusKm, daqi } = ALERT_RADIUS_STATION;
+
+  map.addSource(ALERT_RADIUS_SOURCE_ID, {
+    type: 'geojson',
+    data: {
+      type: 'Feature',
+      properties: { fillColor: QUALITY_LEVELS[daqi].color },
+      geometry: { type: 'Polygon', coordinates: createCirclePolygon([lng, lat], radiusKm) }
+    }
+  });
+
+  map.addLayer({
+    id: ALERT_RADIUS_FILL_LAYER_ID,
+    type: 'fill',
+    source: ALERT_RADIUS_SOURCE_ID,
+    paint: {
+      'fill-color': ['get', 'fillColor'],
+      'fill-opacity': 0.35
+    }
+  });
+
+  map.addLayer({
+    id: ALERT_RADIUS_LINE_LAYER_ID,
+    type: 'line',
+    source: ALERT_RADIUS_SOURCE_ID,
+    paint: {
+      'line-color': ['get', 'fillColor'],
+      'line-width': 2
+    }
+  });
+
+  map.on('mouseenter', ALERT_RADIUS_FILL_LAYER_ID, () => { map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', ALERT_RADIUS_FILL_LAYER_ID, () => { map.getCanvas().style.cursor = ''; });
+  map.on('click', ALERT_RADIUS_FILL_LAYER_ID, () => { showAlertRadiusInfo(); });
+}
+
 // Filters the map layers to only show bands whose checkbox is ticked.
 function applyAlertLevelFilter() {
   const showVeryHigh = document.getElementById('alert-very-high')?.checked ?? true;
@@ -312,6 +449,7 @@ function initMap() {
     loadAlertAreas().then(() => {
       setupAlertLayers();
       applyAlertLevelFilter();
+      setupAlertRadiusLayer();
       createKeyOverlay();
       renderKeyOverlay();
       showKeyOverlay();
@@ -421,5 +559,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupPanelControls();
   setupMobilePanelControls();
   setupAlertCheckboxes();
+  setupAlertRadiusInfoControls();
   initMap();
 });

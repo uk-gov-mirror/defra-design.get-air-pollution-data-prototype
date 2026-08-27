@@ -1,6 +1,6 @@
 {% extends "layouts/v17.html" %}
 
-{% set pageName="Birmingham A4540 Roadside monitoring station - Get air pollution data - GOV.UK" %}
+{% set pageName="Birmingham Ladywood monitoring station - Get air pollution data - GOV.UK" %}
 
 {% block beforeContent %}
 <a href="#"
@@ -20,16 +20,16 @@
 
 {% block head %}
   {{ super() }}
-  <meta property="og:title" content="Birmingham A4540 Roadside monitoring station - Get air pollution data - GOV.UK">
-  <meta name="description" content="Monitoring station information for Birmingham A4540 Roadside.">
-  <meta name="og:description" content="Monitoring station information for Birmingham A4540 Roadside.">
+  <meta property="og:title" content="Birmingham Ladywood monitoring station - Get air pollution data - GOV.UK">
+  <meta name="description" content="Monitoring station information for Birmingham Ladywood.">
+  <meta name="og:description" content="Monitoring station information for Birmingham Ladywood.">
 {% endblock %}
 
 {% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-1">Birmingham A4540 Roadside</h1>
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-1">Birmingham Ladywood</h1>
     <strong class="govuk-tag status-tag govuk-tag--blue">Active</strong>
     <p class="govuk-body status-description govuk-!-margin-top-3" id="status">Latest at 11:00am on 25 November 2024</p>
   </div>
@@ -37,7 +37,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <a href="../map.html" role="button" id="map-btn" class="aq-button-secondary aq-button-secondary--icon govuk-!-margin-top-2" onclick="sessionStorage.setItem('mapFlyTo', JSON.stringify({lat:52.48,lng:-1.90,zoom:12}))">
+    <a href="../map.html" role="button" id="map-btn" class="aq-button-secondary aq-button-secondary--icon govuk-!-margin-top-2" onclick="sessionStorage.setItem('mapFlyTo', JSON.stringify({lat:52.481346,lng:-1.918235,zoom:12}))">
       <span class="aq-button-secondary__icon">
         <svg focusable="false" width="15" height="20" viewBox="0 0 15 20">
           <path d="M15,7.5c0.009,3.778 -4.229,9.665 -7.5,12.5c-3.271,-2.835 -7.509,-8.722 -7.5,-12.5c0,-4.142 3.358,-7.5 7.5,-7.5c4.142,0 7.5,3.358 7.5,7.5Zm-7.5,5.461c3.016,0 5.461,-2.445 5.461,-5.461c0,-3.016 -2.445,-5.461 -5.461,-5.461c-3.016,0 -5.461,2.445 -5.461,5.461c0,3.016 2.445,5.461 5.461,5.461Z" fill="currentColor"></path>
@@ -58,9 +58,9 @@
               <span class="govuk-details__summary-text">3 other data sources available</span>
             </summary>
             <div class="govuk-details__text">
-              <p class="govuk-body"><a href="" class="govuk-link">UK Urban NO2 Network</a></p>
-              <p class="govuk-body"><a href="" class="govuk-link">Black Carbon Network</a></p>
               <p class="govuk-body"><a href="" class="govuk-link">Non-Automatic Hydrocarbon Network</a></p>
+              <p class="govuk-body"><a href="" class="govuk-link">PAH Network</a></p>
+              <p class="govuk-body"><a href="" class="govuk-link">UK Black Carbon Network</a></p>
             </div>
           </details>
         </dd>
@@ -75,10 +75,10 @@
       <div class="defra-aq-features__item">
         <dt class="defra-aq-features__key govuk-caption-m">Site type</dt>
         <dd class="defra-aq-features__value govuk-body">
-          <div class="defra-toggletip" data-toggletip="" data-toggletip-label="More information about urban traffic" data-toggletip-content="This monitoring site is in a city or town close to roads, motorways or highways.">
-            Urban traffic
+          <div class="defra-toggletip" data-toggletip="" data-toggletip-label="More information about urban background" data-toggletip-content="This monitoring area is in a city or town. It is located so pollutant measurements do not come from one specific source.">
+            Urban background
           </div>
-          <p class="defra-aq-features__link govuk-body govuk-!-margin-top-1"><a href="https://www.google.co.uk/maps?q=52.476145,-1.874978" class="govuk-link">View on Google Maps</a></p>
+          <p class="defra-aq-features__link govuk-body govuk-!-margin-top-1"><a href="https://www.google.co.uk/maps?q=52.481346,-1.918235" class="govuk-link">View on Google Maps</a></p>
         </dd>
       </div>
     </dl>
@@ -90,9 +90,13 @@
       </summary>
       <div class="govuk-details__text">
         <strong>Coordinates</strong>
-        <p class="govuk-body">52.476145, -1.874978</p>
+        <p class="govuk-body">52.481346, -1.918235</p>
         <strong>Grid reference</strong>
-        <p class="govuk-body">SP085864</p>
+        <p class="govuk-body">SP056870</p>
+        <strong>Address</strong>
+        <p class="govuk-body">St Marks Crescent, Birmingham, B1 2PR</p>
+        <strong>Altitude</strong>
+        <p class="govuk-body">134 metres</p>
         <strong>Photos</strong>
         <p class="govuk-body"><a href="" class="govuk-link">View on data.gov</a></p>
       </div>
@@ -116,42 +120,35 @@
           <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
               <th scope="row" class="govuk-table__header">Fine particulate matter (PM2.5)</th>
-              <td class="govuk-table__cell">09/09/2016</td>
+              <td class="govuk-table__cell">23/08/2018</td>
               <td class="govuk-table__cell">–</td>
               <td class="govuk-table__cell">3.0</td>
               <td class="govuk-table__cell">FIDAS</td>
             </tr>
             <tr class="govuk-table__row">
               <th scope="row" class="govuk-table__header">Particulate matter (PM10)</th>
-              <td class="govuk-table__cell">09/09/2016</td>
+              <td class="govuk-table__cell">23/08/2018</td>
               <td class="govuk-table__cell">–</td>
               <td class="govuk-table__cell">3.0</td>
               <td class="govuk-table__cell">FIDAS</td>
             </tr>
             <tr class="govuk-table__row">
               <th scope="row" class="govuk-table__header">Nitrogen dioxide</th>
-              <td class="govuk-table__cell">09/09/2016</td>
+              <td class="govuk-table__cell">23/08/2018</td>
               <td class="govuk-table__cell">–</td>
               <td class="govuk-table__cell">3.0</td>
               <td class="govuk-table__cell">–</td>
             </tr>
             <tr class="govuk-table__row">
               <th scope="row" class="govuk-table__header">Ozone</th>
-              <td class="govuk-table__cell">09/09/2016</td>
+              <td class="govuk-table__cell">23/08/2018</td>
               <td class="govuk-table__cell">–</td>
               <td class="govuk-table__cell">3.0</td>
               <td class="govuk-table__cell">–</td>
             </tr>
             <tr class="govuk-table__row">
-              <th scope="row" class="govuk-table__header">Nitric oxide</th>
-              <td class="govuk-table__cell">09/09/2016</td>
-              <td class="govuk-table__cell">–</td>
-              <td class="govuk-table__cell">3.0</td>
-              <td class="govuk-table__cell">–</td>
-            </tr>
-            <tr class="govuk-table__row">
-              <th scope="row" class="govuk-table__header">Nitrogen oxides as nitrogen dioxide</th>
-              <td class="govuk-table__cell">09/09/2016</td>
+              <th scope="row" class="govuk-table__header">Sulphur dioxide</th>
+              <td class="govuk-table__cell">23/08/2018</td>
               <td class="govuk-table__cell">–</td>
               <td class="govuk-table__cell">3.0</td>
               <td class="govuk-table__cell">–</td>
@@ -291,14 +288,31 @@
                    
                   </td>
                   <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
-                    41 µg/m3
-                  </td>
-                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
-                    
-                    <strong class="govuk-tag" style="background-color:#31ff00; color:#0b0c0c;">2 (low)</strong>
+                    225 µg/m3
                   </td>
                   <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
+                    
+                    <strong class="govuk-tag" style="background-color:#ff0000; color:#ffffff;">8 (high)</strong>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
                     8 hour rolling average
+                  </td>
+                </tr>
+
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    Sulphur dioxide
+                   
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    18 µg/m3
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
+                    
+                    <strong class="govuk-tag" style="background-color:#9cff9c; color:#0b0c0c;">1 (low)</strong>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                    15 minute average
                   </td>
                 </tr>
               </tbody>
@@ -396,7 +410,7 @@
                 <tr class="defra-aq-levels-table__row">
                   <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
                     Ozone
-                    <span class="defra-aq-levels-table__cell--data">Data capture: 100%</span>
+                    <span class="defra-aq-levels-table__cell--data">Data capture: 99%</span>
                   </td>
                  
                   <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
@@ -404,11 +418,35 @@
                          data-toggletip
                          data-toggletip-label="More information about the UK annual average limit value for ozone"
                          data-toggletip-content="There is no annual average limit value for ozone.">
-                      35 µg/m3
+                      210 µg/m3
                     </div>
                   </td>
                   <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
                     no legal limit
+                  </td>
+                </tr>
+
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    Sulphur dioxide
+                    <span class="defra-aq-levels-table__cell--data">Data capture: 100%</span>
+                  </td>
+                 
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about the UK annual average limit value for sulphur dioxide"
+                         data-toggletip-content="There is no annual average limit value for sulphur dioxide.">
+                      20 µg/m3
+                    </div>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about hourly exceedances for sulphur dioxide"
+                         data-toggletip-content="Hourly sulphur dioxide levels must not go above 350 micrograms per cubic metre (µg/m³) more than 24 times in a calendar year (when rounded to a whole number).">
+                      0
+                    </div>
                   </td>
                 </tr>
               </tbody>
@@ -521,14 +559,14 @@
                 <tr class="defra-aq-levels-table__row">
                   <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
                     Ozone
-                    <span class="defra-aq-levels-table__cell--data">Data capture: 100%</span>
+                    <span class="defra-aq-levels-table__cell--data">Data capture: 98%</span>
                   </td>
                   <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
                     <div class="defra-toggletip"
                          data-toggletip
                          data-toggletip-label="More information about the UK annual average limit value for ozone"
                          data-toggletip-content="There is no annual average limit value for ozone.">
-                      32 µg/m3
+                      178 µg/m3
                     </div>
                   </td>
                   <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
@@ -536,6 +574,37 @@
                   </td>
                   <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
                     no legal limit
+                  </td>
+                </tr>
+
+                <tr class="defra-aq-levels-table__row">
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+                    Sulphur dioxide
+                    <span class="defra-aq-levels-table__cell--data">Data capture: 100%</span>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about the UK annual average limit value for sulphur dioxide"
+                         data-toggletip-content="There is no annual average limit value for sulphur dioxide.">
+                      17 µg/m3
+                    </div>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about daily exceedances for sulphur dioxide"
+                         data-toggletip-content="Daily average sulphur dioxide levels must not go above 125 micrograms per cubic metre (µg/m³) more than 3 times in a calendar year (when rounded to a whole number).">
+                      0
+                    </div>
+                  </td>
+                  <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly">
+                    <div class="defra-toggletip"
+                         data-toggletip
+                         data-toggletip-label="More information about hourly exceedances for sulphur dioxide"
+                         data-toggletip-content="Hourly sulphur dioxide levels must not go above 350 micrograms per cubic metre (µg/m³) more than 24 times in a calendar year (when rounded to a whole number).">
+                      1
+                    </div>
                   </td>
                 </tr>
 
@@ -667,6 +736,24 @@
         <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly" id="annual-o3-hourly">no legal limit</td>
       </tr>
 
+      <!-- SO2 -->
+      <tr class="defra-aq-levels-table__row">
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant">
+          Sulphur dioxide
+          <span class="defra-aq-levels-table__cell--data">Data capture: <span id="annual-so2-capture">100%</span></span>
+        </td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--average">
+          <div class="defra-toggletip"
+               data-toggletip
+               data-toggletip-label="More information about the UK annual average limit value for sulphur dioxide"
+               data-toggletip-content="There is no annual average limit value for sulphur dioxide.">
+            <span id="annual-so2-avg">18 µg/m3</span>
+          </div>
+        </td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--daily" id="annual-so2-daily">no legal limit</td>
+        <td class="defra-aq-levels-table__cell defra-aq-levels-table__cell--hourly" id="annual-so2-hourly">no legal limit</td>
+      </tr>
+
     </tbody>
   </table>
 </div>
@@ -728,6 +815,10 @@
           <div class="govuk-checkboxes__item">
             <input class="govuk-checkboxes__input" id="pollutant-o3" name="pollutants" type="checkbox" value="o3" checked>
             <label class="govuk-label govuk-checkboxes__label" for="pollutant-o3">Ozone (O3)</label>
+          </div>
+          <div class="govuk-checkboxes__item">
+            <input class="govuk-checkboxes__input" id="pollutant-so2" name="pollutants" type="checkbox" value="so2" checked>
+            <label class="govuk-label govuk-checkboxes__label" for="pollutant-so2">Sulphur dioxide (SO2)</label>
           </div>
         </div>
 
@@ -877,10 +968,11 @@ function updateViewGraphLink() {
       "2026": {
         verified: "none",
         values: {
-          pm25: { avg: "8 µg/m3",  daily: "no legal limit", hourly: "no legal limit", capture: "100%" },
-          pm10: { avg: "14 µg/m3", daily: "2",             hourly: "no legal limit", capture: "100%" },
+          pm25: { avg: "8 µg/m3",  daily: "no legal limit", hourly: "no legal limit", capture: "99%" },
+          pm10: { avg: "14 µg/m3", daily: "2",             hourly: "no legal limit", capture: "98%" },
           no2:  { avg: "52 µg/m3", daily: "no legal limit", hourly: "1",             capture: "100%" },
-          o3:   { avg: "32 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%" }
+          o3:   { avg: "46 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "97%" },
+          so2:  { avg: "18 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%" }
         }
       },
       "2025": {
@@ -890,7 +982,8 @@ function updateViewGraphLink() {
           pm25: { avg: "10 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "97%", aboveLimit: false },
           pm10: { avg: "16 µg/m3", daily: "3",             hourly: "no legal limit", capture: "95%", aboveLimit: false },
           no2:  { avg: "55 µg/m3", daily: "no legal limit", hourly: "2",             capture: "98%", aboveLimit: true  },
-          o3:   { avg: "34 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "96%", aboveLimit: false }
+          o3:   { avg: "34 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "96%", aboveLimit: false },
+          so2:  { avg: "19 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "97%",  aboveLimit: false }
         }
       },
       "2024": {
@@ -899,7 +992,8 @@ function updateViewGraphLink() {
           pm25: { avg: "9 µg/m3",  daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false },
           pm10: { avg: "15 µg/m3", daily: "2",             hourly: "no legal limit", capture: "100%", aboveLimit: false },
           no2:  { avg: "50 µg/m3", daily: "no legal limit", hourly: "1",             capture: "100%", aboveLimit: true  },
-          o3:   { avg: "33 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false }
+          o3:   { avg: "33 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false },
+          so2:  { avg: "18 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false }
         }
       },
       "2023": {
@@ -908,7 +1002,8 @@ function updateViewGraphLink() {
           pm25: { avg: "9 µg/m3",  daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false },
           pm10: { avg: "15 µg/m3", daily: "2",             hourly: "no legal limit", capture: "100%", aboveLimit: false },
           no2:  { avg: "48 µg/m3", daily: "no legal limit", hourly: "1",             capture: "100%", aboveLimit: true  },
-          o3:   { avg: "33 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false }
+          o3:   { avg: "33 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false },
+          so2:  { avg: "18 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false }
         }
       },
       "2022": {
@@ -917,7 +1012,8 @@ function updateViewGraphLink() {
           pm25: { avg: "9 µg/m3",  daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false },
           pm10: { avg: "15 µg/m3", daily: "2",             hourly: "no legal limit", capture: "100%", aboveLimit: false },
           no2:  { avg: "46 µg/m3", daily: "no legal limit", hourly: "1",             capture: "100%", aboveLimit: true  },
-          o3:   { avg: "33 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false }
+          o3:   { avg: "33 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false },
+          so2:  { avg: "17 µg/m3", daily: "no legal limit", hourly: "no legal limit", capture: "100%", aboveLimit: false }
         }
       }
     };
@@ -972,6 +1068,12 @@ function updateViewGraphLink() {
       setText('annual-o3-hourly', v.o3.hourly);
       setText('annual-o3-capture', v.o3.capture);
       setAboveLimit('annual-o3-above', !!v.o3.aboveLimit);
+
+      setText('annual-so2-avg', v.so2.avg);
+      setText('annual-so2-daily', v.so2.daily);
+      setText('annual-so2-hourly', v.so2.hourly);
+      setText('annual-so2-capture', v.so2.capture);
+      setAboveLimit('annual-so2-above', !!v.so2.aboveLimit);
 
       if (currentPeriod === 'thisYear') {
         updateHeadingsForPeriod('thisYear');
@@ -1169,6 +1271,10 @@ function updateViewGraphLink() {
             <div class="govuk-checkboxes__item">
               <input class="govuk-checkboxes__input" id="cdr-o3" name="cdr-pollutants" type="checkbox" value="o3" checked>
               <label class="govuk-label govuk-checkboxes__label" for="cdr-o3">Ozone (O3)</label>
+            </div>
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="cdr-so2" name="cdr-pollutants" type="checkbox" value="so2" checked>
+              <label class="govuk-label govuk-checkboxes__label" for="cdr-so2">Sulphur dioxide (SO2)</label>
             </div>
           </div>
 
@@ -1406,7 +1512,8 @@ function updateViewGraphLink() {
           pm25: 'PM2.5',
           pm10: 'PM10',
           no2: 'Nitrogen dioxide (NO2)',
-          o3: 'Ozone (O3)'
+          o3: 'Ozone (O3)',
+          so2: 'Sulphur dioxide (SO2)'
         };
 
         const polText = selection.pollutants.map(p => pollutantLabels[p] || p).join(', ');
