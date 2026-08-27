@@ -26,10 +26,13 @@
        <div class="govuk-radios govuk-!-margin-top-0" data-module="govuk-radios">
   <!-- Last 7 days -->
   <div class="govuk-radios__item">
-    <input class="govuk-radios__input" id="time-7d" name="time" type="radio" value="7d">
+    <input class="govuk-radios__input" id="time-7d" name="time" type="radio" value="7d" aria-describedby="time-7d-hint">
     <label class="govuk-label govuk-radios__label" for="time-7d">
       Last 7 days
     </label>
+    <div id="time-7d-hint" class="govuk-hint govuk-radios__hint">
+      Only near real-time data from Defra is available
+    </div>
   </div>
 
   <!-- Year to date -->

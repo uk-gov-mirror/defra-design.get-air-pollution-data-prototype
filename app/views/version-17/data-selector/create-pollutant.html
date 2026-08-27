@@ -21,9 +21,9 @@
   <div role="alert">
     <h2 class="govuk-error-summary__title">There is a problem</h2>
     <div class="govuk-error-summary__body">
-      <p class="govuk-body">There are no stations available based on your selection. Change the year or location.</p>
+      <p class="govuk-body">There are no stations available based on your selection. Change the time period or location.</p>
       <ul class="govuk-list govuk-error-summary__list">
-        <li><a href="add-time.html">Change the year</a></li>
+        <li><a href="add-time.html">Change the time period</a></li>
         <li><a href="add-location.html">Change the location</a></li>
       </ul>
     </div>
@@ -34,14 +34,33 @@
 
         <p class="govuk-body govuk-!-margin-bottom-6"><a href="#" id="clear-selections" class="govuk-link">Clear selections</a></p>
 
+        <div class="govuk-warning-text" id="last-7-days-warning" hidden>
+          <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+          <strong class="govuk-warning-text__text">
+            <span class="govuk-visually-hidden">Warning</span>
+            Only near real-time data from Defra is available for the last 7 days
+          </strong>
+        </div>
 
         <div id="station-inset-container" aria-live="polite" style="display: none;"></div>
 
 <!-- <p class="govuk-body">Choose pollutant(s)</p> -->
      
     <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">
+        <div class="govuk-summary-list__row pollutant-toggle-row">
+          <span class="govuk-summary-list__key" style="padding: 0;">Pollutant</span>
+          <button type="button" class="pollutant-toggle-btn" id="pollutant-toggle" aria-expanded="false" aria-controls="pollutant-panel-content">
+            <span class="govuk-accordion__section-toggle" data-nosnippet>
+              <span class="govuk-accordion__section-toggle-focus">
+                <span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span>
+                <span class="govuk-accordion__section-toggle-text">Show</span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <div class="govuk-summary-list__row" id="pollutant-panel-content" hidden>
+    <dt class="govuk-summary-list__key govuk-visually-hidden">
       Pollutant
     </dt>
     <dd class="govuk-summary-list__value" id="pollutant-summary-list">
@@ -65,7 +84,7 @@
 
     <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
-      Year
+      Time period
     </dt>
     <dd class="govuk-summary-list__value" id="time-period-value">
       None selected
@@ -105,6 +124,50 @@
         }) }}
 </div>
 </div>
+
+<style>
+  .pollutant-toggle-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pollutant-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: none;
+    border: 0;
+    padding: 0;
+    margin-top: 2px;
+    cursor: pointer;
+  }
+
+  .pollutant-toggle-btn .govuk-accordion__section-toggle-text {
+    margin-left: 5px;
+  }
+</style>
+
+<script>
+  // Pollutant show/hide toggle (uses the accordion component's chevron/text styling only)
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('pollutant-toggle');
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      const content = document.getElementById(btn.getAttribute('aria-controls'));
+      const chevron = btn.querySelector('.govuk-accordion-nav__chevron');
+      const text = btn.querySelector('.govuk-accordion__section-toggle-text');
+
+      btn.setAttribute('aria-expanded', String(!expanded));
+      if (content) content.hidden = expanded;
+      if (chevron) chevron.classList.toggle('govuk-accordion-nav__chevron--down', expanded);
+      if (text) text.textContent = expanded ? 'Show' : 'Hide';
+    });
+  });
+</script>
+
 <script>
 /**
  * Station inset (strict per-network + site-type aware)
@@ -964,6 +1027,11 @@ document.addEventListener('DOMContentLoaded', function () {
     timeActionCell.innerHTML = '<a class="govuk-link" href="add-time.html">Change<span class="govuk-visually-hidden"> time period</span></a>';
   }
 
+  const last7DaysWarning = document.getElementById('last-7-days-warning');
+  if (last7DaysWarning) {
+    last7DaysWarning.hidden = !(timePeriod && timePeriod.startsWith('Last 7 days'));
+  }
+
   // Site types
 const siteTypes = sessionStorage.getItem('selectedSiteTypes');
 const siteTypeCell = document.getElementById('site-type-value');
@@ -1222,16 +1290,16 @@ document.addEventListener('DOMContentLoaded', () => {
         </ul>`;
     } else if (kind === 'both-missing') {
       bodyHtml = `
-        <p class="govuk-body">Select a year and a location to continue.</p>
+        <p class="govuk-body">Select a time period and a location to continue.</p>
         <ul class="govuk-list govuk-error-summary__list">
-          <li><a href="add-time.html">Add year</a></li>
+          <li><a href="add-time.html">Add time period</a></li>
           <li><a href="add-location.html">Add location</a></li>
         </ul>`;
     } else if (kind === 'year-missing') {
       bodyHtml = `
-        <p class="govuk-body">Select a year to continue.</p>
+        <p class="govuk-body">Select a time period to continue.</p>
         <ul class="govuk-list govuk-error-summary__list">
-          <li><a href="add-time.html">Add year</a></li>
+          <li><a href="add-time.html">Add time period</a></li>
         </ul>`;
     } else if (kind === 'location-missing') {
       bodyHtml = `
@@ -1241,9 +1309,9 @@ document.addEventListener('DOMContentLoaded', () => {
         </ul>`;
     } else {
       bodyHtml = `
-        <p class="govuk-body">There are no stations available based on your selection. Change the year or location.</p>
+        <p class="govuk-body">There are no stations available based on your selection. Change the time period or location.</p>
         <ul class="govuk-list govuk-error-summary__list">
-          <li><a href="add-time.html">Change the year</a></li>
+          <li><a href="add-time.html">Change the time period</a></li>
           <li><a href="add-location.html">Change the location</a></li>
         </ul>`;
     }

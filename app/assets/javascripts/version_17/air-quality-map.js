@@ -2706,6 +2706,7 @@ function initPollutantPanels() {
   `;
 
   updateGroupHints();
+  updatePollutantSelectionSummary(root, mount);
 
     function updateGroupHints() {
   const radios = Array.from(mount.querySelectorAll(`input[name="${groupName}"]`));
@@ -2737,6 +2738,7 @@ function initPollutantPanels() {
     filterState.groupKey = r.value;
 
     updateGroupHints();
+    updatePollutantSelectionSummary(root, mount);
 
     const available = getAvailableNetworks();
     selectedNetwork = available.includes(selectedNetwork) ? selectedNetwork : (available[0] || NETWORK.AURN);
@@ -2818,6 +2820,7 @@ function initPollutantPanels() {
 
       filterState.mode = 'pollutant';
       applyFilter();
+      updatePollutantSelectionSummary(root, mount);
 
     }
 
@@ -2856,14 +2859,45 @@ function initPollutantPanels() {
 // Tracks whether the user has interacted with pollutant/group filters yet
 let hasUserInteractedWithFilters = false;
 
-function renderDataSources(root, mount, uiId) {
-  // NEW: scroll container – where all dynamic content will live
-  const scrollContainer =
-    root.querySelector('.panel-scroll') || mount.parentElement;
+// Live "currently selected" text shown above each accordion's toggle
+function updatePollutantSelectionSummary(root, mount) {
+  const el = root.querySelector('.pollutant-selection-summary');
+  if (!el) return;
 
-  // Remove existing instances from *inside* the scroll container
-  scrollContainer.querySelector(`#${uiId}-data-sources`)?.remove();
-  scrollContainer.querySelector(`#${uiId}-map-features`)?.remove();
+  if (filterState.mode === 'pollutant') {
+    el.textContent = 'DAQI pollutants';
+    return;
+  }
+
+  const checkedRadio = mount.querySelector('.govuk-radios__input:checked');
+  const label = checkedRadio && mount.querySelector(`label[for="${checkedRadio.id}"]`);
+  el.textContent = label ? label.textContent.trim() : 'DAQI pollutants';
+}
+
+function updateDataSourcesSelectionSummary(root) {
+  const el = root.querySelector('.data-sources-selection-summary');
+  if (!el) return;
+  const meta = NETWORK_META[selectedNetwork];
+  el.textContent = meta ? meta.label : '';
+}
+
+function updateMapFeaturesSelectionSummary(root, statusCb, laBoundariesCb) {
+  const el = root.querySelector('.map-features-selection-summary');
+  if (!el) return;
+  const labels = [];
+  if (statusCb?.checked) labels.push('Show closed and inactive stations');
+  if (laBoundariesCb?.checked) labels.push('Local authority boundaries');
+  el.textContent = labels.length ? labels.join(', ') : 'None selected';
+}
+
+function renderDataSources(root, mount, uiId) {
+  // Data sources and Map features now render into their own accordion mounts
+  const dataSourcesMount = root.querySelector('.data-sources-mount');
+  const mapFeaturesMount = root.querySelector('.map-features-mount');
+
+  // Remove existing instances before re-rendering
+  dataSourcesMount?.querySelector(`#${uiId}-data-sources`)?.remove();
+  mapFeaturesMount?.querySelector(`#${uiId}-map-features`)?.remove();
 
   // --- Determine which networks to show in the radios ---
   function getAvailableNetworksForUi() {
@@ -2895,38 +2929,23 @@ function renderDataSources(root, mount, uiId) {
     }
   }
 
-  // -------------------------
-  // Data sources (no details/collapsible)
-  // -------------------------
-  // Remove old hr and data sources container if they exist (to prevent duplication on re-render)
-  const oldHr = scrollContainer.querySelector('hr');
-  if (oldHr) oldHr.remove();
-  const oldDataSources = scrollContainer.querySelector(`#${uiId}-data-sources`);
-  if (oldDataSources) oldDataSources.remove();
+  updateDataSourcesSelectionSummary(root);
 
-  // Add dividing line
-  const hr = document.createElement('hr');
-  hr.className = 'govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-bottom-3';
-  scrollContainer.appendChild(hr);
-
+  // -------------------------
+  // Data sources (own accordion, no header needed - accordion supplies it)
+  // -------------------------
   // Create data sources container
   const dataSourcesContainer = document.createElement('div');
   dataSourcesContainer.id = `${uiId}-data-sources`;
   dataSourcesContainer.className = 'govuk-!-margin-bottom-4';
-
-  // Add header
-  const header = document.createElement('h3');
-  header.className = 'govuk-heading-s govuk-!-margin-bottom-3';
-  header.textContent = 'Data sources';
-  dataSourcesContainer.appendChild(header);
 
   // Add network radio groups content
   const networksDiv = document.createElement('div');
   networksDiv.innerHTML = renderNetworkRadioGroupsHtml(uiId, availableNetworks);
   dataSourcesContainer.appendChild(networksDiv);
 
-  // Add container to scroll area
-  scrollContainer.appendChild(dataSourcesContainer);
+  // Add container to its own accordion mount
+  dataSourcesMount?.appendChild(dataSourcesContainer);
 
   const groupName = `${uiId}-networks`;
 
@@ -2974,21 +2993,15 @@ function renderDataSources(root, mount, uiId) {
   });
 
   // -------------------------
-  // Map features (details)
+  // Map features (own accordion, checkboxes only - no details/summary)
   // -------------------------
-  const features = document.createElement('details');
-  features.className = 'govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0';
+  const features = document.createElement('div');
   features.id = `${uiId}-map-features`;
-  features.open = false;
 
   const showStatusId = `${uiId}-show-closed-inactive`;
   const showLaBoundariesId = `${uiId}-show-la-boundaries`;
 
   features.innerHTML = `
-    <summary class="govuk-details__summary">
-      <span class="govuk-details__summary-text">Map features</span>
-    </summary>
-    <div class="govuk-details__text">
       <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
         <div class="govuk-checkboxes__item">
           <input
@@ -3010,17 +3023,17 @@ function renderDataSources(root, mount, uiId) {
           </label>
         </div>
       </div>
-    </div>
   `;
 
-  // Add into scroll area (⬅️ key change)
-  scrollContainer.appendChild(features);
+  // Add into its own accordion mount
+  mapFeaturesMount?.appendChild(features);
 
   // Bind show/hide closed+inactive
   const statusCb = root.querySelector(`#${showStatusId}`);
   statusCb?.addEventListener('change', () => {
     showClosedAndInactiveStations = !!statusCb.checked;
     applyFilter();
+    updateMapFeaturesSelectionSummary(root, statusCb, laBoundariesCb);
   });
 
   // Bind LA boundaries toggle
@@ -3033,7 +3046,10 @@ function renderDataSources(root, mount, uiId) {
       m.setLayoutProperty('la-boundaries-line', 'visibility', visibility);
       m.setLayoutProperty('la-boundaries-fill', 'visibility', visibility);
     }
+    updateMapFeaturesSelectionSummary(root, statusCb, laBoundariesCb);
   });
+
+  updateMapFeaturesSelectionSummary(root, statusCb, laBoundariesCb);
 }
 
 

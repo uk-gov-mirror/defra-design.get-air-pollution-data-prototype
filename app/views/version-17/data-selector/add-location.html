@@ -55,23 +55,22 @@
             </div>
           </div>
 
-          <!-- Zones and agglomerations -->
+          <!-- Zones -->
           <div class="govuk-radios__item">
             <input class="govuk-radios__input"
                    id="location-3"
                    name="location"
                    type="radio"
-                   value="zones-agglomerations"
+                   value="zones"
                    data-aria-controls="conditional-location-3">
-            <label class="govuk-label govuk-radios__label" for="location-3">Zones and agglomerations</label>
+            <label class="govuk-label govuk-radios__label" for="location-3">Zones</label>
             <div class="govuk-hint govuk-radios__hint">
-              Choose one or more UK air quality zones and agglomerations
+              Choose one or more UK air quality zones
             </div>
           </div>
 
           <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-location-3">
             <div class="govuk-form-group">
-              <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Zones</h2>
               <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                 <div class="govuk-checkboxes__item">
                   <input class="govuk-checkboxes__input" id="za-central-scotland" name="zoneAgg" type="checkbox" value="Central Scotland zone">
@@ -138,8 +137,25 @@
                   <label class="govuk-label govuk-checkboxes__label" for="za-south-wales">South Wales</label>
                 </div>
               </div>
+            </div>
+          </div>
 
-              <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-2">Agglomerations</h2>
+          <!-- Agglomerations -->
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input"
+                   id="location-3b"
+                   name="location"
+                   type="radio"
+                   value="agglomerations"
+                   data-aria-controls="conditional-location-3b">
+            <label class="govuk-label govuk-radios__label" for="location-3b">Agglomerations</label>
+            <div class="govuk-hint govuk-radios__hint">
+              Choose one or more UK air quality agglomerations
+            </div>
+          </div>
+
+          <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-location-3b">
+            <div class="govuk-form-group">
               <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                 <div class="govuk-checkboxes__item">
                   <input class="govuk-checkboxes__input" id="za-greater-london" name="zoneAgg" type="checkbox" value="Greater London Urban Area agglomeration">
@@ -332,10 +348,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const tableBody = table.querySelector('tbody');
 
   const countriesRadio = document.getElementById('location-2');
-  const zonesAggRadio = document.getElementById('location-3');
+  const zoneRadio = document.getElementById('location-3');
+  const agglomerationRadio = document.getElementById('location-3b');
   const laRadio = document.getElementById('location-4');
   const countriesConditional = document.getElementById('conditional-location-2');
-  const zonesAggConditional = document.getElementById('conditional-location-3');
+  const zoneConditional = document.getElementById('conditional-location-3');
+  const agglomerationConditional = document.getElementById('conditional-location-3b');
   const laConditional = document.getElementById('conditional-location-4');
 
   const modeFieldset = document.getElementById('location-mode-fieldset') || document.querySelector('fieldset[aria-describedby="location-hint"]');
@@ -351,10 +369,15 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelector('#conditional-location-2 .govuk-form-group') ||
     document.getElementById('conditional-location-2');
 
-  const zonesAggFormGroup =
-    document.getElementById('zones-agg-form-group') ||
+  const zoneFormGroup =
+    document.getElementById('zone-form-group') ||
     document.querySelector('#conditional-location-3 .govuk-form-group') ||
     document.getElementById('conditional-location-3');
+
+  const agglomerationFormGroup =
+    document.getElementById('agglomeration-form-group') ||
+    document.querySelector('#conditional-location-3b .govuk-form-group') ||
+    document.getElementById('conditional-location-3b');
 
   // ------- INLINE ERROR HELPERS (reuseable) -------
   function ensureInlineError(container, id) {
@@ -417,16 +440,29 @@ document.addEventListener('DOMContentLoaded', function () {
     if (err) err.remove();
   }
 
-  function showZonesAggInlineError(message) {
-    if (!zonesAggFormGroup) return;
-    const err = ensureInlineError(zonesAggFormGroup, 'zones-agg-error');
+  function showZoneInlineError(message) {
+    if (!zoneFormGroup) return;
+    const err = ensureInlineError(zoneFormGroup, 'zone-error');
     err.innerHTML = '<span class="govuk-visually-hidden">Error:</span> ' + message;
   }
 
-  function clearZonesAggInlineError() {
-    if (!zonesAggFormGroup) return;
-    zonesAggFormGroup.classList.remove('govuk-form-group--error');
-    const err = zonesAggFormGroup.querySelector('#zones-agg-error');
+  function clearZoneInlineError() {
+    if (!zoneFormGroup) return;
+    zoneFormGroup.classList.remove('govuk-form-group--error');
+    const err = zoneFormGroup.querySelector('#zone-error');
+    if (err) err.remove();
+  }
+
+  function showAgglomerationInlineError(message) {
+    if (!agglomerationFormGroup) return;
+    const err = ensureInlineError(agglomerationFormGroup, 'agglomeration-error');
+    err.innerHTML = '<span class="govuk-visually-hidden">Error:</span> ' + message;
+  }
+
+  function clearAgglomerationInlineError() {
+    if (!agglomerationFormGroup) return;
+    agglomerationFormGroup.classList.remove('govuk-form-group--error');
+    const err = agglomerationFormGroup.querySelector('#agglomeration-error');
     if (err) err.remove();
   }
 
@@ -444,7 +480,8 @@ document.addEventListener('DOMContentLoaded', function () {
       r.addEventListener('change', () => {
         clearErrorSummary();
         clearCountriesInlineError();
-        clearZonesAggInlineError();
+        clearZoneInlineError();
+        clearAgglomerationInlineError();
         clearLAInlineError();
       });
     });
@@ -459,7 +496,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('#conditional-location-3 input[name="zoneAgg"]').forEach(cb => {
       cb.addEventListener('change', () => {
-        clearZonesAggInlineError();
+        clearZoneInlineError();
+        clearErrorSummary();
+      });
+    });
+
+    document.querySelectorAll('#conditional-location-3b input[name="zoneAgg"]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        clearAgglomerationInlineError();
         clearErrorSummary();
       });
     });
@@ -533,15 +577,24 @@ document.addEventListener('DOMContentLoaded', function () {
     countriesRadio.checked = true;
     countriesConditional.classList.remove('govuk-radios__conditional--hidden');
   } else if (savedZonesAgg) {
-    zonesAggRadio.checked = true;
-    zonesAggConditional.classList.remove('govuk-radios__conditional--hidden');
     try {
       const items = JSON.parse(savedZonesAgg);
-      if (Array.isArray(items)) {
+      if (Array.isArray(items) && items.length) {
         const selected = new Set(items.map(v => String(v).toLowerCase().trim()));
-        document.querySelectorAll('#conditional-location-3 input[name="zoneAgg"]').forEach(cb => {
-          cb.checked = selected.has(String(cb.value).toLowerCase().trim());
-        });
+        const isAgglomeration = items.some(v => String(v).toLowerCase().includes('agglomeration'));
+        if (isAgglomeration) {
+          agglomerationRadio.checked = true;
+          agglomerationConditional.classList.remove('govuk-radios__conditional--hidden');
+          document.querySelectorAll('#conditional-location-3b input[name="zoneAgg"]').forEach(cb => {
+            cb.checked = selected.has(String(cb.value).toLowerCase().trim());
+          });
+        } else {
+          zoneRadio.checked = true;
+          zoneConditional.classList.remove('govuk-radios__conditional--hidden');
+          document.querySelectorAll('#conditional-location-3 input[name="zoneAgg"]').forEach(cb => {
+            cb.checked = selected.has(String(cb.value).toLowerCase().trim());
+          });
+        }
       }
     } catch {}
   } else if (savedLAList) {
@@ -646,16 +699,28 @@ document.addEventListener('DOMContentLoaded', function () {
       sessionStorage.setItem(KEY_COUNTRIES, JSON.stringify(checked));
 
     } else if (selectedRadio.id === 'location-3') {
-      const selectedZonesAgg = Array.from(document.querySelectorAll('input[name="zoneAgg"]:checked'))
+      const selectedZones = Array.from(document.querySelectorAll('#conditional-location-3 input[name="zoneAgg"]:checked'))
         .map(cb => cb.value.trim());
-      if (selectedZonesAgg.length === 0) {
-        showZonesAggInlineError('Select at least one zone or agglomeration');
-        showErrorSummary([{ text: 'Select at least one zone or agglomeration', href: '#za-greater-london' }]);
+      if (selectedZones.length === 0) {
+        showZoneInlineError('Select at least one zone');
+        showErrorSummary([{ text: 'Select at least one zone', href: '#za-central-scotland' }]);
         return;
       }
-      clearZonesAggInlineError();
+      clearZoneInlineError();
       clearErrorSummary();
-      sessionStorage.setItem(KEY_ZONES_AGG, JSON.stringify(selectedZonesAgg));
+      sessionStorage.setItem(KEY_ZONES_AGG, JSON.stringify(selectedZones));
+
+    } else if (selectedRadio.id === 'location-3b') {
+      const selectedAgglomerations = Array.from(document.querySelectorAll('#conditional-location-3b input[name="zoneAgg"]:checked'))
+        .map(cb => cb.value.trim());
+      if (selectedAgglomerations.length === 0) {
+        showAgglomerationInlineError('Select at least one agglomeration');
+        showErrorSummary([{ text: 'Select at least one agglomeration', href: '#za-greater-london' }]);
+        return;
+      }
+      clearAgglomerationInlineError();
+      clearErrorSummary();
+      sessionStorage.setItem(KEY_ZONES_AGG, JSON.stringify(selectedAgglomerations));
 
     } else if (selectedRadio.id === 'location-4') {
       let locations = [];

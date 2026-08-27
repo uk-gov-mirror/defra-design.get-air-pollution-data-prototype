@@ -98,6 +98,9 @@ module.exports = {
       // Forecast Map V17
       forecast_map_17 : './app/assets/javascripts/version_17/forecast-map.js',
 
+      // Alerts Map V17
+      alerts_map_17 : './app/assets/javascripts/version_17/alerts-map.js',
+
       // Phase 1 Map
       autocomplete_p_phase1_map :   './app/assets/javascripts/phase1_map/components/accessible-autocomplete-p-v8.js',
       autocomplete_la_phase1_map :   './app/assets/javascripts/phase1_map/components/accessible-autocomplete.js',

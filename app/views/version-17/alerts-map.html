@@ -1,6 +1,6 @@
-{% extends "layouts/v17-forecast-map.html" %}
+{% extends "layouts/v17-alerts-map.html" %}
 
-{% set pageName="Forecast map - GOV.UK" %}
+{% set pageName="Air Quality Alerts Map - GOV.UK" %}
 
 {# Hide header and footer on map page #}
 {% block header %}{% endblock %}
@@ -11,13 +11,13 @@
 
 <div id="maphigh" class="defra-map" aria-hidden="false" style="outline: 3px solid transparent;
   box-shadow: 0px 0px 0px 2px white, inset 0px 0px 0px 0px #0b0c0c, 0px 0px 0px 5px #0b0c0c, 0px 0px 0px 8px #ffdd00;">
-  <h1 id="mapLabel" class="defra-map__title">Forecast map</h1>
+  <h1 id="mapLabel" class="defra-map__title">Alerts map</h1>
 
   <div
     id="map-viewport"
     class="defra-map-viewport"
     role="region"
-    aria-label="Interactive map showing air quality forecasts"
+    aria-label="Interactive map showing air quality alerts"
     >
   </div>
 
@@ -37,18 +37,21 @@
         <h3 class="govuk-heading-s" style="margin-bottom: 5px;">Map type</h3>
        <div class="btn-grp" style="margin-top: 5px;">
         <button class="panel-btn map-type-btn" data-map-href="map.html" aria-pressed="false"><span>Stations</span></button>
-        <button class="panel-btn map-type-btn" data-map-href="alerts-map.html" aria-pressed="false"><span>Alerts</span></button>
-        <button class="panel-btn map-type-btn" data-map-href="" aria-pressed="true"><span>Forecast</span></button>
+        <button class="panel-btn map-type-btn" data-map-href="" aria-pressed="true"><span>Alerts</span></button>
+        <button class="panel-btn map-type-btn" data-map-href="forecast-map.html" aria-pressed="false"><span>Forecast</span></button>
        </div>
 
-        <h3 class="govuk-heading-s" style="margin-top: 16px; margin-bottom: 5px;">Forecast</h3>
-       <div class="btn-grp" id="forecast-btn-group">
-        <!-- Forecast date buttons will be inserted here by JavaScript -->
-       </div>
-
-       <div id="national-forecast" class="national-forecast">
-        <!-- National forecast content will be inserted here by JavaScript -->
-       </div>
+        <h3 class="govuk-heading-s" style="margin-top: 16px; margin-bottom: 5px;">Alerts</h3>
+        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+          <div class="govuk-checkboxes__item">
+            <input class="govuk-checkboxes__input" id="alert-very-high" type="checkbox" checked>
+            <label class="govuk-label govuk-checkboxes__label" for="alert-very-high">Very high level alerts</label>
+          </div>
+          <div class="govuk-checkboxes__item">
+            <input class="govuk-checkboxes__input" id="alert-high" type="checkbox" checked>
+            <label class="govuk-label govuk-checkboxes__label" for="alert-high">High level alerts</label>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -80,16 +83,21 @@
       <h3 class="govuk-heading-s" style="margin-bottom: 5px;">Map type</h3>
       <div class="btn-grp" style="margin-top: 5px;">
         <button class="panel-btn map-type-btn" data-map-href="map.html" aria-pressed="false"><span>Stations</span></button>
-        <button class="panel-btn map-type-btn" data-map-href="alerts-map.html" aria-pressed="false"><span>Alerts</span></button>
-        <button class="panel-btn map-type-btn" data-map-href="" aria-pressed="true"><span>Forecast</span></button>
+        <button class="panel-btn map-type-btn" data-map-href="" aria-pressed="true"><span>Alerts</span></button>
+        <button class="panel-btn map-type-btn" data-map-href="forecast-map.html" aria-pressed="false"><span>Forecast</span></button>
       </div>
-      <h3 class="govuk-heading-s" style="margin-top: 16px; margin-bottom: 5px;">Forecast</h3>
+      <h3 class="govuk-heading-s" style="margin-top: 16px; margin-bottom: 5px;">Alerts</h3>
       <div class="panel-scroll" style="padding-left: 0; max-height: 55vh;">
-        <div class="btn-grp" id="forecast-btn-group-mobile" style="margin-top: 5px;">
-          <!-- Forecast date buttons inserted by JS -->
+        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+          <div class="govuk-checkboxes__item">
+            <input class="govuk-checkboxes__input" id="alert-very-high-mobile" type="checkbox" checked onchange="document.getElementById('alert-very-high').checked = this.checked; document.getElementById('alert-very-high').dispatchEvent(new Event('change'));">
+            <label class="govuk-label govuk-checkboxes__label" for="alert-very-high-mobile">Very high level alerts</label>
+          </div>
+          <div class="govuk-checkboxes__item">
+            <input class="govuk-checkboxes__input" id="alert-high-mobile" type="checkbox" checked onchange="document.getElementById('alert-high').checked = this.checked; document.getElementById('alert-high').dispatchEvent(new Event('change'));">
+            <label class="govuk-label govuk-checkboxes__label" for="alert-high-mobile">High level alerts</label>
+          </div>
         </div>
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        <div id="national-forecast-mobile" class="national-forecast"></div>
       </div>
     </div>
   </div>

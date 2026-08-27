@@ -36,11 +36,25 @@
       <div class="btn-container measurement-container" id="measurement-container">
         <h3 class="govuk-heading-s" style="margin-bottom: 5px;">Map type</h3>
        <div class="btn-grp" style="margin-top: 5px;">
-        <button class="panel-btn map-type-btn" data-map-href="" aria-pressed="true"><span>Monitoring stations</span></button>
+        <button class="panel-btn map-type-btn" data-map-href="" aria-pressed="true"><span>Stations</span></button>
+        <button class="panel-btn map-type-btn" data-map-href="alerts-map.html" aria-pressed="false"><span>Alerts</span></button>
         <button class="panel-btn map-type-btn" data-map-href="forecast-map.html" aria-pressed="false"><span>Forecast</span></button>
        </div>
 
-        <h3 class="govuk-heading-s" style="margin-top: 16px; margin-bottom: 5px;">Search by pollutant</h3>
+        <div class="accordion-toggle-row">
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Pollutant</h3>
+          <p class="govuk-body-s govuk-!-margin-bottom-1 govuk-!-margin-top-1 pollutant-selection-summary"></p>
+          <button type="button" class="accordion-toggle-btn" id="pollutant-toggle" aria-expanded="false" aria-controls="pollutant-panel-content">
+            <span class="govuk-accordion__section-toggle" data-nosnippet>
+              <span class="govuk-accordion__section-toggle-focus">
+                <span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span>
+                <span class="govuk-accordion__section-toggle-text">Show</span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <div id="pollutant-panel-content" class="pollutant-panel-content" hidden>
        <div class="btn-grp" style="margin-top: 5px;">
         <button class="panel-btn depth-btn" aria-pressed="true"><span>DAQI pollutants</span></button>
 <button class="panel-btn ext-btn" aria-pressed="false"><span>Other pollutants</span></button>
@@ -51,6 +65,45 @@
     <div class="panel-scroll">
       <div class="radio-mount"></div>
     </div>
+        </div>
+
+        <hr class="govuk-section-break govuk-section-break--visible accordion-section-break">
+
+        <div class="accordion-toggle-row">
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Data sources</h3>
+          <p class="govuk-body-s govuk-!-margin-bottom-1 govuk-!-margin-top-1 data-sources-selection-summary"></p>
+          <button type="button" class="accordion-toggle-btn" id="data-sources-toggle" aria-expanded="false" aria-controls="data-sources-panel-content">
+            <span class="govuk-accordion__section-toggle" data-nosnippet>
+              <span class="govuk-accordion__section-toggle-focus">
+                <span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span>
+                <span class="govuk-accordion__section-toggle-text">Show</span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <div id="data-sources-panel-content" hidden>
+          <div class="data-sources-mount"></div>
+        </div>
+
+        <hr class="govuk-section-break govuk-section-break--visible accordion-section-break">
+
+        <div class="accordion-toggle-row">
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Map features</h3>
+          <p class="govuk-body-s govuk-!-margin-bottom-1 govuk-!-margin-top-1 map-features-selection-summary"></p>
+          <button type="button" class="accordion-toggle-btn" id="map-features-toggle" aria-expanded="false" aria-controls="map-features-panel-content">
+            <span class="govuk-accordion__section-toggle" data-nosnippet>
+              <span class="govuk-accordion__section-toggle-focus">
+                <span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span>
+                <span class="govuk-accordion__section-toggle-text">Show</span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <div id="map-features-panel-content" hidden>
+          <div class="map-features-mount"></div>
+        </div>
 
       </div>
     </div>
@@ -82,11 +135,25 @@
       <div class="btn-container measurement-container" id="measurement-container">
         <h3 class="govuk-heading-s" style="margin-bottom: 5px;">Map type</h3>
        <div class="btn-grp" style="margin-top: 5px;">
-        <button class="panel-btn map-type-btn" data-map-href="" aria-pressed="true"><span>Monitoring stations</span></button>
+        <button class="panel-btn map-type-btn" data-map-href="" aria-pressed="true"><span>Stations</span></button>
+        <button class="panel-btn map-type-btn" data-map-href="alerts-map.html" aria-pressed="false"><span>Alerts</span></button>
         <button class="panel-btn map-type-btn" data-map-href="forecast-map.html" aria-pressed="false"><span>Forecast</span></button>
        </div>
 
-        <h3 class="govuk-heading-s" style="margin-top: 16px; margin-bottom: 5px;">Search by pollutant</h3>
+        <div class="accordion-toggle-row">
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Pollutant</h3>
+          <p class="govuk-body-s govuk-!-margin-bottom-1 govuk-!-margin-top-1 pollutant-selection-summary"></p>
+          <button type="button" class="accordion-toggle-btn" id="pollutant-toggle-mobile" aria-expanded="false" aria-controls="pollutant-panel-content-mobile">
+            <span class="govuk-accordion__section-toggle" data-nosnippet>
+              <span class="govuk-accordion__section-toggle-focus">
+                <span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span>
+                <span class="govuk-accordion__section-toggle-text">Show</span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <div id="pollutant-panel-content-mobile" class="pollutant-panel-content" hidden>
        <div class="btn-grp" style="margin-top: 5px;">
         <button class="panel-btn depth-btn" aria-pressed="false"><span>DAQI pollutants</span></button>
         <button class="panel-btn ext-btn" aria-pressed="true"><span>Other pollutants</span></button>
@@ -96,6 +163,45 @@
       <div class="panel-scroll">
         <div class="radio-mount"></div>
       </div>
+        </div>
+
+        <hr class="govuk-section-break govuk-section-break--visible accordion-section-break">
+
+        <div class="accordion-toggle-row">
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Data sources</h3>
+          <p class="govuk-body-s govuk-!-margin-bottom-1 govuk-!-margin-top-1 data-sources-selection-summary"></p>
+          <button type="button" class="accordion-toggle-btn" id="data-sources-toggle-mobile" aria-expanded="false" aria-controls="data-sources-panel-content-mobile">
+            <span class="govuk-accordion__section-toggle" data-nosnippet>
+              <span class="govuk-accordion__section-toggle-focus">
+                <span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span>
+                <span class="govuk-accordion__section-toggle-text">Show</span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <div id="data-sources-panel-content-mobile" hidden>
+          <div class="data-sources-mount"></div>
+        </div>
+
+        <hr class="govuk-section-break govuk-section-break--visible accordion-section-break">
+
+        <div class="accordion-toggle-row">
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Map features</h3>
+          <p class="govuk-body-s govuk-!-margin-bottom-1 govuk-!-margin-top-1 map-features-selection-summary"></p>
+          <button type="button" class="accordion-toggle-btn" id="map-features-toggle-mobile" aria-expanded="false" aria-controls="map-features-panel-content-mobile">
+            <span class="govuk-accordion__section-toggle" data-nosnippet>
+              <span class="govuk-accordion__section-toggle-focus">
+                <span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span>
+                <span class="govuk-accordion__section-toggle-text">Show</span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <div id="map-features-panel-content-mobile" hidden>
+          <div class="map-features-mount"></div>
+        </div>
 
       </div>
 </div>
@@ -180,6 +286,58 @@
       }
     });
   });
+
+  // Panel accordion show/hide toggles (Pollutant, Data sources, Map features) -
+  // uses the accordion component's chevron/text styling only
+  document.querySelectorAll('.accordion-toggle-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var expanded = btn.getAttribute('aria-expanded') === 'true';
+      var content = document.getElementById(btn.getAttribute('aria-controls'));
+      var chevron = btn.querySelector('.govuk-accordion-nav__chevron');
+      var text = btn.querySelector('.govuk-accordion__section-toggle-text');
+
+      btn.setAttribute('aria-expanded', String(!expanded));
+      if (content) content.hidden = expanded;
+      if (chevron) chevron.classList.toggle('govuk-accordion-nav__chevron--down', expanded);
+      if (text) text.textContent = expanded ? 'Show' : 'Hide';
+    });
+  });
 </script>
+
+<style>
+  .accordion-section-break {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .pollutant-panel-content:not([hidden]) {
+    padding-bottom: 12px;
+  }
+
+  .accordion-toggle-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 16px;
+  }
+
+  .accordion-toggle-row .govuk-heading-s {
+    margin-bottom: 2px;
+  }
+
+  .accordion-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .accordion-toggle-btn .govuk-accordion__section-toggle-text {
+    margin-left: 5px;
+  }
+</style>
 
 {% endblock %}
