@@ -139,7 +139,9 @@ body:has(.defra-map) {
 // Map controls container
 .defra-map-controls {
   position: absolute;
-  z-index: 1;
+  // Must outrank the highest station marker z-index (4) so nothing inside
+  // (the menu panel, zoom controls, etc.) can be covered by a marker.
+  z-index: 5;
   overflow: hidden;
   top: 0px;
   right: 0px;
@@ -403,6 +405,7 @@ body:has(.defra-map) {
     position: relative;
     display: block;
   }
+  z-index: 9;
   display: none;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 3px 2px;
   width: 100%;
@@ -443,6 +446,7 @@ body:has(.defra-map) {
   box-sizing: border-box;
   max-height: 80vh;
   overflow: hidden;
+  z-index: 9;
   @include govuk-font($size: 16);
   pointer-events: auto;
   &:focus-visible {

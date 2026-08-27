@@ -2282,6 +2282,15 @@ map.on('load', () => {
   };
 });
 
+// Buckets a DAQI value (1-10, or null) into a small whole-number z-index (0-4)
+function daqiToZIndex(daqi) {
+  if (daqi == null) return 0;
+  if (daqi <= 3) return 1;
+  if (daqi <= 6) return 2;
+  if (daqi <= 9) return 3;
+  return 4;
+}
+
 function buildMarkersFromStations(stations) {
   // Remove existing markers
   markerRegistry.forEach(({ marker }) => marker.remove());
@@ -2293,8 +2302,10 @@ function buildMarkersFromStations(stations) {
     markerContainer.setAttribute('role', 'button');
     markerContainer.setAttribute('tabindex', '0');
     markerContainer.setAttribute('aria-label', `${station.name} monitoring station`);
-    // Higher DAQI stations render above lower ones when markers overlap
-    markerContainer.style.zIndex = String(station.daqi != null ? station.daqi : 0);
+    // Higher DAQI stations render above lower ones when markers overlap.
+    // DAQI bands (Low 1-3, Moderate 4-6, High 7-9, Very High 10) map to z-index 1-4,
+    // staying well below the map menu's z-index of 9.
+    markerContainer.style.zIndex = String(daqiToZIndex(station.daqi));
 
     const inner = document.createElement('div');
     inner.className = 'station-marker-inner';
