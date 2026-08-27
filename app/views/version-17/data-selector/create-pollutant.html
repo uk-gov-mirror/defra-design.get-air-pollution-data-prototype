@@ -23,8 +23,8 @@
     <div class="govuk-error-summary__body">
       <p class="govuk-body">There are no stations available based on your selection. Change the time period or location.</p>
       <ul class="govuk-list govuk-error-summary__list">
-        <li><a href="add-time.html">Change the time period</a></li>
-        <li><a href="add-location.html">Change the location</a></li>
+        <li><a href="add-time.html">Change time period</a></li>
+        <li><a href="add-location.html">Change location</a></li>
       </ul>
     </div>
   </div>
@@ -47,20 +47,8 @@
 <!-- <p class="govuk-body">Choose pollutant(s)</p> -->
      
     <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row pollutant-toggle-row">
-          <span class="govuk-summary-list__key" style="padding: 0;">Pollutant</span>
-          <button type="button" class="pollutant-toggle-btn" id="pollutant-toggle" aria-expanded="false" aria-controls="pollutant-panel-content">
-            <span class="govuk-accordion__section-toggle" data-nosnippet>
-              <span class="govuk-accordion__section-toggle-focus">
-                <span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span>
-                <span class="govuk-accordion__section-toggle-text">Show</span>
-              </span>
-            </span>
-          </button>
-        </div>
-
-        <div class="govuk-summary-list__row" id="pollutant-panel-content" hidden>
-    <dt class="govuk-summary-list__key govuk-visually-hidden">
+        <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
       Pollutant
     </dt>
     <dd class="govuk-summary-list__value" id="pollutant-summary-list">
@@ -124,49 +112,6 @@
         }) }}
 </div>
 </div>
-
-<style>
-  .pollutant-toggle-row {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .pollutant-toggle-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-    background: none;
-    border: 0;
-    padding: 0;
-    margin-top: 2px;
-    cursor: pointer;
-  }
-
-  .pollutant-toggle-btn .govuk-accordion__section-toggle-text {
-    margin-left: 5px;
-  }
-</style>
-
-<script>
-  // Pollutant show/hide toggle (uses the accordion component's chevron/text styling only)
-  document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('pollutant-toggle');
-    if (!btn) return;
-
-    btn.addEventListener('click', () => {
-      const expanded = btn.getAttribute('aria-expanded') === 'true';
-      const content = document.getElementById(btn.getAttribute('aria-controls'));
-      const chevron = btn.querySelector('.govuk-accordion-nav__chevron');
-      const text = btn.querySelector('.govuk-accordion__section-toggle-text');
-
-      btn.setAttribute('aria-expanded', String(!expanded));
-      if (content) content.hidden = expanded;
-      if (chevron) chevron.classList.toggle('govuk-accordion-nav__chevron--down', expanded);
-      if (text) text.textContent = expanded ? 'Show' : 'Hide';
-    });
-  });
-</script>
 
 <script>
 /**
@@ -1275,6 +1220,41 @@ document.addEventListener('DOMContentLoaded', () => {
     return false;
   };
 
+  // Last 7 days only has near real-time (AURN) data available
+  const isLast7Days = () => {
+    const tp = sessionStorage.getItem('selectedTimePeriod') || '';
+    return tp.startsWith('Last 7 days');
+  };
+
+  const hasAurnAvailable = () => {
+    let pollutants = [];
+    try { pollutants = JSON.parse(sessionStorage.getItem('selectedPollutants') || '[]'); } catch {}
+    if (!pollutants.length) return false;
+
+    const HOUR_HDR  = '<strong>Near real-time data from Defra</strong>';
+    const AURN_NAME = 'Automatic Urban and Rural Network (AURN)';
+
+    const availableHourly = new Set();
+    pollutants.forEach(p => {
+      let current = null;
+      (buildNetworksForPollutant(p) || []).forEach(item => {
+        if (item.startsWith('<strong>')) current = (item === HOUR_HDR) ? 'hourly' : null;
+        else if (current === 'hourly') availableHourly.add(item);
+      });
+    });
+    if (!availableHourly.has(AURN_NAME)) return false;
+
+    // Respect an explicit data source selection, if the user made one
+    let ds = null;
+    try { ds = JSON.parse(sessionStorage.getItem('selectedDataSources') || 'null'); } catch {}
+    if (ds && ds.hourly) {
+      if (!ds.hourly.enabled) return false;
+      if (Array.isArray(ds.hourly.networks) && ds.hourly.networks.length && !ds.hourly.networks.includes(AURN_NAME)) return false;
+    }
+
+    return true;
+  };
+
   function showErrorSummary(kind) {
     const err = document.getElementById('no-stations-error');
     if (!err) return;
@@ -1307,12 +1287,18 @@ document.addEventListener('DOMContentLoaded', () => {
         <ul class="govuk-list govuk-error-summary__list">
           <li><a href="add-location.html">Add location</a></li>
         </ul>`;
+    } else if (kind === 'last7days-no-aurn') {
+      bodyHtml = `
+        <p class="govuk-body">There are no stations available based on your selection. Change the time period.</p>
+        <ul class="govuk-list govuk-error-summary__list">
+          <li><a href="add-time.html">Change time period</a></li>
+        </ul>`;
     } else {
       bodyHtml = `
         <p class="govuk-body">There are no stations available based on your selection. Change the time period or location.</p>
         <ul class="govuk-list govuk-error-summary__list">
-          <li><a href="add-time.html">Change the time period</a></li>
-          <li><a href="add-location.html">Change the location</a></li>
+          <li><a href="add-time.html">Change time period</a></li>
+          <li><a href="add-location.html">Change location</a></li>
         </ul>`;
     }
 
@@ -1348,6 +1334,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (yearSelected && !locationSelected) {
       e.preventDefault();
       showErrorSummary('location-missing');
+      return;
+    }
+
+    if (isLast7Days() && !hasAurnAvailable()) {
+      e.preventDefault();
+      showErrorSummary('last7days-no-aurn');
       return;
     }
 

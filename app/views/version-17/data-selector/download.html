@@ -12,6 +12,7 @@
   <div class="govuk-grid-column-three-quarters-from-desktop">
 
     <h1 class="govuk-heading-l">Download your data</h1>
+
 <details class="govuk-details" style="display: none;">
   <summary class="govuk-details__summary">
     <span class="govuk-details__summary-text">
@@ -677,6 +678,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Time parsing
   function parseTimeMode() {
     const timeText = sessionStorage.getItem('selectedTimePeriod') || '';
+    if (timeText.startsWith('Last 7 days')) return { mode: 'last7days', text: timeText };
     const rangeMatch = timeText.match(/(\d{4}).*to.*(\d{4})/);
     const lastYear   = timeText.match(/1 January to 31 December (\d{4})/);
     const ytd        = timeText.match(/1 January to \d{1,2} \w+ (\d{4})/);
@@ -1082,6 +1084,23 @@ return `${headingAndDesc}${inset}${cta}
   const tabsRoot  = document.querySelector('.govuk-tabs');
   if (!tabsList || !tabsRoot) return;
 
+  const tm = parseTimeMode();
+
+  // Last 7 days: only near real-time (AURN) data is available.
+  // (Gating for "no AURN available" happens earlier, on the create-pollutant page.)
+  if (tm.mode === 'last7days') {
+    const AURN_NAME = 'Automatic Urban and Rural Network (AURN)';
+    finalBuckets.hourly   = finalBuckets.hourly.includes(AURN_NAME) ? [AURN_NAME] : [];
+    finalBuckets.monthly  = [];
+    finalBuckets.nonDefra = [];
+
+    if (!finalBuckets.hourly.length) {
+      tabsRoot.hidden = true;
+      return;
+    }
+  }
+  tabsRoot.hidden = false;
+
   const sources = [];
   if (finalBuckets.hourly.length)   sources.push('Near real-time data from Defra');
   if (finalBuckets.monthly.length)  sources.push('Other data from Defra');
@@ -1089,7 +1108,6 @@ return `${headingAndDesc}${inset}${cta}
   if (!sources.length) sources.push('Other data from Defra');
 
   const slugify = t => t.toLowerCase().replace(/\s+/g,'-').replace(/[^\w-]+/g,'');
-  const tm = parseTimeMode();
 
   tabsList.innerHTML = '';
   tabsRoot.querySelectorAll('.govuk-tabs__panel').forEach(el => el.remove());
