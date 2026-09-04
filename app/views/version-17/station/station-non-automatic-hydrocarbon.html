@@ -1,0 +1,229 @@
+{% extends "layouts/v17.html" %}
+
+{% set pageName="Birmingham A4540 Roadside (Non-Automatic Hydrocarbon Network) - Get air pollution data - GOV.UK" %}
+
+{% block beforeContent %}
+<a href="#"
+   class="govuk-back-link"
+   onclick="
+     var family = ['station.html','station-non-automatic-hydrocarbon.html','station-black-carbon.html','station-uk-urban-no2.html'];
+     var ref = document.referrer || '';
+     var refFile = ref.split('/').pop().split('?')[0].split('#')[0];
+     if (ref && family.indexOf(refFile) === -1) {
+       sessionStorage.setItem('stationReturnTo', ref);
+     }
+     var returnTo = sessionStorage.getItem('stationReturnTo');
+     if (returnTo) {
+       window.location.href = returnTo;
+     } else if (ref) {
+       history.back();
+     } else {
+       window.location.href = 'results-b2-4qa.html';
+     }
+     return false;
+   ">
+  Back
+</a>
+{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <meta property="og:title" content="Birmingham A4540 Roadside (Non-Automatic Hydrocarbon Network) - Get air pollution data - GOV.UK">
+  <meta name="description" content="Non-Automatic Hydrocarbon Network monitoring data for Birmingham A4540 Roadside.">
+  <meta name="og:description" content="Non-Automatic Hydrocarbon Network monitoring data for Birmingham A4540 Roadside.">
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <span class="govuk-caption-l">Non-Automatic Hydrocarbon Network</span>
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-1">Birmingham A4540 Roadside</h1>
+    <strong class="govuk-tag status-tag govuk-tag--blue">Active</strong>
+    <p class="govuk-body status-description govuk-!-margin-top-3" id="status">Latest monthly sample analysed for October 2024</p>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <a href="../map.html" role="button" id="map-btn" class="aq-button-secondary aq-button-secondary--icon govuk-!-margin-top-2" onclick="sessionStorage.setItem('mapFlyTo', JSON.stringify({lat:52.48,lng:-1.90,zoom:12}))">
+      <span class="aq-button-secondary__icon">
+        <svg focusable="false" width="15" height="20" viewBox="0 0 15 20">
+          <path d="M15,7.5c0.009,3.778 -4.229,9.665 -7.5,12.5c-3.271,-2.835 -7.509,-8.722 -7.5,-12.5c0,-4.142 3.358,-7.5 7.5,-7.5c4.142,0 7.5,3.358 7.5,7.5Zm-7.5,5.461c3.016,0 5.461,-2.445 5.461,-5.461c0,-3.016 -2.445,-5.461 -5.461,-5.461c-3.016,0 -5.461,2.445 -5.461,5.461c0,3.016 2.445,5.461 5.461,5.461Z" fill="currentColor"></path>
+        </svg>
+      </span>
+      <span class="aq-button-secondary__text">View map of nearby monitoring stations</span>
+      <span class="govuk-visually-hidden">(Visual only)</span>
+    </a>
+
+    <div class="div govuk-divider"></div>
+
+    <dl class="defra-aq-features__list govuk-!-margin-top-3">
+      <div class="defra-aq-features__item">
+        <dt class="defra-aq-features__key govuk-caption-m">Data source</dt>
+        <dd class="defra-aq-features__value govuk-body">Non-Automatic Hydrocarbon Network
+          <details class="govuk-details">
+            <summary class="govuk-details__summary govuk-!-margin-top-3">
+              <span class="govuk-details__summary-text">3 other data sources available</span>
+            </summary>
+            <div class="govuk-details__text">
+              <p class="govuk-body"><a href="station.html" class="govuk-link">Automatic Urban and Rural Network (AURN)</a></p>
+              <p class="govuk-body"><a href="station-uk-urban-no2.html" class="govuk-link">UK Urban NO2 Network</a></p>
+              <p class="govuk-body"><a href="station-black-carbon.html" class="govuk-link">UK Black Carbon Network</a></p>
+            </div>
+          </details>
+        </dd>
+      </div>
+
+      <div class="defra-aq-features__item">
+        <dt class="defra-aq-features__key govuk-caption-m">Local authority</dt>
+        <dd class="defra-aq-features__value govuk-body">Birmingham City Council</dd>
+        <p class="defra-aq-features__link govuk-body govuk-!-margin-top-1"><a href="birmingham-la.html" class="govuk-link">View local authority data</a></p>
+      </div>
+
+      <div class="defra-aq-features__item">
+        <dt class="defra-aq-features__key govuk-caption-m">Site type</dt>
+        <dd class="defra-aq-features__value govuk-body">
+          <div class="defra-toggletip" data-toggletip="" data-toggletip-label="More information about urban traffic" data-toggletip-content="This monitoring site is in a city or town close to roads, motorways or highways.">
+            Urban traffic
+          </div>
+          <p class="defra-aq-features__link govuk-body govuk-!-margin-top-1"><a href="https://www.google.co.uk/maps?q=52.476145,-1.874978" class="govuk-link">View on Google Maps</a></p>
+        </dd>
+      </div>
+    </dl>
+
+    <!-- Metadata -->
+    <details class="govuk-details govuk-!-margin-top-5">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">Coordinates, grid reference and photos</span>
+      </summary>
+      <div class="govuk-details__text">
+        <strong>Coordinates</strong>
+        <p class="govuk-body">52.476145, -1.874978</p>
+        <strong>Grid reference</strong>
+        <p class="govuk-body">SP085864</p>
+        <strong>Photos</strong>
+        <p class="govuk-body"><a href="" class="govuk-link">View on data.gov</a></p>
+      </div>
+    </details>
+
+    <details class="govuk-details govuk-!-margin-top-6">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">Pollutant start dates, end dates, instruments and inlet heights</span>
+      </summary>
+      <div class="govuk-details__text">
+        <table class="govuk-table">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Pollutant</th>
+              <th scope="col" class="govuk-table__header">Start date</th>
+              <th scope="col" class="govuk-table__header">End date</th>
+              <th scope="col" class="govuk-table__header">Inlet height (m)</th>
+              <th scope="col" class="govuk-table__header">Instrument</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <th scope="row" class="govuk-table__header">Benzene</th>
+              <td class="govuk-table__cell">06/09/2016</td>
+              <td class="govuk-table__cell">–</td>
+              <td class="govuk-table__cell">2.5</td>
+              <td class="govuk-table__cell">Pumped hydrocarbon sampler</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <div class="div govuk-divider"></div>
+
+    <h2 class="govuk-heading-l govuk-!-margin-top-6 govuk-!-margin-bottom-2">Download data</h2>
+    <p class="govuk-body govuk-!-margin-bottom-3">Data from the Non-Automatic Hydrocarbon Network is collected using pumped tube samplers and published as monthly averages.</p>
+
+    <details class="govuk-details govuk-!-margin-top-3">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">File format and metadata</span>
+      </summary>
+      <div class="govuk-details__text">
+        <h3 class="govuk-heading-s">File format</h3>
+        <p class="govuk-body">This data will download in a wide format.</p>
+        <p class="govuk-body">Data in a wide format puts each variable in a separate column.</p>
+
+        <h3 class="govuk-heading-s">Metadata</h3>
+        <p class="govuk-body">These files could contain the following metadata:</p>
+        <ul class="govuk-body govuk-list--bullet">
+          <li>name of monitoring station</li>
+          <li>map coordinates</li>
+          <li>local authority</li>
+          <li>region</li>
+          <li>site ID</li>
+          <li>instrument type</li>
+          <li>inlet height</li>
+        </ul>
+      </div>
+    </details>
+
+    <table class="govuk-table govuk-!-margin-top-6">
+      <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">Download data by year</caption>
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Year</th>
+          <th scope="col" class="govuk-table__header">Download</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">All years</th>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">Download (CSV)</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">2026</th>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">Download (CSV)</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">2025</th>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">Download (CSV)</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">2024</th>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">Download (CSV)</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">2023</th>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">Download (CSV)</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">2022</th>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">Download (CSV)</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">2021</th>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">Download (CSV)</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">2020</th>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">Download (CSV)</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">2019</th>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">Download (CSV)</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">2018</th>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">Download (CSV)</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">2017</th>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">Download (CSV)</a></td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">2016</th>
+          <td class="govuk-table__cell"><a href="#" class="govuk-link">Download (CSV)</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+{% endblock %}

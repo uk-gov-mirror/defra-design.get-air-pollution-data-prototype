@@ -2547,149 +2547,135 @@ function initPollutantPanels() {
 
   // Sync initial UI state
   syncAllPollutantCheckboxes();
-  // Render data sources for any panel currently showing pollutant mode
-  pollutantMounts.forEach(({ root, mount, uiId }) => {
-    if (mount.querySelector('.govuk-checkboxes__input[type="checkbox"]')) {
-      renderDataSources(root, mount, uiId);
-    }
-  });
 
   function setupPanel(root) {
     if (!root) return;
 
-    const extBtn   = root.querySelector('.ext-btn');
-    const depthBtn = root.querySelector('.depth-btn');
-    const mount    = root.querySelector('.radio-mount');
-
-    if (!extBtn || !depthBtn || !mount) return;
+    const mount = root.querySelector('.radio-mount');
+    if (!mount) return;
 
     const uiId = `pollutant-ui-${Math.random().toString(36).slice(2, 8)}`;
     pollutantMounts.push({ root, mount, uiId });
 
-    function setPressed(btn, pressed) {
-      btn.setAttribute('aria-pressed', pressed ? 'true' : 'false');
-      btn.classList.toggle('is-active', !!pressed);
-    }
+    const DAQI_POLLUTANTS = [
+      { code: 'PM2.5', label: 'Fine particulate matter (PM2.5)' },
+      { code: 'PM10',  label: 'Particulate matter (PM10)' },
+      { code: 'NO2',   label: 'Nitrogen dioxide (NO2)' },
+      { code: 'O3',    label: 'Ozone (O3)' },
+      { code: 'SO2',   label: 'Sulphur dioxide (SO2)' }
+    ];
 
-    function showMode(mode) {
-      if (mode === 'groups') {
-        setPressed(extBtn, true);
-        setPressed(depthBtn, false);
-        renderGroups();
-      } else {
-        setPressed(extBtn, false);
-        setPressed(depthBtn, true);
-        renderPollutants();
-        syncAllPollutantCheckboxes();
-        renderDataSources(root, mount, uiId);
+    const GROUPS = [
+      {
+        key: 'regulation',
+        title: 'Regulated pollutants',
+        hint: 'PM2.5, PM10, NO2, O3, SO2, NO, NOx as NO2 and CO'
+      },
+      {
+        key: 'vocs',
+        title: 'Volatile organic compounds (VOCs)',
+        hint: 'benzene and other hydrocarbons'
+      },
+      {
+        key: 'heavy_metals',
+        title: 'Heavy metals in air (PM10)',
+        hint: ''
+      },
+      {
+        key: 'pahs',
+        title: 'Polycyclic aromatic hydrocarbons (PAHs)',
+        hint: ''
+      },
+      {
+        key: 'ammonia',
+        title: 'Ammonia',
+        hint: 'gaseous ammonia NH3 (active, passive and diffusion tube) and particulate ammonium (NH4)'
+      },
+      {
+        key: 'precipitation',
+        title: 'Precipitation chemistry',
+        hint: 'particles and heavy metals in rainfall'
+      },
+      {
+        key: 'mercury',
+        title: 'Mercury',
+        hint: 'elemental mercury (Hg), reactive mercury (Hg), mercury in PM2.5 (Hg)'
+      },
+      {
+        key: 'black_carbon',
+        title: 'Black carbon',
+        hint: ''
+      },
+      {
+        key: 'ions_acids',
+        title: 'Particulates and acid gases',
+        hint: ''
+      },
+      {
+        key: 'particles',
+        title: 'Particles',
+        hint: 'particle count 10.18 to 791.48 nm and particles in particulate matter'
       }
+    ];
+
+    const groupName = `${uiId}-pollutant-mode`;
+    const daqiConditionalId = `${uiId}-daqi-conditional`;
+
+    function updateGroupHints() {
+      const radios = Array.from(mount.querySelectorAll(`input[name="${groupName}"]`));
+      radios.forEach((radio) => {
+        const hintId = `${radio.id}-hint`;
+        const hintEl = mount.querySelector(`#${CSS.escape(hintId)}`);
+        if (!hintEl) return;
+        hintEl.style.display = radio.checked ? 'block' : 'none';
+      });
     }
 
-  function renderGroups() {
-  // Important: we’re using groupKey to drive data sources
-  filterState.mode = 'group';
-  if (!filterState.groupKey) filterState.groupKey = 'regulation';
+    function render() {
+      if (filterState.mode !== 'pollutant' && !filterState.groupKey) {
+        filterState.groupKey = 'regulation';
+      }
+      if (!filterState.selected || filterState.selected.size === 0) {
+        filterState.selected = new Set(DAQI_CODES);
+      }
 
-  const GROUPS = [
-    {
-      key: 'regulation',
-      title: 'Regulated pollutants',
-      hint: 'PM2.5, PM10, NO2, O3, SO2, NO, NOx as NO2 and CO'
-    },
-    {
-      key: 'vocs',
-      title: 'Volatile organic compounds (VOCs)',
-      hint: 'benzene and other hydrocarbons'
-    },
-    {
-      key: 'heavy_metals',
-      title: 'Heavy metals in air (PM10)',
-      hint: ''
-    },
-    {
-      key: 'pahs',
-      title: 'Polycyclic aromatic hydrocarbons (PAHs)',
-      hint: ''
-    },
-    {
-      key: 'ammonia',
-      title: 'Ammonia',
-      hint: 'gaseous ammonia NH3 (active, passive and diffusion tube) and particulate ammonium (NH4)'
-    }
-  ];
+      const daqiChecked = filterState.mode === 'pollutant';
 
-  const MORE_GROUPS = [
-    {
-      key: 'precipitation',
-      title: 'Precipitation chemistry',
-      hint: 'particles and heavy metals in rainfall'
-    },
-    {
-      key: 'mercury',
-      title: 'Mercury',
-      hint: 'elemental mercury (Hg), reactive mercury (Hg), mercury in PM2.5 (Hg)'
-    },
-    {
-      key: 'black_carbon',
-      title: 'Black carbon',
-      hint: ''
-    },
-    {
-      key: 'ions_acids',
-      title: 'Particulates and acid gases',
-      hint: ''
-    },
-    {
-      key: 'particles',
-      title: 'Particles',
-      hint: 'particle count 10.18 to 791.48 nm and particles in particulate matter'
-    }
-  ];
-
-  const groupName = `${uiId}-pollutant-group`;
-
-  mount.innerHTML = `
-    <fieldset class="govuk-fieldset">
-      <legend class="govuk-visually-hidden">Select a pollutant group</legend>
-
-      <div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
-        ${GROUPS.map((g, idx) => {
-          const id = `${uiId}-grp-${idx}`;
-          const checked = (filterState.groupKey === g.key) ? 'checked' : '';
-          const hintId = `${id}-hint`;
-          return `
-            <div class="govuk-radios__item" style="margin-bottom:5px;">
+      mount.innerHTML = `
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-visually-hidden">Select a pollutant</legend>
+          <div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
+            <div class="govuk-radios__item">
               <input class="govuk-radios__input"
-                     id="${id}"
+                     id="${uiId}-daqi"
                      name="${groupName}"
                      type="radio"
-                     value="${g.key}"
-                     ${checked}
-                     aria-describedby="${hintId}">
-              <label class="govuk-label govuk-radios__label" for="${id}">
-                ${g.title}
+                     value="daqi"
+                     ${daqiChecked ? 'checked' : ''}
+                     data-aria-controls="${daqiConditionalId}">
+              <label class="govuk-label govuk-radios__label" for="${uiId}-daqi">
+                Daily Air Quality Index pollutants
               </label>
-              <div class="govuk-hint govuk-radios__hint pollutant-group-hint"
-                    id="${hintId}"
-                    hidden
-                    style="display:none; margin-top:2px; margin-left:20px;">
-                    ${g.hint}
-                  </div>
             </div>
-          `;
-        }).join('')}
-      </div>
-
-      <details class="govuk-details govuk-!-margin-top-3 govuk-!-margin-bottom-1">
-        <summary class="govuk-details__summary">
-          <span class="govuk-details__summary-text">Show more pollutant groups</span>
-        </summary>
-        <div class="govuk-details__text">
-          <div class="govuk-radios govuk-radios--small" data-module="govuk-radios" style="margin-top:10px;">
-            ${MORE_GROUPS.map((g, idx) => {
-              const baseIdx = GROUPS.length + idx;
-              const id = `${uiId}-grp-${baseIdx}`;
-              const checked = (filterState.groupKey === g.key) ? 'checked' : '';
+            <div class="govuk-radios__conditional ${daqiChecked ? '' : 'govuk-radios__conditional--hidden'}" id="${daqiConditionalId}">
+              <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                ${DAQI_POLLUTANTS.map((p, idx) => {
+                  const id = `${uiId}-p-${idx}`;
+                  const checked = filterState.selected.has(p.code) ? 'checked' : '';
+                  return `
+                    <div class="govuk-checkboxes__item">
+                      <input class="govuk-checkboxes__input" id="${id}" type="checkbox" value="${p.code}" ${checked}>
+                      <label class="govuk-label govuk-checkboxes__label" for="${id}">
+                        ${p.label}
+                      </label>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+            ${GROUPS.map((g, idx) => {
+              const id = `${uiId}-grp-${idx}`;
+              const checked = (!daqiChecked && filterState.groupKey === g.key) ? 'checked' : '';
               const hintId = `${id}-hint`;
               return `
                 <div class="govuk-radios__item" style="margin-bottom:5px;">
@@ -2706,100 +2692,9 @@ function initPollutantPanels() {
                   <div class="govuk-hint govuk-radios__hint pollutant-group-hint"
                         id="${hintId}"
                         hidden
-                        style="display:none; margin-top:2px; margin-left:20px;">
+                        style="display:${checked ? 'block' : 'none'}; margin-top:2px; margin-left:20px;">
                         ${g.hint}
                       </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      </details>
-    </fieldset>
-  `;
-
-  updateGroupHints();
-  updatePollutantSelectionSummary(root, mount);
-
-    function updateGroupHints() {
-  const radios = Array.from(mount.querySelectorAll(`input[name="${groupName}"]`));
-
-  radios.forEach((radio) => {
-    const hintId = `${radio.id}-hint`;
-    const hintEl = mount.querySelector(`#${CSS.escape(hintId)}`);
-    if (!hintEl) return;
-
-    hintEl.style.display = radio.checked ? 'block' : 'none';
-  });
-}
-
-
-
-
-  // Group mode shows all stations (your current behaviour)
-  applyFilter();
-
-  // Ensure data sources reflect the selected group
-  renderDataSources(root, mount, uiId);
-
-  // Bind change
-  mount.querySelectorAll(`input[name="${groupName}"]`).forEach((r) => {
-  r.addEventListener('change', () => {
-    if (!r.checked) return;
-
-    filterState.mode = 'group';
-    filterState.groupKey = r.value;
-
-    updateGroupHints();
-    updatePollutantSelectionSummary(root, mount);
-
-    const available = getAvailableNetworks();
-    selectedNetwork = available.includes(selectedNetwork) ? selectedNetwork : (available[0] || NETWORK.AURN);
-
-    if (aqMapApi && typeof aqMapApi.setNetwork === 'function') {
-      aqMapApi.setNetwork(selectedNetwork);
-    }
-
-    // ✅ User has interacted with filters
-    hasUserInteractedWithFilters = true;
-
-    requestAnimationFrame(updateGroupHints);
-    renderDataSources(root, mount, uiId);
-    applyFilter();
-  });
-});
-
-}
-
-
-
-
-    function renderPollutants() {
-      const pollutants = [
-        { code: 'PM2.5', label: 'Fine particulate matter (PM2.5)' },
-        { code: 'PM10',  label: 'Particulate matter (PM10)' },
-        { code: 'NO2',   label: 'Nitrogen dioxide (NO2)' },
-        { code: 'O3',    label: 'Ozone (O3)' },
-        { code: 'SO2',   label: 'Sulphur dioxide (SO2)' }
-      ];
-
-      if (!filterState.selected || filterState.selected.size === 0) {
-        filterState.selected = new Set(DAQI_CODES);
-      }
-
-      mount.innerHTML = `
-        <fieldset class="govuk-fieldset">
-          <legend class="govuk-visually-hidden">Select pollutants</legend>
-          <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-            ${pollutants.map((p, idx) => {
-              const id = `${uiId}-p-${idx}`;
-              const checked = filterState.selected.has(p.code) ? 'checked' : '';
-              return `
-                <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="${id}" type="checkbox" value="${p.code}" ${checked}>
-                  <label class="govuk-label govuk-checkboxes__label" for="${id}">
-                    ${p.label}
-                  </label>
                 </div>
               `;
             }).join('')}
@@ -2807,56 +2702,72 @@ function initPollutantPanels() {
         </fieldset>
       `;
 
-      // Bind once per mount element
-      if (!mount.dataset.pollutantCheckboxBound) {
-       mount.addEventListener('change', (e) => {
-        const target = e.target;
-        if (!target || !target.matches('.govuk-checkboxes__input[type="checkbox"]')) return;
+      // Bind mode radios (DAQI pollutants vs pollutant groups)
+      mount.querySelectorAll(`input[name="${groupName}"]`).forEach((r) => {
+        r.addEventListener('change', () => {
+          if (!r.checked) return;
 
-        const selected = new Set(
-          Array.from(mount.querySelectorAll('.govuk-checkboxes__input[type="checkbox"]:checked'))
-            .map(cb => cb.value)
-        );
+          hasUserInteractedWithFilters = true; // ✅
 
-        setFilter('pollutant', selected);
+          const conditional = mount.querySelector(`#${daqiConditionalId}`);
 
-        // ✅ User has interacted with filters now
-        hasUserInteractedWithFilters = true;
+          if (r.value === 'daqi') {
+            filterState.mode = 'pollutant';
+            if (!filterState.selected || filterState.selected.size === 0) {
+              filterState.selected = new Set(DAQI_CODES);
+            }
+            if (conditional) conditional.classList.remove('govuk-radios__conditional--hidden');
+          } else {
+            filterState.mode = 'group';
+            filterState.groupKey = r.value;
+            if (conditional) conditional.classList.add('govuk-radios__conditional--hidden');
 
-        renderDataSources(root, mount, uiId);
-        syncAllPollutantCheckboxes();
+            const available = getAvailableNetworks();
+            selectedNetwork = available.includes(selectedNetwork) ? selectedNetwork : (available[0] || NETWORK.AURN);
+
+            if (aqMapApi && typeof aqMapApi.setNetwork === 'function') {
+              aqMapApi.setNetwork(selectedNetwork);
+            }
+          }
+
+          updateGroupHints();
+          updatePollutantSelectionSummary(root, mount);
+          renderDataSources(root, mount, uiId);
+          applyFilter();
+        });
       });
 
+      // Bind pollutant checkboxes (only relevant while DAQI pollutants is selected)
+      if (!mount.dataset.pollutantCheckboxBound) {
+        mount.addEventListener('change', (e) => {
+          const target = e.target;
+          if (!target || !target.matches('.govuk-checkboxes__input[type="checkbox"]')) return;
+
+          const selected = new Set(
+            Array.from(mount.querySelectorAll('.govuk-checkboxes__input[type="checkbox"]:checked'))
+              .map(cb => cb.value)
+          );
+
+          setFilter('pollutant', selected);
+
+          // ✅ User has interacted with filters now
+          hasUserInteractedWithFilters = true;
+
+          renderDataSources(root, mount, uiId);
+          syncAllPollutantCheckboxes();
+        });
 
         mount.dataset.pollutantCheckboxBound = 'true';
       }
 
-      filterState.mode = 'pollutant';
-      applyFilter();
+      updateGroupHints();
       updatePollutantSelectionSummary(root, mount);
-
+      applyFilter();
+      renderDataSources(root, mount, uiId);
     }
 
-    extBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      filterState.mode = 'group';
-      filterState.groupKey = 'regulation';
-
-      hasUserInteractedWithFilters = true; // ✅
-      showMode('groups');
-    });
-
-    depthBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      hasUserInteractedWithFilters = true; // ✅
-      showMode('pollutant');
-    });
-
-
-        showMode('pollutant');
-      }
+    render();
+  }
 
   function syncAllPollutantCheckboxes() {
     if (!filterState.selected) return;
@@ -2877,14 +2788,9 @@ function updatePollutantSelectionSummary(root, mount) {
   const el = root.querySelector('.pollutant-selection-summary');
   if (!el) return;
 
-  if (filterState.mode === 'pollutant') {
-    el.textContent = 'DAQI pollutants';
-    return;
-  }
-
   const checkedRadio = mount.querySelector('.govuk-radios__input:checked');
   const label = checkedRadio && mount.querySelector(`label[for="${checkedRadio.id}"]`);
-  el.textContent = label ? label.textContent.trim() : 'DAQI pollutants';
+  el.textContent = label ? label.textContent.trim() : 'Daily Air Quality Index pollutants';
 }
 
 function updateDataSourcesSelectionSummary(root) {
@@ -2894,11 +2800,12 @@ function updateDataSourcesSelectionSummary(root) {
   el.textContent = meta ? meta.label : '';
 }
 
-function updateMapFeaturesSelectionSummary(root, statusCb, laBoundariesCb) {
+function updateMapFeaturesSelectionSummary(root, daqiCb, statusCb, laBoundariesCb) {
   const el = root.querySelector('.map-features-selection-summary');
   if (!el) return;
   const labels = [];
-  if (statusCb?.checked) labels.push('Show closed and inactive stations');
+  if (daqiCb?.checked) labels.push('Show Daily Air Quality Index');
+  if (statusCb?.checked) labels.push('Show closed stations');
   if (laBoundariesCb?.checked) labels.push('Local authority boundaries');
   el.textContent = labels.length ? labels.join(', ') : 'None selected';
 }
@@ -2995,27 +2902,32 @@ function renderDataSources(root, mount, uiId) {
     });
   });
 
-  // Bind DAQI toggle IF present (only when AURN available & selected)
-  const daqiId = `${uiId}-show-daqi-aurn`;
-  const daqiCb = dataSourcesContainer.querySelector(`#${daqiId}`);
-  daqiCb?.addEventListener('change', () => {
-    colourByDaqi = !!daqiCb.checked;
-    aurnDaqiStateWhenSelected = colourByDaqi; // Remember this state for when we return to AURN
-    updateAllMarkers();
-    renderKeyOverlay();
-  });
-
   // -------------------------
   // Map features (own accordion, checkboxes only - no details/summary)
   // -------------------------
   const features = document.createElement('div');
   features.id = `${uiId}-map-features`;
 
+  // DAQI toggle only makes sense when AURN is available & selected
+  const showDaqiToggle = availableNetworks.includes(NETWORK.AURN) && selectedNetwork === NETWORK.AURN;
+  const daqiId = `${uiId}-show-daqi-aurn`;
   const showStatusId = `${uiId}-show-closed-inactive`;
   const showLaBoundariesId = `${uiId}-show-la-boundaries`;
 
   features.innerHTML = `
       <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+        ${showDaqiToggle ? `
+        <div class="govuk-checkboxes__item">
+          <input
+            class="govuk-checkboxes__input"
+            id="${daqiId}"
+            type="checkbox"
+            ${colourByDaqi ? 'checked' : ''}>
+          <label class="govuk-label govuk-checkboxes__label" for="${daqiId}">
+            Show Daily Air Quality Index
+          </label>
+        </div>
+        ` : ''}
         <div class="govuk-checkboxes__item">
           <input
             class="govuk-checkboxes__input"
@@ -3023,7 +2935,7 @@ function renderDataSources(root, mount, uiId) {
             type="checkbox"
             ${showClosedAndInactiveStations ? 'checked' : ''}>
           <label class="govuk-label govuk-checkboxes__label" for="${showStatusId}">
-            Show closed and inactive stations
+            Show closed stations
           </label>
         </div>
         <div class="govuk-checkboxes__item">
@@ -3041,12 +2953,22 @@ function renderDataSources(root, mount, uiId) {
   // Add into its own accordion mount
   mapFeaturesMount?.appendChild(features);
 
+  // Bind DAQI toggle IF present (only when AURN available & selected)
+  const daqiCb = root.querySelector(`#${daqiId}`);
+  daqiCb?.addEventListener('change', () => {
+    colourByDaqi = !!daqiCb.checked;
+    aurnDaqiStateWhenSelected = colourByDaqi; // Remember this state for when we return to AURN
+    updateAllMarkers();
+    renderKeyOverlay();
+    updateMapFeaturesSelectionSummary(root, daqiCb, statusCb, laBoundariesCb);
+  });
+
   // Bind show/hide closed+inactive
   const statusCb = root.querySelector(`#${showStatusId}`);
   statusCb?.addEventListener('change', () => {
     showClosedAndInactiveStations = !!statusCb.checked;
     applyFilter();
-    updateMapFeaturesSelectionSummary(root, statusCb, laBoundariesCb);
+    updateMapFeaturesSelectionSummary(root, daqiCb, statusCb, laBoundariesCb);
   });
 
   // Bind LA boundaries toggle
@@ -3059,10 +2981,10 @@ function renderDataSources(root, mount, uiId) {
       m.setLayoutProperty('la-boundaries-line', 'visibility', visibility);
       m.setLayoutProperty('la-boundaries-fill', 'visibility', visibility);
     }
-    updateMapFeaturesSelectionSummary(root, statusCb, laBoundariesCb);
+    updateMapFeaturesSelectionSummary(root, daqiCb, statusCb, laBoundariesCb);
   });
 
-  updateMapFeaturesSelectionSummary(root, statusCb, laBoundariesCb);
+  updateMapFeaturesSelectionSummary(root, daqiCb, statusCb, laBoundariesCb);
 }
 
 
@@ -3099,17 +3021,6 @@ const groups = {
     const id = `${uiId}-net-${n}-${idx}`;
     const checked = (n === selectedNetwork) ? 'checked' : '';
 
-    // Only show DAQI checkbox when:
-    // - AURN is available in the current list AND
-    // - This specific radio is AURN AND
-    // - AURN is currently selected (keeps it visually “under” the AURN choice)
-    const showDaqiUnderThis =
-      availableNetworks.includes(NETWORK.AURN) &&
-      n === NETWORK.AURN &&
-      selectedNetwork === NETWORK.AURN;
-
-    const daqiId = `${uiId}-show-daqi-aurn`;
-
     return `
       <div class="govuk-radios__item">
         <input class="govuk-radios__input" id="${id}" name="${name}" type="radio" value="${n}" ${checked}>
@@ -3117,20 +3028,6 @@ const groups = {
           ${NETWORK_META[n].label}
         </label>
       </div>
-      ${showDaqiUnderThis ? `
-        <div class="govuk-checkboxes govuk-checkboxes--small govuk-!-margin-top-1 govuk-!-margin-bottom-1 govuk-!-margin-left-4" data-module="govuk-checkboxes">
-          <div class="govuk-checkboxes__item">
-            <input
-              class="govuk-checkboxes__input"
-              id="${daqiId}"
-              type="checkbox"
-              ${colourByDaqi ? 'checked' : ''}>
-            <label class="govuk-label govuk-checkboxes__label" for="${daqiId}">
-              Show Daily Air Quality Index
-            </label>
-          </div>
-        </div>
-      ` : ''}
     `;
   }
 

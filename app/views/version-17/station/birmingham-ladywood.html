@@ -6,11 +6,23 @@
 <a href="#"
    class="govuk-back-link"
    onclick="
-     const ref = document.referrer || '';
+     var ref = document.referrer || '';
      if (ref.includes('pm10-graph.html')) {
        history.go(-2);
-     } else {
+       return false;
+     }
+     var family = ['birmingham-ladywood.html','birmingham-ladywood-non-automatic-hydrocarbon.html','birmingham-ladywood-pah.html','birmingham-ladywood-black-carbon.html'];
+     var refFile = ref.split('/').pop().split('?')[0].split('#')[0];
+     if (ref && family.indexOf(refFile) === -1) {
+       sessionStorage.setItem('stationReturnTo', ref);
+     }
+     var returnTo = sessionStorage.getItem('stationReturnTo');
+     if (returnTo) {
+       window.location.href = returnTo;
+     } else if (ref) {
        history.back();
+     } else {
+       window.location.href = 'results-b2-4qa.html';
      }
      return false;
    ">
@@ -29,6 +41,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
+    <span class="govuk-caption-l">Automatic Urban and Rural Network (AURN)</span>
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-1">Birmingham Ladywood</h1>
     <strong class="govuk-tag status-tag govuk-tag--blue">Active</strong>
     <p class="govuk-body status-description govuk-!-margin-top-3" id="status">Latest at 11:00am on 25 November 2024</p>
@@ -58,9 +71,9 @@
               <span class="govuk-details__summary-text">3 other data sources available</span>
             </summary>
             <div class="govuk-details__text">
-              <p class="govuk-body"><a href="" class="govuk-link">Non-Automatic Hydrocarbon Network</a></p>
-              <p class="govuk-body"><a href="" class="govuk-link">PAH Network</a></p>
-              <p class="govuk-body"><a href="" class="govuk-link">UK Black Carbon Network</a></p>
+              <p class="govuk-body"><a href="birmingham-ladywood-non-automatic-hydrocarbon.html" class="govuk-link">Non-Automatic Hydrocarbon Network</a></p>
+              <p class="govuk-body"><a href="birmingham-ladywood-pah.html" class="govuk-link">PAH Network</a></p>
+              <p class="govuk-body"><a href="birmingham-ladywood-black-carbon.html" class="govuk-link">UK Black Carbon Network</a></p>
             </div>
           </details>
         </dd>
